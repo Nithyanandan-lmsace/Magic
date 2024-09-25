@@ -1,0 +1,569 @@
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+#page-auth-magic-campaigns-edit.load-icon:before {
+    content: '\f1ce';
+    font-family: fontawesome;
+    font-size: 40px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    animation: spin 2s linear infinite;
+    z-index: 11;
+}
+#page-auth-magic-campaigns-edit.load-icon:after {
+    content: '';
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, .9);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+}
+.auth-magic.path-login form .form-group a.btn-block {
+    margin: 20px 0;
+}
+.auth-magic .modal-backdrop.show {
+    border-color: #8c8c8c;
+    background-color: #f0f0f0;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    opacity: .7;
+}
+.auth-magic .modal .modal-dialog {
+    margin-top: 200px;
+}
+.auth-magic .modal .modal-dialog .modal-content .modal-header {
+    padding: 30px;
+    border: 0;
+}
+.auth-magic .modal .modal-dialog .modal-content .modal-header h5 {
+    font-size: 24px;
+    font-weight: normal;
+    color: #000;
+}
+.auth-magic .modal .modal-dialog .modal-content .modal-body {
+    padding: 0 30px;
+}
+.auth-magic .modal .modal-dialog .modal-content .modal-body .auth-magic-block p {
+    font-size: 16px;
+    margin-bottom: 30px;
+}
+.auth-magic .modal .modal-dialog .modal-content .modal-body .auth-magic-block .magic-link-block span {
+    font-size: 16px;
+    display: block;
+    margin-bottom: 15px;
+}
+.auth-magic .modal .modal-dialog .modal-content .modal-body .auth-magic-block .magic-link-block input {
+    width: 100%;
+    height: 40px;
+    font-size: 13px;
+    border: 1px solid #8c8c8c;
+    border-radius: 4px;
+    padding: 0 8px;
+}
+.auth-magic .modal .modal-dialog .modal-content .modal-body .auth-magic-block .magic-link-block .copy-link-block {
+    margin-top: 15px;
+}
+.auth-magic .modal .modal-dialog .modal-content .modal-body .auth-magic-block .magic-link-block .copy-link-block button {
+    font-size: 16px;
+    color: #fff;
+    background-color: #121212;
+}
+.auth-magic .modal .modal-dialog .modal-content .modal-footer {
+    border: 0;
+}
+.auth-magic .modal .modal-dialog .modal-content .modal-footer button {
+    display: none;
+}
+
+/* Magic signup */
+.magic-login-form.pagelayout-login #page {
+    background: #f8f9fa;
+    background-image: linear-gradient(to right, #f8f9fa 0%, #dee2e6 100%);
+    background-repeat: repeat-x;
+}
+.magic-login-form.pagelayout-login #region-main,
+.magic-login-form.pagelayout-login #region-main div[role="main"] {
+    height: 100%;
+    overflow: visible;
+}
+.magic-login-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+.magic-login-container {
+    min-width: 350px;
+    background-color: #fff;
+    padding: 3rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    margin-bottom: 2rem;
+}
+.loginform.magic .logo-block {
+    max-width: 250px;
+    text-align: center;
+    margin: 0 auto 20px;
+}
+.login-container {
+    min-width: 350px;
+}
+.loginform.magic {
+    max-width: 254px;
+}
+.loginform.magic .logo-block img {
+    width: 100%;
+}
+.loginform.magic .info-block {
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+}
+.loginform.magic > .d-flex {
+    justify-content: center;
+    margin-top: 30px;
+}
+.loginform.magic .login-form {
+    /* max-width: 250px; */
+    padding: 0;
+    margin-bottom: 10px;
+    position: relative;
+}
+.loginform.magic .login-form ~ .login-identityproviders {
+    margin-bottom: 30px;
+}
+.loginform.magic .login-form ~ .login-identityproviders .login-identityprovider-btn {
+    height: 36px;
+    line-height: normal;
+    border: 1px solid #dee2e6;
+    border-radius: .5rem;
+}
+.loginform.magic .login-form .fdescription.required {
+    display: none;
+}
+.loginform.magic .login-form .form-group {
+    margin: 0 0 5px 0;
+}
+.loginform.magic .login-form .form-group.magic-submit-action {
+    margin-bottom: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+.loginform.magic .login-form .form-group .col-form-label {
+    max-width: none;
+    width: 0;
+    height: 0;
+    padding: 0;
+    overflow: hidden;
+    flex: none;
+}
+.loginform.magic .login-form .form-group.magic-submit-action .felement input {
+    height: 100%;
+    font-size: 28px;
+    font-family: fontawesome;
+    color: #121212;
+    border: 0;
+    background: none;
+    padding: 0 10px 0 0;
+    opacity: .3;
+}
+.loginform.magic .login-form .form-group .felement {
+    max-width: none;
+    height: 100%;
+    padding: 0;
+    flex: auto;
+}
+.loginform.magic .login-form .form-group .felement input {
+    width: 100%;
+    height: 42px;
+}
+.loginform.magic .login-form .form-group .felement input.form-control {
+    border: 1px solid #8c8c8c;
+    border-radius: 0.5rem;
+}
+.loginform.magic .login-form .form-group:not(.magic-submit-action) .felement input[type="submit"] {
+    height: 36px;
+    border-radius: .5rem;
+}
+.loginform.magic .login-form .form-group .felement input.form-control[type="text"] {
+    padding-right: 40px;
+    border: 1px solid #8c8c8c;
+    border-radius: 0.5rem;
+}
+.loginform.magic .login-form .form-group .felement input.form-control.is-invalid {
+    background-image: none;
+}
+.magic-login-footer {
+    width: 100%;
+    background-image: linear-gradient(to right, #f8f9fa 0%, #dee2e6 100%);
+}
+.magic-login-footer ul {
+    max-width: 600px;
+    text-align: center;
+    list-style: none;
+    padding: 18px 0;
+    margin: 0 auto;
+}
+.magic-login-footer ul li {
+    text-align: center;
+    display: inline-block;
+    padding: 0 10px;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+.magic-login-footer ul li:last-child {
+    border-right: 0;
+}
+.magic-login-footer ul li a {
+    font-size: 16px;
+    color: rgba(0, 0, 0, 0.3);
+}
+#page-auth-magic-signin #page-wrapper #page > * {
+    height: 100%;
+}
+.path-local-magic .alert {
+    margin: 10px;
+}
+
+@media (min-width: 768px) {
+    .magic-login-container {
+        max-width: 600px;
+        border-radius: 0.5rem;
+    }
+}
+
+@media (min-width: 576px) {
+    #page-auth-magic-signin #page-wrapper #page-footer {
+        margin-bottom: 60px;
+    }
+    .magic-login-footer {
+        position: fixed;
+        bottom: 0;
+    }
+}
+
+@media (max-width: 575px) {
+    .magic-login-form .magic-login-footer ul {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+    .magic-login-footer ul {
+        max-width: 720px;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+    .magic-login-footer ul li {
+        text-align: left;
+        display: block;
+        border: 0;
+    }
+    .magic-login-footer ul li a {
+        color: #000;
+    }
+}
+
+/* End of Magic signup */
+
+/* Campaign - Signup page */
+.magic-campaign-signup #page.drawers {
+    padding: 0;
+}
+.magic-campaign-signup #page.drawers .main-inner {
+    padding: 0;
+    margin: 0;
+}
+.magic-campaign-signup #page.drawers .main-inner #page-header {
+    display: none;
+}
+.magic-campaign-signup #page.drawers .main-inner div[role="main"] {
+    padding: 0;
+}
+.magic-campaign-signup #page-wrapper #page #page-content {
+    margin-bottom: -16px;
+}
+
+@media (min-width: 576px) {
+    .magic-campaign-signup .campaign-block .mform:not(.full-width-labels) .col-form-label .form-label-addon {
+        margin-left: 5px;
+    }
+    .magic-campaign-signup .campaign-block .form-inline .form-control {
+        width: 100%;
+    }
+}
+.magic-campaign-signup .campaign-block .campaign-wrapper .campaign-container .form-group > div {
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+.magic-campaign-signup .campaign-owner-profile {
+    font-weight: bold;
+}
+
+/* Campaign block - Edit page custom field */
+.custom-field-group {
+    display: flex;
+}
+.custom-field-group .form-group:first-child {
+    max-width: 40%;
+    flex: 0 0 40%;
+    display: inline-flex;
+}
+.custom-field-group .form-group:nth-child(2) {
+    margin: 0 5px 1rem;
+}
+.custom-field-group .form-group:nth-child(2) .felement,
+.custom-field-group .form-group:nth-child(3) .felement {
+    max-width: 210px;
+    flex: none;
+}
+.custom-field-group .form-group:nth-child(3) {
+    margin: 0 0 1rem;
+}
+.custom-field-group .form-group .col-form-label {
+    max-width: 64%;
+    flex: 0 0 64%;
+}
+.custom-field-group .form-group .felement {
+    max-width: 36%;
+    flex: 0 0 36%;
+    padding-right: 0;
+}
+.custom-field-group .form-group .felement select {
+    width: 100%;
+}
+.custom-field-group .form-group:nth-child(3) .felement {
+    padding: 0;
+}
+.mform fieldset .fcontainer.collapseable .form-group .felement fieldset .form-group:first-child {
+    min-width: 240px;
+}
+.mform fieldset .fcontainer.collapseable .form-group .felement fieldset .form-group span,
+.mform fieldset .fcontainer.collapseable .form-group .felement fieldset .form-group select {
+    width: 100%;
+}
+.mform fieldset .fcontainer.collapseable .custom-field-group > .form-group:not(:nth-child(1)) .col-form-label {
+    width: 0;
+    padding: 0;
+    height: 0;
+    text-indent: -999em;
+}
+.mform fieldset .fcontainer .magic-campaign-message-vars .form-group .message-vars .campaign-message-clickforword {
+    font-size: 10px;
+    color: #000;
+    border-radius: 5px;
+    background-color: #ffc107;
+    padding: 3px 10px;
+    margin: 0 0 10px 5px;
+}
+/*End of Campaign block - Edit page custom field */
+
+/*Campaign block*/
+.magic-campaign-signup .campaign-block {
+    text-align: center;
+    position: relative;
+    z-index: 0;
+}
+/*Campaign block - background image*/
+.magic-campaign-signup .campaign-block .campaign-background-block {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+.magic-campaign-signup .campaign-block .campaign-background-block img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+/*End of Campaign block - background image*/
+
+/*Campaign block - Form block*/
+.magic-campaign-signup .campaign-block .campaign-wrapper {
+    padding: 30px 0;
+}
+.magic-campaign-signup .campaign-block .campaign-wrapper .campaign-container {
+    border-radius: 15px;
+    background-color: #fff;
+    box-shadow: 0 1px 20px rgba(0, 0, 0, 0.4);
+    padding: 3rem;
+    display: flex;
+}
+.magic-campaign-signup .campaign-block .campaign-wrapper .campaign-container .campaign-content-section {
+    margin: 0 auto;
+}
+
+/*Campaign block - Transparent*/
+.magic-campaign-signup .campaign-block.form-transparent .campaign-wrapper .campaign-container {
+    background: none;
+    box-shadow: none;
+}
+.magic-campaign-signup .campaign-block.form-transparent .campaign-form-block {
+    max-width: 400px;
+    margin: auto;
+}
+/*End of Campaign block - Transparent*/
+
+/*Campaign block - Header image*/
+.magic-campaign-signup .campaign-block .campaign-header-block img {
+    width: 100%;
+    object-fit: cover;
+}
+/* End of Campaign block - Header image*/
+
+.magic-campaign-signup .campaign-block .container-fluid {
+    position: relative;
+}
+.magic-campaign-signup .campaign-block .campaign-wrapper .campaign-container {
+    max-width: 700px;
+    margin: 30px auto;
+}
+
+/*Campaign block - Form*/
+.magic-campaign-signup .campaign-block .campaign-signup-block .logo-block {
+    max-width: 200px;
+    margin: 0 auto 45px;
+}
+.magic-campaign-signup .campaign-block .campaign-signup-block .logo-block img {
+    width: 100%;
+}
+.magic-campaign-signup .campaign-block .campaign-signup-block .campaign-info-block h3 {
+    margin-bottom: 20px;
+}
+.magic-campaign-signup .campaign-block .campaign-signup-block .campaign-info-block p:empty {
+    display: none;
+}
+.magic-campaign-signup .campaign-block .campaign-signup-block .campaign-form-block {
+    display: flex;
+    max-width: min-content;
+    margin: 0 auto;
+}
+.magic-campaign-signup .campaign-block .campaign-signup-block .campaign-form-block form > .form-group {
+    flex-direction: column;
+}
+.magic-campaign-signup .campaign-block .campaign-signup-block .campaign-form-block form > .form-group .checkbox {
+    max-width: none;
+    padding-right: 0;
+}
+.magic-campaign-signup .campaign-block .campaign-signup-block .campaign-form-block form > .form-group .checkbox label,
+.magic-campaign-signup .campaign-block .campaign-signup-block .campaign-form-block form > .form-group .checkbox p {
+    margin-bottom: 0;
+}
+
+/*Campaign block - Form label*/
+.magic-campaign-signup .campaign-block .campaign-signup-block .campaign-form-block form > .form-group .col-form-label {
+    max-width: none;
+    text-transform: capitalize;
+}
+.magic-campaign-signup .campaign-block .campaign-signup-block .campaign-form-block
+form > .form-group .col-form-label .form-label-addon {
+    margin-left: 5px;
+}
+/*Campaign block - Form label*/
+
+/*Campaign block - Form Element*/
+.magic-campaign-signup .campaign-block .campaign-signup-block  .campaign-form-block
+form > #fgroup_id_buttonar.form-group .felement {
+    max-width: none;
+}
+.magic-campaign-signup .campaign-block .campaign-signup-block  .campaign-form-block
+form > #fgroup_id_buttonar.form-group .felement .form-group {
+    margin-right: 10px;
+}
+.magic-campaign-signup .campaign-block .campaign-signup-block  .campaign-form-block form > .fdescription.required {
+    text-align: left;
+    display: none;
+}
+
+/*Left full width*/
+.magic-campaign-signup .campaign-block.form-position-leftfull .campaign-wrapper .campaign-container {
+    margin-left: 0;
+}
+/*End of Left full width*/
+
+/*Left overlay*/
+.magic-campaign-signup .campaign-block.form-position-leftoverlay .campaign-wrapper .campaign-container {
+    margin-left: 0;
+}
+.magic-campaign-signup .campaign-block.form-position-leftoverlay .campaign-wrapper .campaign-background-block {
+    width: 45%;
+    left: auto;
+    right: 0;
+}
+/*End of Left overlay*/
+
+/*Right full width*/
+.magic-campaign-signup .campaign-block.form-position-rightfull .campaign-wrapper .campaign-container {
+    margin-right: 0;
+}
+/*End of Right full width*/
+
+/*Right full overlay*/
+.magic-campaign-signup .campaign-block.form-position-rightoverlay .campaign-wrapper .campaign-container {
+    margin-right: 0;
+}
+.magic-campaign-signup .campaign-block.form-position-rightoverlay .campaign-wrapper .campaign-background-block {
+    width: 45%;
+    left: 0;
+    right: auto;
+}
+/*End of Right full overlay*/
+
+
+@media (min-width: 992px) {
+    .magic-campaign-signup .campaign-block.form-position-leftoverlay .campaign-wrapper .campaign-container,
+    .magic-campaign-signup .campaign-block.form-position-rightoverlay .campaign-wrapper .campaign-container {
+        max-width: none;
+        width: 50%;
+    }
+}
+
+@media (max-width: 992px) {
+    .magic-campaign-signup .campaign-block.form-position-leftoverlay .campaign-wrapper .campaign-background-block,
+    .magic-campaign-signup .campaign-block.form-position-rightoverlay .campaign-wrapper .campaign-background-block,
+    .magic-campaign-signup .campaign-block.form-position-leftoverlay .campaign-wrapper .campaign-container,
+    .magic-campaign-signup .campaign-block.form-position-rightoverlay .campaign-wrapper .campaign-container {
+        max-width: none;
+        width: 100%;
+    }
+}
+/*End Campaign block - Form Element*/
+/*End of Campaign block - Form*/
+
+/*Campaign password modal*/
+.magic-campaign-signup .modal .modal-content form .femptylabel .col-form-label {
+    width: auto;
+    padding: 0;
+    flex: none;
+}
+.magic-campaign-signup .modal .modal-content form > .form-group {
+    margin-left: 0;
+    margin-right: 0;
+    display: block;
+}
+.magic-campaign-signup .modal .modal-content form > #fgroup_id_buttonar.form-group {
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+    margin-top: 20px;
+}
+.magic-campaign-signup .modal .modal-content form .form-group > div {
+    max-width: none;
+    padding: 0;
+}
+.magic-campaign-signup .modal .modal-content form .form-group > div input {
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .magic-campaign-signup .campaign-block .container-fluid {
+        padding: 0 3rem;
+    }
+}
+/*End of Campaign password modal*/
+/* End of Campaign block*/

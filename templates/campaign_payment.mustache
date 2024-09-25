@@ -1,0 +1,52 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template auth_magic/campaign_payment
+
+    Campaign payment page template
+
+     Example context (json):
+    {
+        "cost": "$108.50",
+        "instanceid": 11,
+        "successurl": "https://moodlesite/my"
+    }
+}}
+<div class="auth_magic_payment_region text-center">
+    <p>{{# str }} paymentrequiredcampaign, auth_magic {{/ str}}</p>
+    <p><b>{{cost}}</b></p>
+    <button
+        class="btn btn-secondary"
+        type="button"
+        id="gateways-modal-trigger-{{ uniqid }}"
+        data-action="core_payment/triggerPayment"
+        data-component="auth_magic"
+        data-paymentarea="campaign"
+        data-itemid="{{instanceid}}"
+        data-cost="{{cost}}"
+        data-successurl="{{successurl}}"
+        data-description="{{description}}"
+    >
+        {{# str }} sendpaymentbutton, auth_magic {{/ str }}
+    </button>
+</div>
+
+{{#js}}
+    require(['core_payment/gateways_modal'], function(modal) {
+        modal.init();
+    });
+{{/js}}

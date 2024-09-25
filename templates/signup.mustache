@@ -1,0 +1,127 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template auth_magic/signup
+
+    Signup page template
+
+    Example context (json):
+    {
+        "output": {
+            "doctype": "<!DOCTYPE html>",
+            "confirm": "true",
+            "title": "Demo title",
+            "description": "<h1>Headers keep HTML validators happy</h1>"
+        }
+    }
+}}
+
+{{#confirm}}
+<div role="alertdialog" aria-labelledby="modal-header" aria-describedby="modal-body" aria-modal="true" id="notice" class="box py-3 generalbox modal modal-dialog modal-in-page show">
+    <div id="modal-content" class="box py-3 modal-content">
+        <div id="modal-header" class="box py-3 modal-header px-3">
+            <h4>{{#str}}confirmpassword, auth_magic {{/str}}</h4>
+        </div>
+        <div role="alert" id="modal-body" class="box py-3 modal-body">
+            {{{passwordform}}}
+        </div>
+    </div>
+</div>
+{{/confirm}}
+
+{{^confirm}}
+<div class="campaign-block {{#classes}} {{.}} {{/classes}}">
+    {{#images.headerimage}}
+        <div class="campaign-header-block">
+            <img src="{{{images.headerimage}}}" alt="Header image of {{{title}}}" role="presentation">
+        </div>
+    {{/images.headerimage}}
+    <div class="container-fluid">
+        <div class="campaign-wrapper">
+            <div class="campaign-container">
+
+                {{#images.backgroundimage}}
+                <div class="campaign-background-block">
+                    <img src="{{{images.backgroundimage}}}" alt="Background image of {{{title}}}" class="campaign-background">
+                </div>
+                {{/images.backgroundimage}}
+
+                <div class="campaign-content-section">
+                    <div class="campaign-signup-block">
+                        {{#images.logo}}
+                        <div class="logo-block">
+                            <img src="{{{images.logo}}}" alt="logo image of {{{title}}}" role="presentaion" >
+                        </div>
+                        {{/images.logo}}
+
+                        <div class="campaign-info-block">
+                            <div class="header-block">
+                                <div class="header-block">
+                                    {{#title}} <h3> {{{title}}} </h3> {{/title}}
+                                </div>
+                                {{#cost}}
+                                    <div class="cost">
+                                        <p> <b> {{#str}} paymentrequiredcampaign, auth_magic{{/str}} </b> </p>
+                                        <p> <b> {{#str}} cost{{/str}}: {{cost}} </b> <p>
+                                    </div>
+                                {{/cost}}
+                            </div>
+                            <div class="campaign-owner-profile">
+                                {{{ownerpicture}}}
+                                {{#ownername}}<span>{{ownername}}</span>{{/ownername}}
+                            </div>
+                            {{#description}} <p> {{{description}}} </p> {{/description}}
+                        </div>
+                    </div>
+
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="my-tab" data-toggle="tab" data-target="#myselftab" type="button" role="tab" aria-controls="myselftab" aria-selected="true">Myself</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="team-tab" data-toggle="tab" data-target="#teamtab" type="button" role="tab" aria-controls="teamtab" aria-selected="false">Team member</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="user-tab" data-toggle="tab" data-target="#contacttab" type="button" role="tab" aria-controls="contacttab" aria-selected="false">New user</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="myselftab" role="tabpanel" aria-labelledby="my-tab"><p></p></div>
+                        <div class="tab-pane fade" id="teamtab" role="tabpanel" aria-labelledby="team-tab"><p></p></div>
+                        <div class="tab-pane fade" id="contacttab" role="tabpanel" aria-labelledby="user-tab">
+                            {{^summary}}
+                                {{#signupform}}
+                                <div class="campaign-form-block">
+                                    {{{signupform}}}
+                                </div>
+                                {{/signupform}}
+                            {{/summary}}
+                        </div>
+                    </div>
+
+                    {{#summary}}
+                        <div class="campaign-submisson-summary">
+                            {{{summary}}}
+                        </div>
+                    {{/summary}}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{{/confirm}}

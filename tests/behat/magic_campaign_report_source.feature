@@ -66,6 +66,9 @@ Feature: Magic campaign report source workflow.
       | Visibility             | Visible           |
       | Require email confirmation | No            |
       | Type                   | Free              |
+      | expirytime[enabled]    | 1                 |
+      | expirytime[number]     | 5                 |
+      | expirytime[timeunit]   | days              |
       | Available from         | ##23 September 2024## |
       | Available closes       | ##25 September 2025## |
       | Campaign password      |                   |
@@ -94,6 +97,9 @@ Feature: Magic campaign report source workflow.
       | Visibility             | Hidden            |
       | Require email confirmation | No            |
       | Type                   | Free              |
+      | expirytime[enabled]    | 1                 |
+      | expirytime[number]     | 0                 |
+      | expirytime[timeunit]   | days              |
       | startdate[enabled]     | 0                 |
       | enddate[enabled]       | 0                 |
       | Campaign password      | Test123#          |
@@ -121,6 +127,9 @@ Feature: Magic campaign report source workflow.
       | Visibility             | Visible           |
       | Require email confirmation | No            |
       | Type                   | Free              |
+      | expirytime[enabled]    | 1                 |
+      | expirytime[number]     | 3                 |
+      | expirytime[timeunit]   | days              |
       | Available from         | ##02 September 2025## |
       | Available closes       | ##31 September 2026## |
       | Campaign password      |                   |
@@ -191,6 +200,7 @@ Feature: Magic campaign report source workflow.
     And I click on "Welcome message" "link"
     And I click on "Follow up" "link"
     And I click on "Campaign course" "link"
+    And I click on "Expiration date" "link"
 
     # Payment method
     And I am on site homepage
@@ -226,8 +236,8 @@ Feature: Magic campaign report source workflow.
     And I should see "Description" in the "Demo campaign" "table_row"
     And I should see "Demo campaign1" in the "Description1" "table_row"
     And I should see "Comments2" in the "Demo campaign2" "table_row"
-    # And I should see "2" in the ".generaltable tr:nth-child(2) td:nth-child(4)" "css_element"
-    # And I should see "5" in the ".generaltable tr:nth-child(3) td:nth-child(4)" "css_element"
+    And I should see "2" in the ".generaltable tr:nth-child(2) td:nth-child(4)" "css_element"
+    And I should see "5" in the ".generaltable tr:nth-child(3) td:nth-child(4)" "css_element"
     And I should see "Available" in the "Demo campaign" "table_row"
     And I should see "Archived" in the "Demo campaign1" "table_row"
     And I should see "Hidden" in the "Demo campaign1" "table_row"
@@ -244,14 +254,15 @@ Feature: Magic campaign report source workflow.
     And I should see "Course creator" in the "Demo campaign2" "table_row"
     And I should see "parentuser_01 parentuser_01" in the "Demo campaign" "table_row"
     And I should see "user_01 user_01" in the "Demo campaign1" "table_row"
-    # And I should see "Yes" in the ".generaltable tr:nth-child(1) td:nth-child(13)" "css_element"
-    # And I should see "No" in the ".generaltable tr:nth-child(2) td:nth-child(13)" "css_element"
-    # And I should see "No" in the ".generaltable tr:nth-child(2) td:nth-child(14)" "css_element"
-    # And I should see "Yes" in the ".generaltable tr:nth-child(3) td:nth-child(14)" "css_element"
-    # And I should see "0" in the ".generaltable tr:nth-child(2) td:nth-child(15)" "css_element"
-    # And I should see "1" in the ".generaltable tr:nth-child(3) td:nth-child(15)" "css_element"
+    And I should see "Yes" in the ".generaltable tr:nth-child(1) td:nth-child(13)" "css_element"
+    And I should see "No" in the ".generaltable tr:nth-child(2) td:nth-child(13)" "css_element"
+    And I should see "No" in the ".generaltable tr:nth-child(2) td:nth-child(14)" "css_element"
+    And I should see "Yes" in the ".generaltable tr:nth-child(3) td:nth-child(14)" "css_element"
+    And I should see "0" in the ".generaltable tr:nth-child(2) td:nth-child(15)" "css_element"
+    And I should see "1" in the ".generaltable tr:nth-child(3) td:nth-child(15)" "css_element"
     And I should see "Course C1" in the "Demo campaign" "table_row"
     And I should see "Course C2" in the "Demo campaign1" "table_row"
+    And I should see "3" in the "Demo campaign2" "table_row"
     And I should see "10 USD" in the "Demo campaign" "table_row"
 
   @javascript
@@ -758,6 +769,9 @@ Feature: Magic campaign report source workflow.
       | Fee                    | 10                |
       | Currency               | US Dollar         |
       | Account                | Bank Transfer     |
+      | expirytime[enabled]    | 1                 |
+      | expirytime[number]     | 2                 |
+      | expirytime[timeunit]   | days              |
       | Available from         | ##1 March 2024##  |
       | Available closes       | ##31 March 2025## |
       | Campaign password      |                   |
@@ -924,6 +938,8 @@ Feature: Magic campaign report source workflow.
       # | Campaign course     | campaign:campaigncourse_operator       | Course C1            | campaign:campaigncourse_value        | Is not equal to    | Course C2         | Course C1         | [data-cardtitle='Campaign course']     |
       # | Registration fee    | campaign:fee_operator                  | 10                   | campaign:fee_value                   | Contains           | Magic campaign    | Demo campaign     | [data-cardtitle='Name']                |
       # | Registration fee    | campaign:fee_operator                  | Free                 | campaign:fee_value                   | Is equal to        | Demo campaign     | Magic campaign    | [data-cardtitle='Name']                |
+      | Expiration date     | campaign:expirydate_operator           |                      |                                      | In the past          | Demo campaign1    | Demo campaign2    | [data-cardtitle='Name']                |
+      | Expiration date     | campaign:expirydate_operator           |                      |                                      | In the future        | Demo campaign     | Demo campaign1    | [data-cardtitle='Name']                |
       # | Only my campaigns   | campaign:usercohort_operator           |                      |                                      | Yes                | Yes               | No                | [data-cardtitle='Capacity']            |
 
 
@@ -1018,6 +1034,9 @@ Feature: Magic campaign report source workflow.
       | Fee                    | 10                |
       | Currency               | US Dollar         |
       | Account                | Bank Transfer     |
+      | expirytime[enabled]    | 1                 |
+      | expirytime[number]     | 2                 |
+      | expirytime[timeunit]   | days              |
       | Available from         | ##31 March 2024## |
       | Available closes       | ##31 March 2025## |
       | Campaign password      |                   |
@@ -1186,6 +1205,8 @@ Feature: Magic campaign report source workflow.
       # | Follow up           | campaign:followupmessagedelay_operator | 1                    | campaign:followupmessagedelay_value  | Is equal to        | Demo campaign2    | Demo campaign1    | [data-cardtitle='Name']                |
       # | Campaign course     | campaign:campaigncourse_operator       | Course C1            | campaign:campaigncourse_value        | Is equal to        | Course C1         | Course C2         | [data-cardtitle='Campaign course']     |
       # | Campaign course     | campaign:campaigncourse_operator       | Course C1            | campaign:campaigncourse_value        | Is not equal to    | Course C2         | Course C1         | [data-cardtitle='Campaign course']     |
+      # | Expiration date     | campaign:expirydate_operator           |                      |                                      | In the past        | Demo campaign1    | Demo campaign2    | [data-cardtitle='Name']                |
+      # | Expiration date     | campaign:expirydate_operator           |                      |                                      | In the future      | Demo campaign2    | Demo campaign1    | [data-cardtitle='Name']                |
       # | Registration fee    | campaign:fee_operator                  | 10                   | campaign:fee_value                   | Contains           | Magic campaign    | Demo campaign     | [data-cardtitle='Name']                |
       # | Registration fee    | campaign:fee_operator                  | Free                 | campaign:fee_value                   | Is equal to        | Demo campaign     | Magic campaign    | [data-cardtitle='Name']                |
 

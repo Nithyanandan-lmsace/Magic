@@ -61,6 +61,9 @@ Feature: Campaign data source for Dash workflow.
       | Visibility             | Visible           |
       | Require email confirmation | No            |
       | Type                   | Free              |
+      | expirytime[enabled]    | 1                 |
+      | expirytime[number]     | 5                 |
+      | expirytime[timeunit]   | days              |
       | Available from         | ##31 March 2024## |
       | Available closes       | ##31 March 2025## |
       | Campaign password      |                   |
@@ -89,6 +92,9 @@ Feature: Campaign data source for Dash workflow.
       | Visibility             | Hidden            |
       | Require email confirmation | No            |
       | Type                   | Free              |
+      | expirytime[enabled]    | 1                 |
+      | expirytime[number]     | 0                 |
+      | expirytime[timeunit]   | days              |
       | startdate[enabled]     | 0                 |
       | enddate[enabled]       | 0                 |
       | Campaign password      | Test123#          |
@@ -116,6 +122,9 @@ Feature: Campaign data source for Dash workflow.
       | Visibility             | Visible           |
       | Require email confirmation | No            |
       | Type                   | Free              |
+      | expirytime[enabled]    | 1                 |
+      | expirytime[number]     | 3                 |
+      | expirytime[timeunit]   | days              |
       | Available from         | ##02 September 2024## |
       | Available closes       | ##31 September 2025## |
       | Campaign password      |                   |
@@ -184,6 +193,9 @@ Feature: Campaign data source for Dash workflow.
       | Fee                    | 10                |
       | Currency               | US Dollar         |
       | Account                | Bank Transfer     |
+      | expirytime[enabled]    | 1                 |
+      | expirytime[number]     | 2                 |
+      | expirytime[timeunit]   | days              |
       | Available from         | ##31 March 2024## |
       | Available closes       | ##31 March 2025## |
       | Campaign password      | Test123#          |
@@ -216,6 +228,7 @@ Feature: Campaign data source for Dash workflow.
     And I press "Verify"
     And I should see "Password verified successfully"
     Then ".campaign-block" "css_element" should exist
+    When I click on "New user" "button"
     Then I should see "Magic campaign" in the ".campaign-info-block" "css_element"
     And I set the following fields to these values:
       | firstname      | Alan        |
@@ -254,6 +267,7 @@ Feature: Campaign data source for Dash workflow.
     And I press "Verify"
     And I should see "Password verified successfully"
     Then ".campaign-block" "css_element" should exist
+    When I click on "New user" "button"
     Then I should see "Magic campaign" in the ".campaign-info-block" "css_element"
     And I set the following fields to these values:
       | firstname      | Steve        |
@@ -299,7 +313,7 @@ Feature: Campaign data source for Dash workflow.
     Then "//div[contains(@class, 'table-responsive')]//img[contains(@class, 'img-responsive')][contains(@src, 'pluginfile.php/1/auth_magic/headerimage/')][contains(@src, 'headerbg.jpg')]" "xpath_element" should exist
     Then "//div[contains(@class, 'table-responsive')]//img[contains(@class, 'img-responsive')][contains(@src, 'pluginfile.php/1/auth_magic/backgroundimage/')][contains(@src, 'backgroundbg.jpg')]" "xpath_element" should exist
     Then "//div[contains(@class, 'table-responsive')]//img[contains(@class, 'img-responsive')][contains(@src, 'pluginfile.php/1/auth_magic/logo/')][contains(@src, 'logo.png')]" "xpath_element" should exist
-    And I should see "Magic campaign" in the "Magic Description" "table_row"
+    And I should see "Magic campaign" in the ".table-responsive tr:nth-child(3) td:nth-child(1)" "css_element"
     And I should see "Comments2" in the "Description2" "table_row"
     And I should see "Seats available" in the "Description2" "table_row"
     And I should see "5 total" in the ".table-responsive tr:nth-child(2) td:nth-child(13)" "css_element"
@@ -324,6 +338,8 @@ Feature: Campaign data source for Dash workflow.
     And I should see "Paid" in the ".table-responsive tr:nth-child(3) td:nth-child(28)" "css_element"
     And I should see "Free" in the ".table-responsive tr:nth-child(1) td:nth-child(29)" "css_element"
     And I should see "10 USD" in the ".table-responsive tr:nth-child(3) td:nth-child(29)" "css_element"
+    And I should see "##2 days ago##%A, %d %B %Y##" in the ".table-responsive tr:nth-child(1) td:nth-child(30)" "css_element"
+    And I should see "##2 days ago##%A, %d %B %Y##" in the ".table-responsive tr:nth-child(2) td:nth-child(30)" "css_element"
 
     # Filter preferences
     And I navigate to "Appearance > Default Dashboard page" in site administration
@@ -375,7 +391,7 @@ Feature: Campaign data source for Dash workflow.
     Then I should not see "Magic campaign"
     And I click on ".select2-selection__choice__remove" "css_element"
 
-    # Cqampaign Owner
+    # Campaign Owner
     When I set the field "campaign_owner" to "Admin User"
     Then I should see "Demo campaign2" in the "Description2" "table_row"
     Then I should not see "Magic campaign"

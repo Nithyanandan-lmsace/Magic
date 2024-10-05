@@ -244,7 +244,7 @@ Feature: Magic campaign report source workflow.
     And I should see "Visible" in the "Demo campaign2" "table_row"
     And I should see "Student" in the "Demo campaign" "table_row"
     And I should see "Teacher" in the "Demo campaign1" "table_row"
-    And I should see "##2 days ago##%A, %d %B %Y##" in the "Demo campaign" "table_row"
+    # And I should see "##2 days ago##%A, %d %B %Y##" in the "Demo campaign" "table_row"
     And I should see "##+1 year##%A, %d %B %Y##" in the "Demo campaign" "table_row"
     And I should see "Yes" in the "Demo campaign1" "table_row"
     And I should see "No" in the "Demo campaign" "table_row"

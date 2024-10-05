@@ -294,7 +294,7 @@ $string['campaigns:insertsuccess'] = 'Campaign created successfully';
 $string['campaigns:recordmissing'] = 'Campaign record missing';
 $string['campaigns:campaigndeleted'] = 'Campaign deleted successfully';
 $string['campaigns:deleteconfirmcampaign'] = 'Are you sure you want to delete this campaign from the manage campaigns?';
-$string['campaigns:notavailable'] = 'This campaign is not avilable to signup';
+$string['campaigns:notavailable'] = 'This campaign is not available to signup';
 $string['campaigns:capacity_info'] = '<ul><li>No of users registered using this campaign: {$a->used}</li><li>No of users still able to signup using this campaign: {$a->available} </li></ul>';
 $string['campaigns:requirepasswordmessage'] = 'To signup using this campaign you need to know this campaign password';
 $string['campaigns:password'] = 'Campaign password';
@@ -433,9 +433,6 @@ $string['magic:createcampaign'] = "Create the campaign.";
 
 
 $string['campaignsnotfound'] = "Invaild campaign";
-$string['magic:campaignself'] = "Can able to access the  campaign self section";
-$string['magic:campaignteam'] = "Can able to campaign team section";
-$string['magic:campaignnew'] = "Can able to campaign new section";
 $string['magic:viewcampaignlists'] = "View the campaign lists";
 $string['magic:viewcampaignownerlists'] = "View the campaign owner lists";
 $string['magic:privilegeaccount'] = "Manage the magic privilege account";
@@ -699,3 +696,17 @@ $string['uponbefore'] = "upon expiry";
 $string['subjectcampaignexpirynotify'] = 'Campaign Expiry Notification: {$a}';
 $string['messagecampaignexpirynotify'] = 'This is a reminder that the campaign {$a->campaignname} is set to expire in {$a->notifytime}.';
 $string['campaignexpirycheck'] = "Magic campaign expiry action task";
+
+$string['myself'] = "Myself";
+$string['teamtab'] = "Team member";
+$string['contacttab'] = "New user";
+
+$string['magic:campaignself'] = "Can able to access the  campaign self section";
+$string['magic:campaignteam'] = "Can able to campaign team section";
+$string['magic:campaignnew'] = "Can able to campaign new section";
+$string['strapply'] = "Apply";
+$string['campaign:myselfinfo'] = "If you click submit, the assignments of this campaign will be applied to your own user account.";
+$string['searchusers'] = "Search users";
+$string['campaignassignmentapply'] = "Campaign assignments appiled successfully.";
+$string['campaign:noteaminfo'] = "No team members are available.";
+$string['signupyourself'] = "Please select if you want to sign up yourself or somebody else";

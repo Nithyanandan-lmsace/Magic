@@ -63,9 +63,9 @@
                 <div class="campaign-content-section">
                     <div class="campaign-signup-block">
                         {{#images.logo}}
-                        <div class="logo-block">
-                            <img src="{{{images.logo}}}" alt="logo image of {{{title}}}" role="presentaion" >
-                        </div>
+                            <div class="logo-block">
+                                <img src="{{{images.logo}}}" alt="logo image of {{{title}}}" role="presentaion" >
+                            </div>
                         {{/images.logo}}
 
                         <div class="campaign-info-block">
@@ -88,36 +88,9 @@
                         </div>
                     </div>
 
-                    <ul class="nav nav-tabs" id="myTab" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="my-tab" data-toggle="tab" data-target="#myselftab" type="button" role="tab" aria-controls="myselftab" aria-selected="true">Myself</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="team-tab" data-toggle="tab" data-target="#teamtab" type="button" role="tab" aria-controls="teamtab" aria-selected="false">Team member</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="user-tab" data-toggle="tab" data-target="#contacttab" type="button" role="tab" aria-controls="contacttab" aria-selected="false">New user</button>
-                        </li>
-                    </ul>
-                    <div class="tab-content" id="myTabContent">
-                        <div class="tab-pane fade show active" id="myselftab" role="tabpanel" aria-labelledby="my-tab"><p></p></div>
-                        <div class="tab-pane fade" id="teamtab" role="tabpanel" aria-labelledby="team-tab"><p></p></div>
-                        <div class="tab-pane fade" id="contacttab" role="tabpanel" aria-labelledby="user-tab">
-                            {{^summary}}
-                                {{#signupform}}
-                                <div class="campaign-form-block">
-                                    {{{signupform}}}
-                                </div>
-                                {{/signupform}}
-                            {{/summary}}
-                        </div>
-                    </div>
-
-                    {{#summary}}
-                        <div class="campaign-submisson-summary">
-                            {{{summary}}}
-                        </div>
-                    {{/summary}}
+                    {{#content}}
+                        {{{content}}}
+                    {{/content}}
                 </div>
             </div>
 

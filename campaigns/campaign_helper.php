@@ -41,6 +41,11 @@ class campaign_helper {
     public $campaignid;
 
     /**
+     * The campaign object
+     */
+    public $campaign;
+
+    /**
      * campaign constructor.
      *
      * @param int $campaignid campaign data.
@@ -63,6 +68,7 @@ class campaign_helper {
         if (!has_capability('auth/magic:createcampaign', context_system::instance())) {
             return "";
         }
+
         // Setup create campaign button on page.
         $caption = get_string('createcampaign', 'auth_magic');
         $editurl = new moodle_url('/auth/magic/campaigns/edit.php', ['sesskey' => sesskey()]);
@@ -72,6 +78,121 @@ class campaign_helper {
         $button = $OUTPUT->render($button);
 
         return $button;
+    }
+
+    public function update_campaign_selfform($data) {
+        global $DB;
+        $campaigninstance = campaign::instance($this->campaignid);
+        if (isset($data->userid) && !auth_magic_is_paid_campaign($this->campaign, $data->coupon)) {
+            $user = $DB->get_record('user', ['id' => $data->userid]);
+            // Assign to the campaign cohorts, roles, parent.
+            $this->process_campaign_assignments($user);
+            $campaigninstance->campaign_after_submission($user, get_string('campaignassignmentapply', 'auth_magic'));
+        } else {
+            $returnurl = new moodle_url('/auth/magic/campaigns/payment.php',
+                        ['campaignid' => $this->campaignid, 'userid' => $data->userid, 'sesskey' => sesskey()]);
+            return redirect($returnurl);
+        }
+    }
+
+
+    public function update_campaign_teamform($data) {
+        global $DB, $PAGE;
+        if (!empty($data->teammembers)) {
+            if (!auth_magic_is_paid_campaign($this->campaign, $data->coupon)) {
+                foreach ($data->teammembers as $member) {
+                    $user = $DB->get_record('user', ['id' => $member]);
+                    // Assign to the campaign cohorts, roles, parent.
+                    $this->process_campaign_assignments($user);
+                }
+                return redirect($PAGE->url, get_string('campaignassignmentapply', 'auth_magic'),
+                    null, \core\output\notification::NOTIFY_SUCCESS);
+            } else {
+                $returnurl = new moodle_url('/auth/magic/campaigns/payment.php',
+                ['campaignid' => $this->campaignid, 'sesskey' => sesskey()]);
+                $userparams = [];
+                foreach ($data->teammembers as $member) {
+                    $userparams[] = 'users[]=' . $member;
+                }
+                $usersquery = implode('&', $userparams);
+                $returnurl = $returnurl->out(false) . "&" . $usersquery;
+                return redirect($returnurl);
+            }
+        }
+    }
+
+    public function update_campaign_manageform($user, $params) {
+        global $DB;
+        $campaigninstance = campaign::instance($this->campaignid);
+        $parentuser = null;
+        $userenrolmentkey = isset($user->enrolpassword) ? $user->enrolpassword : '';
+        if ($DB->record_exists('user', ['email' => $user->email])) {
+            $redirectstr = get_string('campaignassignapplied', 'auth_magic');
+            $newuser = $DB->get_record('user', ['email' => $user->email]);
+            $customfieldvalues = auth_magic_managerole_assignments_customvalues($user, $this->campaign->approvalroles);
+            $campaigninstance->assign_user($user, $newuser->id, $params['coupon']);
+            $assignmentobj = \auth_magic\roleassignment::create($newuser->id);
+            $parentuser = $assignmentobj->manage_role_assignments([], $customfieldvalues);
+
+        } else {
+            $redirectstr = get_string('signupsuccess', 'auth_magic');
+            // Add missing required fields.
+            $user = campaign_helper::get_campaign_fields_instance($this->campaignid)->reset_placeholder_values($user);
+            if (trim($user->username) === '') {
+                $user->username = $user->email;
+            }
+            $user = campaign_helper::signup_setup_new_user($user);
+            // Plugins can perform post sign up actions once data has been validated.
+            core_login_post_signup_requests($user);
+            $authplugin = get_auth_plugin($user->auth);
+            $user->password = isset($user->password) && $authplugin->is_internal() ? hash_internal_user_password($user->password) : '';
+            // Prints notice and link to login/index.php.
+            if ($userid = user_create_user($user, false, false)) {
+                $user->id = $userid;
+                $newuser = $DB->get_record('user', ['id' => $userid]);
+                // Sent the confirmation link.
+                if ($this->campaign->emailconfirm == campaign::ENABLE && $this->campaign->approvaltype != 'optionalin') {
+                    auth_magic_send_confirmation_email($newuser, new moodle_url('/auth/magic/confirm.php'));
+                }
+
+                $usercontext = context_user::instance($newuser->id);
+                // Update preferences.
+                useredit_update_user_preference($newuser);
+                // Save custom profile fields data.
+                profile_save_data($user);
+
+                if ($authplugin->is_internal() && empty($user->password) && $this->campaign->approvaltype != 'optionalin') {
+                    setnew_password_and_mail($newuser);
+                    unset_user_preference('create_password', $newuser);
+                    set_user_preference('auth_forcepasswordchange', 1, $newuser);
+                }
+
+                $campaigninstance->assign_user($user, $newuser->id, $params['coupon']);
+
+                \core\event\user_created::create_from_userid($newuser->id)->trigger();
+                // Login user automatically.
+                if ($this->campaign->emailconfirm != campaign::ENABLE && $this->campaign->approvaltype != 'optionalin') {
+                    complete_user_login($newuser);
+                }
+                // After user complete login then Set the user unconfirmed.
+                if ($this->campaign->approvaltype == 'optionalin') {
+                    $DB->set_field("user", "confirmed", 0, ["id" => $newuser->id]);
+                } else if ($this->campaign->emailconfirm == campaign::PARTIAL) {
+                    $DB->set_field("user", "confirmed", 0, ["id" => $newuser->id]);
+                    if ($this->campaign->approvaltype != 'optionalin') {
+                        auth_magic_send_confirmation_email($newuser, new moodle_url('/auth/magic/confirm.php'));
+                    }
+                }
+            }
+        }
+
+        if (!auth_magic_is_paid_campaign($this->campaign, $userenrolmentkey) && ($this->campaign->emailconfirm != campaign::ENABLE
+            || isloggedin()) && $this->campaign->approvaltype != 'optionalin') {
+            // Assign to the campaign cohorts, roles, parent.
+            $this->process_campaign_assignments($newuser, false, $parentuser);
+        }
+        $campaigninstance->campaign_after_submission($newuser, $redirectstr);
+
     }
 
     /**

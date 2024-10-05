@@ -37,8 +37,9 @@ require_login();
 require_sesskey();
 
 // PAGE URL.
-$userid = optional_param('userid', null, PARAM_INT);
-$campaignid = optional_param('campaignid', null, PARAM_INT);
+$userid = optional_param('userid', 0, PARAM_INT);
+$campaignid = optional_param('campaignid', 0, PARAM_INT);
+$users = optional_param_array('users', [], PARAM_INT);
 
 $url = new moodle_url('/auth/magic/campaigns/payment.php', ['userid' => $userid, 'campaignid' => $campaignid,
     'sesskey' => sesskey()]);
@@ -51,7 +52,7 @@ $PAGE->set_title("$SITE->fullname: ". $strviewcampaign);
 
 $PAGE->set_pagetype('campaigns-payment-page');
 
-if (!auth_magic_is_campaign_signup_user($userid, $campaignid)) {
+if (!isloggedin() && !auth_magic_is_campaign_signup_user($userid, $campaignid)) {
     // Throw error to non access the.
     throw new moodle_exception('invalidrequest');
 }

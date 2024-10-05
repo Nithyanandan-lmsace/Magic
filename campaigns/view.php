@@ -103,84 +103,35 @@ $params = ['campaignid' => $campaignid , 'code' => $code, 'token' => $token,
 $campaignmanageform = null;
 
 if (!$submissionuser) {
-    $campaignmanageform = new \auth_magic\form\campaigns_manageform(null, $params);
+    $managereturnurl = $PAGE->url . "#usertab";
+    $campaignmanageform = new \auth_magic\form\campaigns_manageform($managereturnurl, $params);
     // Process the submitted items form data.
     if ($user = $campaignmanageform->get_data()) {
-        $parentuser = null;
-        $userenrolmentkey = isset($user->enrolpassword) ? $user->enrolpassword : '';
-        if ($DB->record_exists('user', ['email' => $user->email])) {
-            $redirectstr = get_string('campaignassignapplied', 'auth_magic');
-            $newuser = $DB->get_record('user', ['email' => $user->email]);
-            $customfieldvalues = auth_magic_managerole_assignments_customvalues($user, $campaignrecord->approvalroles);
-            $campaigninstance->assign_user($user, $newuser->id, $coupon);
-            $assignmentobj = \auth_magic\roleassignment::create($newuser->id);
-            $parentuser = $assignmentobj->manage_role_assignments([], $customfieldvalues);
-
-        } else {
-            $redirectstr = get_string('signupsuccess', 'auth_magic');
-            // Add missing required fields.
-            $user = campaign_helper::get_campaign_fields_instance($campaignid)->reset_placeholder_values($user);
-            if (trim($user->username) === '') {
-                $user->username = $user->email;
-            }
-            $user = campaign_helper::signup_setup_new_user($user);
-            // Plugins can perform post sign up actions once data has been validated.
-            core_login_post_signup_requests($user);
-            $authplugin = get_auth_plugin($user->auth);
-            $user->password = isset($user->password) && $authplugin->is_internal() ? hash_internal_user_password($user->password) : '';
-            // Prints notice and link to login/index.php.
-            if ($userid = user_create_user($user, false, false)) {
-                $user->id = $userid;
-                $newuser = $DB->get_record('user', ['id' => $userid]);
-                // Sent the confirmation link.
-                if ($campaignrecord->emailconfirm == campaign::ENABLE && $campaignrecord->approvaltype != 'optionalin') {
-                    auth_magic_send_confirmation_email($newuser, new moodle_url('/auth/magic/confirm.php'));
-                }
-
-                $usercontext = context_user::instance($newuser->id);
-                // Update preferences.
-                useredit_update_user_preference($newuser);
-                // Save custom profile fields data.
-                profile_save_data($user);
-
-                if ($authplugin->is_internal() && empty($user->password) && $campaignrecord->approvaltype != 'optionalin') {
-                    setnew_password_and_mail($newuser);
-                    unset_user_preference('create_password', $newuser);
-                    set_user_preference('auth_forcepasswordchange', 1, $newuser);
-                }
-
-                $campaigninstance->assign_user($user, $newuser->id, $coupon);
-
-                \core\event\user_created::create_from_userid($newuser->id)->trigger();
-                // Login user automatically.
-                if ($campaignrecord->emailconfirm != campaign::ENABLE && $campaignrecord->approvaltype != 'optionalin') {
-                    complete_user_login($newuser);
-                }
-                // After user complete login then Set the user unconfirmed.
-                if ($campaignrecord->approvaltype == 'optionalin') {
-                    $DB->set_field("user", "confirmed", 0, ["id" => $newuser->id]);
-                } else if ($campaignrecord->emailconfirm == campaign::PARTIAL) {
-                    $DB->set_field("user", "confirmed", 0, ["id" => $newuser->id]);
-                    if ($campaignrecord->approvaltype != 'optionalin') {
-                        auth_magic_send_confirmation_email($newuser, new moodle_url('/auth/magic/confirm.php'));
-                    }
-                }
-            }
-        }
-
-        if (!auth_magic_is_paid_campaign($campaign, $userenrolmentkey) && ($campaignrecord->emailconfirm != campaign::ENABLE
-            || isloggedin()) && $campaignrecord->approvaltype != 'optionalin') {
-            // Assign to the campaign cohorts, roles, parent.
-            $campaignhelper->process_campaign_assignments($newuser, false, $parentuser);
-        }
-        $campaigninstance->campaign_after_submission($newuser, $redirectstr);
+        $campaignhelper->update_campaign_manageform($user, $params);
 
     } else if ($campaignmanageform->is_cancelled()) {
         redirect(get_login_url());
     }
+
+    $selfreturnurl = $PAGE->url . "#myseltab";
+    $campaignselfform = new \auth_magic\form\campaigns_selfform($selfreturnurl, $params);
+
+    if ($selfformdata = $campaignselfform->get_data()) {
+        // Need to update self form data.
+        $campaignhelper->update_campaign_selfform($selfformdata);
+    }
+
+    $teamreturnurl = $PAGE->url . "#teamtab";
+    $campaignteamform = new \auth_magic\form\campaigns_teamform($teamreturnurl, $params);
+
+    if ($teamformdata = $campaignteamform->get_data()) {
+        // Need to update team form data.
+        $campaignhelper->update_campaign_teamform($teamformdata);
+    }
+
 }
 
-$content = $campaigninstance->buildform($campaignmanageform);
+$content = $campaigninstance->buildform($campaignmanageform, $campaignselfform, $campaignteamform);
 // TODO: Not available handler.
 
 // Page content display started.

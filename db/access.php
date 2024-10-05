@@ -189,7 +189,7 @@ $capabilities = [
         'captype' => 'read',
         'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => [
-            'manager' => CAP_ALLOW,
+            'user' => CAP_ALLOW
         ],
     ],
     'auth/magic:campaignteam' => [
@@ -197,7 +197,7 @@ $capabilities = [
         'captype' => 'read',
         'contextlevel' => CONTEXT_USER,
         'archetypes' => [
-            'manager' => CAP_ALLOW,
+            'user' => CAP_ALLOW,
         ],
     ],
     'auth/magic:campaignnew' => [
@@ -205,7 +205,7 @@ $capabilities = [
         'captype' => 'read',
         'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => [
-            'manager' => CAP_ALLOW,
+            'user' => CAP_ALLOW
         ],
     ],
 ];

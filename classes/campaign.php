@@ -936,7 +936,7 @@ class campaign {
      * @param mform $campaignmanageform
      * @param object $user
      */
-    public function buildform($campaignmanageform = null, $user = null) {
+    public function buildform($campaignmanageform = null, $campaignselfform = null, $campaignteamform = null) {
         global $OUTPUT, $CFG, $USER, $DB;
 
         if (!$this->is_campaign_available() && !(is_siteadmin() || (isloggedin()
@@ -1002,18 +1002,86 @@ class campaign {
             }
         }
 
+        $tabs = [
+            'myself' => [
+                'capability' => 'auth/magic:campaignself',
+                'context' => \context_system::instance(),
+                'string' => get_string('myself', 'auth_magic'),
+                'id' => "my-tab",
+                'id2' => "myselftab",
+                'contentform' => $campaignselfform,
+            ],
+            'team' => [
+                'capability' => 'auth/magic:campaignteam',
+                'context' => \context_system::instance(),
+                'string' => get_string('teamtab', 'auth_magic'),
+                'id' => "team-tab",
+                'id2' => "teamtab",
+                'contentform' => $campaignteamform,
+            ],
+            'new' => [
+                'capability' => 'auth/magic:campaignnew',
+                'context' => \context_system::instance(),
+                'string' => get_string('contacttab', 'auth_magic'),
+                'id' => "user-tab",
+                'id2' => "usertab",
+                'contentform' => $campaignmanageform,
+            ],
+        ];
+
+        $tabactive = true;
+        $tabcontentactive = true;
+        $content = html_writer::start_div('campaign-signup-block');
+
+        if (isloggedin()) {
+            // Tab html.
+            $tabhead = '';
+            $tabhead .= html_writer::tag("div", get_string('signupyourself', 'auth_magic'), ['class' => 'campaign-info-head']);
+            $tabhead .= html_writer::start_tag('ul', ["class" => "nav nav-tabs", "id" => "myTab",  "role" => "tablist"]);
+                foreach ($tabs as $tab) {
+                    if (has_capability($tab['capability'], $tab['context'])) {
+                        $navadditionalclasses = ($tabactive === true) ? " active" : "";
+                        $tabhead .= html_writer::start_tag('li', ['class' => "nav-item" . $navadditionalclasses,  "role" => "presentation"]);
+                        $tabhead .= html_writer::tag('a', $tab['string'], ["class" => "nav-link" . $navadditionalclasses,
+                            "id" => $tab['id'], "data-toggle" => "tab", "href" => "#". $tab['id2'], "role" => "tab",
+                            "aria-selected" => "true"]);
+                        $tabhead .= html_writer::end_tag('li');
+                        $tabactive = false;
+                    }
+                }
+            $tabhead .= html_writer::end_tag('ul');
+
+            $tabbody = html_writer::start_tag('div', ["class" => "tab-content", "id" => "myTabContent"]);
+                foreach ($tabs as $tab) {
+                    if (has_capability($tab['capability'], $tab['context'])) {
+                        $tabadditionalclasses = ($tabcontentactive === true) ? " show active" : "";
+                        $tabbody .= html_writer::start_tag('div', ["class" => "tab-pane fade" . $tabadditionalclasses, "id" => $tab['id2'],
+                            "role" => "tabpanel", "aria-labelledby" => $tab['id']]);
+                        $tabbody .= ($tab['contentform'] != null) ? $tab['contentform']->render() : '';
+                        $tabbody .= html_writer::end_tag('div');
+                        $tabcontentactive = false;
+                    }
+                }
+            $tabhead .= html_writer::end_tag('div');
+            $content .= $tabhead . $tabbody;
+        } else {
+            $content .= ($campaignmanageform != null) ? $campaignmanageform->render() : '';
+        }
+        $content .= html_writer::end_div();
+
         $template = [
             'campaign' => $campaigndata,
             'cost' => $cost,
             'images' => $this->get_campaign_images(),
             // Display the campaigns form for create or edit.
-            'signupform' => ($campaignmanageform != null) ? $campaignmanageform->render() : '',
+            'content' => $content,
             'classes' => implode(" ", $classes),
             'ownerpicture' => $ownerpicture ?? false,
             'ownername' => $ownername ?? false,
             'title' => format_string($campaigndata->title),
             'description' => format_text($this->campaign->description, FORMAT_HTML),
             'summary' => !empty($summarycontent) ? $summarycontent : '',
+            'istab' => isloggedin() ? true : false,
         ];
         return $OUTPUT->render_from_template('auth_magic/signup', $template);
     }
@@ -1025,7 +1093,7 @@ class campaign {
      */
     public function is_valid_coupon_campaign() {
         if (empty($this->campaign->courseenrolmentkey) || !$this->campaign->campaigncourse
-        || $this->campaign->courseenrolmentkey == 'disabled') {
+            || $this->campaign->courseenrolmentkey == 'disabled') {
             return true;
         }
         $keytype = $this->campaign->courseenrolmentkey;

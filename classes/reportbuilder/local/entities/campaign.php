@@ -458,6 +458,22 @@ class campaign extends base {
     }
 
 
+    public static function get_options_for_campaigncourse() {
+        global $DB, $SITE;
+        $courses = ['0' => get_string('disabled', 'auth_magic')];
+        $records = get_user_capability_course("moodle/course:update", $USER->id, true, 'fullname');
+        if ($records) {
+            foreach ($records as $record) {
+                if ($record->id != $SITE->id) {
+                    $course = get_course($record->id);
+                    $courses[$record->id] = format_string($course->fullname);
+                }
+            }
+        }
+        return $courses;
+    }
+
+
     public static function get_options_for_cohorts() : array {
         $cohortslist = \cohort_get_all_cohorts();
         $cohorts = $cohortslist['cohorts'];

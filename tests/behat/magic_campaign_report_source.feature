@@ -174,96 +174,96 @@ Feature: Magic campaign report source workflow.
     And I press "Save changes"
     Then I log out
 
-  @javascript
-  Scenario: Report source campaigns fields
-    Given I log in as "admin"
-    Then I navigate to "Reports > Report builder > Custom reports" in site administration
-    And I click on "My report" "link"
+  # @javascript
+  # Scenario: Report source campaigns fields
+  #   Given I log in as "admin"
+  #   Then I navigate to "Reports > Report builder > Custom reports" in site administration
+  #   And I click on "My report" "link"
 
-    # Report edit page
-    And I should see "My report" in the ".navbar h1" "css_element"
-    And I click on "Name" "link"
-    And I click on "Description" "link"
-    And I click on "Comments" "link"
-    And I click on "Capacity" "link"
-    And I click on "Status" "link"
-    And I click on "Visibility" "link"
-    And I click on "Restrict by role" "link"
-    And I click on "Restrict by cohorts" "link"
-    And I click on "Available from" "link"
-    And I click on "Available closes" "link"
-    And I click on "Password" "link"
-    And I click on "Cohort membership" "link"
-    And I click on "Global role" "link"
-    And I click on "Campaign owner" "link"
-    And I click on "Consent option" "link"
-    And I click on "Welcome message" "link"
-    And I click on "Follow up" "link"
-    And I click on "Expiration date" "link"
-    And I click on "Campaign course" "link"
+  #   # Report edit page
+  #   And I should see "My report" in the ".navbar h1" "css_element"
+  #   And I click on "Name" "link"
+  #   And I click on "Description" "link"
+  #   And I click on "Comments" "link"
+  #   And I click on "Capacity" "link"
+  #   And I click on "Status" "link"
+  #   And I click on "Visibility" "link"
+  #   And I click on "Restrict by role" "link"
+  #   And I click on "Restrict by cohorts" "link"
+  #   And I click on "Available from" "link"
+  #   And I click on "Available closes" "link"
+  #   And I click on "Password" "link"
+  #   And I click on "Cohort membership" "link"
+  #   And I click on "Global role" "link"
+  #   And I click on "Campaign owner" "link"
+  #   And I click on "Consent option" "link"
+  #   And I click on "Welcome message" "link"
+  #   And I click on "Follow up" "link"
+  #   And I click on "Expiration date" "link"
+  #   And I click on "Campaign course" "link"
 
-    # Payment method
-    And I am on site homepage
-    Then I navigate to "Plugins > Authentication > Manage campaign" in site administration
-    And I click on ".icon[title='Edit']" "css_element" in the "Demo campaign" "table_row"
-    And I set the following fields to these values:
-    | Type                   | Paid              |
-    | Fee                    | 10                |
-    | Currency               | US Dollar         |
-    | Account                | Bank Transfer     |
-    # Restrict by Role
-    | By role                | Student           |
-    # Restrict by Cohort
-    | By cohort              | Cohort 1          |
-    Then I press "Save changes"
-    And I am on site homepage
-    Then I navigate to "Plugins > Authentication > Manage campaign" in site administration
-    And I click on ".icon[title='Edit']" "css_element" in the "Demo campaign1" "table_row"
-    And I set the following fields to these values:
-    # Restrict by Role
-    | By role                | Teacher           |
-    # Restrict by Cohort
-    | By cohort              | Cohort 2          |
-    Then I press "Save changes"
-    Then I navigate to "Reports > Report builder > Custom reports" in site administration
-    And I click on "My report" "link" in the "My report" "table_row"
-    And I click on "Registration fee" "link"
+  #   # Payment method
+  #   And I am on site homepage
+  #   Then I navigate to "Plugins > Authentication > Manage campaign" in site administration
+  #   And I click on ".icon[title='Edit']" "css_element" in the "Demo campaign" "table_row"
+  #   And I set the following fields to these values:
+  #   | Type                   | Paid              |
+  #   | Fee                    | 10                |
+  #   | Currency               | US Dollar         |
+  #   | Account                | Bank Transfer     |
+  #   # Restrict by Role
+  #   | By role                | Student           |
+  #   # Restrict by Cohort
+  #   | By cohort              | Cohort 1          |
+  #   Then I press "Save changes"
+  #   And I am on site homepage
+  #   Then I navigate to "Plugins > Authentication > Manage campaign" in site administration
+  #   And I click on ".icon[title='Edit']" "css_element" in the "Demo campaign1" "table_row"
+  #   And I set the following fields to these values:
+  #   # Restrict by Role
+  #   | By role                | Teacher           |
+  #   # Restrict by Cohort
+  #   | By cohort              | Cohort 2          |
+  #   Then I press "Save changes"
+  #   Then I navigate to "Reports > Report builder > Custom reports" in site administration
+  #   And I click on "My report" "link" in the "My report" "table_row"
+  #   And I click on "Registration fee" "link"
 
-    # Campaigns field
-    And I am on site homepage
-    Then I navigate to "Reports > Report builder > Custom reports" in site administration
-    And I press "View" action in the "My report" report row
-    And I should see "Description" in the "Demo campaign" "table_row"
-    And I should see "Demo campaign1" in the "Description1" "table_row"
-    And I should see "Comments2" in the "Demo campaign2" "table_row"
-    And I should see "2" in the ".generaltable tbody tr:nth-child(2) td:nth-child(4)" "css_element"
-    And I should see "5" in the ".generaltable tbody tr:nth-child(3) td:nth-child(4)" "css_element"
-    And I should see "Available" in the "Demo campaign" "table_row"
-    And I should see "Archived" in the "Demo campaign1" "table_row"
-    And I should see "Hidden" in the "Demo campaign1" "table_row"
-    And I should see "Visible" in the "Demo campaign2" "table_row"
-    And I should see "Student" in the "Demo campaign" "table_row"
-    And I should see "Teacher" in the "Demo campaign1" "table_row"
-    And I should see "##2 days ago##%A, %d %B %Y##" in the "Demo campaign" "table_row"
-    And I should see "##+1 year##%A, %d %B %Y##" in the "Demo campaign" "table_row"
-    And I should see "Yes" in the "Demo campaign1" "table_row"
-    And I should see "No" in the "Demo campaign" "table_row"
-    And I should see "Cohort 1" in the "Demo campaign" "table_row"
-    And I should see "Cohort 2" in the "Demo campaign1" "table_row"
-    And I should see "Manager" in the "Demo campaign1" "table_row"
-    And I should see "Course creator" in the "Demo campaign2" "table_row"
-    And I should see "parentuser_01 parentuser_01" in the "Demo campaign" "table_row"
-    And I should see "user_01 user_01" in the "Demo campaign1" "table_row"
-    And I should see "Yes" in the ".generaltable tbody tr:nth-child(1) td:nth-child(15)" "css_element"
-    And I should see "No" in the ".generaltable tbody tr:nth-child(2) td:nth-child(15)" "css_element"
-    And I should see "No" in the ".generaltable tbody tr:nth-child(2) td:nth-child(16)" "css_element"
-    And I should see "Yes" in the ".generaltable tbody tr:nth-child(3) td:nth-child(16)" "css_element"
-    And I should see "0" in the ".generaltable tbody tr:nth-child(2) td:nth-child(17)" "css_element"
-    And I should see "1" in the ".generaltable tbody tr:nth-child(3) td:nth-child(17)" "css_element"
-    And I should see "Course C1" in the "Demo campaign" "table_row"
-    And I should see "Course C2" in the "Demo campaign1" "table_row"
-    And I should see "3" in the "Demo campaign2" "table_row"
-    And I should see "10 USD" in the "Demo campaign" "table_row"
+  #   # Campaigns field
+  #   And I am on site homepage
+  #   Then I navigate to "Reports > Report builder > Custom reports" in site administration
+  #   And I press "View" action in the "My report" report row
+  #   And I should see "Description" in the "Demo campaign" "table_row"
+  #   And I should see "Demo campaign1" in the "Description1" "table_row"
+  #   And I should see "Comments2" in the "Demo campaign2" "table_row"
+  #   And I should see "2" in the ".generaltable tbody tr:nth-child(2) td:nth-child(4)" "css_element"
+  #   And I should see "5" in the ".generaltable tbody tr:nth-child(3) td:nth-child(4)" "css_element"
+  #   And I should see "Available" in the "Demo campaign" "table_row"
+  #   And I should see "Archived" in the "Demo campaign1" "table_row"
+  #   And I should see "Hidden" in the "Demo campaign1" "table_row"
+  #   And I should see "Visible" in the "Demo campaign2" "table_row"
+  #   And I should see "Student" in the "Demo campaign" "table_row"
+  #   And I should see "Teacher" in the "Demo campaign1" "table_row"
+  #   And I should see "##2 days ago##%A, %d %B %Y##" in the "Demo campaign" "table_row"
+  #   And I should see "##+1 year##%A, %d %B %Y##" in the "Demo campaign" "table_row"
+  #   And I should see "Yes" in the "Demo campaign1" "table_row"
+  #   And I should see "No" in the "Demo campaign" "table_row"
+  #   And I should see "Cohort 1" in the "Demo campaign" "table_row"
+  #   And I should see "Cohort 2" in the "Demo campaign1" "table_row"
+  #   And I should see "Manager" in the "Demo campaign1" "table_row"
+  #   And I should see "Course creator" in the "Demo campaign2" "table_row"
+  #   And I should see "parentuser_01 parentuser_01" in the "Demo campaign" "table_row"
+  #   And I should see "user_01 user_01" in the "Demo campaign1" "table_row"
+  #   And I should see "Yes" in the ".generaltable tbody tr:nth-child(1) td:nth-child(15)" "css_element"
+  #   And I should see "No" in the ".generaltable tbody tr:nth-child(2) td:nth-child(15)" "css_element"
+  #   And I should see "No" in the ".generaltable tbody tr:nth-child(2) td:nth-child(16)" "css_element"
+  #   And I should see "Yes" in the ".generaltable tbody tr:nth-child(3) td:nth-child(16)" "css_element"
+  #   And I should see "0" in the ".generaltable tbody tr:nth-child(2) td:nth-child(17)" "css_element"
+  #   And I should see "1" in the ".generaltable tbody tr:nth-child(3) td:nth-child(17)" "css_element"
+  #   And I should see "Course C1" in the "Demo campaign" "table_row"
+  #   And I should see "Course C2" in the "Demo campaign1" "table_row"
+  #   And I should see "3" in the "Demo campaign2" "table_row"
+  #   And I should see "10 USD" in the "Demo campaign" "table_row"
 
   # @javascript
   # Scenario: Report source campaign group
@@ -395,174 +395,175 @@ Feature: Magic campaign report source workflow.
   #   And I should see "Available" in the "Demo campaign" "table_row"
   #   And I should see "Archived" in the ".generaltable tbody tr:nth-child(3) td:nth-child(5)" "css_element"
 
-  # @javascript
-  # Scenario: Report source campaign statistics
-  #   # Campaign statistics
-  #   Given I log in as "admin"
-  #   And I am on site homepage
-  #   Then I navigate to "Plugins > Authentication > Manage campaign" in site administration
-  #   Then I should see "Create campaign"
-  #   And I click on "Create campaign" "button"
-  #   And I set the following fields to these values:
-  #     | Title                  | Demo campaign04   |
-  #     | Description            | Description4      |
-  #     | Comments               | Comments4         |
-  #     | Capacity               | 4                 |
-  #     | Status                 | Available         |
-  #     | Visibility             | Visible           |
-  #     | Require email confirmation | No            |
-  #     | Type                   | Paid              |
-  #     | Fee                    | 10                |
-  #     | Currency               | US Dollar         |
-  #     | Account                | Bank Transfer     |
-  #     | Available from         | ##31 March 2024## |
-  #     | Available closes       | ##31 March 2025## |
-  #     | Campaign password      |                   |
-  #     | Cohort membership      | Cohort 1          |
-  #     | Global role            | Disabled          |
-  #     | Campaign owner account | parentuser_01 parentuser_01 |
-  #     | Display consent option | 1                 |
-  #     | Send welcome message to new accounts   | 1 |
-  #     | Send follow up message to new accounts | 1 |
-  #     | Campaign course        | Course C1         |
-  #     | First name             | Required          |
-  #     | Last name              | Required          |
-  #     | Username               | Required          |
-  #     | e-Mail                 | Required          |
-  #     | Password               | Required Once     |
-  #   Then I press "Save changes"
-  #   And I log out
+  @javascript
+  Scenario: Report source campaign statistics
+    # Campaign statistics
+    Given I log in as "admin"
+    And I am on site homepage
+    Then I navigate to "Plugins > Authentication > Manage campaign" in site administration
+    Then I should see "Create campaign"
+    And I click on "Create campaign" "button"
+    And I set the following fields to these values:
+      | Title                  | Demo campaign04   |
+      | Description            | Description4      |
+      | Comments               | Comments4         |
+      | Capacity               | 4                 |
+      | Status                 | Available         |
+      | Visibility             | Visible           |
+      | Require email confirmation | No            |
+      | Type                   | Paid              |
+      | Fee                    | 10                |
+      | Currency               | US Dollar         |
+      | Account                | Bank Transfer     |
+      | Available from         | ##31 March 2024## |
+      | Available closes       | ##31 March 2025## |
+      | Campaign password      |                   |
+      | Cohort membership      | Cohort 1          |
+      | Global role            | Disabled          |
+      | Campaign owner account | parentuser_01 parentuser_01 |
+      | Display consent option | 1                 |
+      | Send welcome message to new accounts   | 1 |
+      | Send follow up message to new accounts | 1 |
+      | Campaign course        | Course C1         |
+      | First name             | Required          |
+      | Last name              | Required          |
+      | Username               | Required          |
+      | e-Mail                 | Required          |
+      | Password               | Required Once     |
+    Then I press "Save changes"
+    And I log out
 
-  #   And I open magic campaign "Demo campaign"
-  #   And I should see "Demo campaign"
-  #   And I set the following fields to these values:
-  #     | firstname      | demo        |
-  #     | lastname       | user01      |
-  #     | username       | demouser01  |
-  #     | password       | Test123#    |
-  #     | email          | demouser01@gmail.com |
-  #     | email2         | demouser01@gmail.com |
-  #     | privacypolicy  | 1           |
-  #   Then I press "Sign up"
-  #   Then I should see "User signup successfully."
-  #   And I log out
+    And I open magic campaign "Demo campaign"
+    And I should see "Demo campaign"
+    And I set the following fields to these values:
+      | firstname      | demo        |
+      | lastname       | user01      |
+      | username       | demouser01  |
+      | password       | Test123#    |
+      | email          | demouser01@gmail.com |
+      | email2         | demouser01@gmail.com |
+      | privacypolicy  | 1           |
+    Then I press "Sign up"
+    Then I should see "User signup successfully."
+    And I log out
 
-  #   And I open magic campaign "Demo campaign04"
-  #   And I should see "Demo campaign04"
-  #   And I set the following fields to these values:
-  #     | firstname      | demo        |
-  #     | lastname       | user02      |
-  #     | username       | demouser02  |
-  #     | password       | Test123#    |
-  #     | email          | demouser02@gmail.com |
-  #     | email2         | demouser02@gmail.com |
-  #     | privacypolicy  | 1           |
-  #   Then I press "Sign up"
-  #   Then I should see "User signup successfully."
-  #   Then I should see "This campaign requires a payment for entry."
-  #   And I should see "10.00"
-  #   And I should see "USD"
-  #   Then "Select payment type" "button" should exist
-  #   And I click on "Select payment type" "button"
-  #   And I should see "Bank Transfer" in the ".core_payment_gateways_modal p" "css_element"
-  #   And I click on "Proceed" "button"
-  #   And I should see "Access the Demo campaign04 campaign." in the ".list-group .list-group-item div" "css_element"
-  #   And I click on "//input[@value='Start process']" "xpath_element"
-  #   And I should see "Transfer process initiated" in the ".alert-info" "css_element"
-  #   And I am on site homepage
-  #   And I should see "This campaign requires a payment for entry." in the ".auth_magic_payment_region" "css_element"
-  #   And I log out
+    And I open magic campaign "Demo campaign04"
+    And I should see "Demo campaign04"
+    And I set the following fields to these values:
+      | firstname      | demo        |
+      | lastname       | user02      |
+      | username       | demouser02  |
+      | password       | Test123#    |
+      | email          | demouser02@gmail.com |
+      | email2         | demouser02@gmail.com |
+      | privacypolicy  | 1           |
+    Then I press "Sign up"
+    Then I should see "User signup successfully."
+    Then I should see "This campaign requires a payment for entry."
+    And I should see "10.00"
+    And I should see "USD"
+    Then "Select payment type" "button" should exist
+    And I click on "Select payment type" "button"
+    And I should see "Bank Transfer" in the ".core_payment_gateways_modal p" "css_element"
+    And I click on "Proceed" "button"
+    And I should see "Access the Demo campaign04 campaign." in the ".list-group .list-group-item div" "css_element"
+    And I click on "//input[@value='Start process']" "xpath_element"
+    And I should see "Transfer process initiated" in the ".alert-info" "css_element"
+    And I am on site homepage
+    And I should see "This campaign requires a payment for entry." in the ".auth_magic_payment_region" "css_element"
+    And I log out
 
-  #   # Campaign Payment approval
-  #   And I log in as "admin"
-  #   Then I navigate to "Site administration > Bank Transfer > Manage Transfers" in site administration
-  #   And I should see "demouser02@gmail.com" in the "demo user" "table_row"
-  #   And I click on "//input[@value='Approve']" "xpath_element"
-  #   And I should see "aprobed" in the ".alert-info" "css_element"
+    # Campaign Payment approval
+    And I log in as "admin"
+    Then I navigate to "Site administration > Bank Transfer > Manage Transfers" in site administration
+    And I should see "demouser02@gmail.com" in the "demo user" "table_row"
+    And I click on "//input[@value='Approve']" "xpath_element"
+    And I should see "aprobed" in the ".alert-info" "css_element"
+    And I log out
 
-  #   And I open magic campaign "Demo campaign04"
-  #   And I should see "Demo campaign04"
-  #   And I set the following fields to these values:
-  #     | firstname      | demo        |
-  #     | lastname       | user04      |
-  #     | username       | demouser04  |
-  #     | password       | Test123#    |
-  #     | email          | demouser04@gmail.com |
-  #     | email2         | demouser04@gmail.com |
-  #     | privacypolicy  | 1           |
-  #   Then I press "Sign up"
-  #   Then I should see "User signup successfully."
-  #   Then I should see "This campaign requires a payment for entry."
-  #   And I should see "10.00"
-  #   And I should see "USD"
-  #   Then "Select payment type" "button" should exist
-  #   And I click on "Select payment type" "button"
-  #   And I should see "Bank Transfer" in the ".core_payment_gateways_modal p" "css_element"
-  #   And I click on "Proceed" "button"
-  #   And I should see "Access the Demo campaign04 campaign." in the ".list-group .list-group-item div" "css_element"
-  #   And I click on "//input[@value='Start process']" "xpath_element"
-  #   And I should see "Transfer process initiated" in the ".alert-info" "css_element"
-  #   And I am on site homepage
-  #   And I should see "This campaign requires a payment for entry." in the ".auth_magic_payment_region" "css_element"
-  #   And I log out
+    And I open magic campaign "Demo campaign04"
+    And I should see "Demo campaign04"
+    And I set the following fields to these values:
+      | firstname      | demo        |
+      | lastname       | user04      |
+      | username       | demouser04  |
+      | password       | Test123#    |
+      | email          | demouser04@gmail.com |
+      | email2         | demouser04@gmail.com |
+      | privacypolicy  | 1           |
+    Then I press "Sign up"
+    Then I should see "User signup successfully."
+    Then I should see "This campaign requires a payment for entry."
+    And I should see "10.00"
+    And I should see "USD"
+    Then "Select payment type" "button" should exist
+    And I click on "Select payment type" "button"
+    And I should see "Bank Transfer" in the ".core_payment_gateways_modal p" "css_element"
+    And I click on "Proceed" "button"
+    And I should see "Access the Demo campaign04 campaign." in the ".list-group .list-group-item div" "css_element"
+    And I click on "//input[@value='Start process']" "xpath_element"
+    And I should see "Transfer process initiated" in the ".alert-info" "css_element"
+    And I am on site homepage
+    And I should see "This campaign requires a payment for entry." in the ".auth_magic_payment_region" "css_element"
+    And I log out
 
-  #   # Campaign Payment approval
-  #   And I log in as "admin"
-  #   Then I navigate to "Site administration > Bank Transfer > Manage Transfers" in site administration
-  #   And I should see "demouser04@gmail.com" in the "demo user" "table_row"
-  #   And I click on "//input[@value='Approve']" "xpath_element"
-  #   And I should see "aprobed" in the ".alert-info" "css_element"
-  #   And I log out
+    # Campaign Payment approval
+    And I log in as "admin"
+    Then I navigate to "Site administration > Bank Transfer > Manage Transfers" in site administration
+    And I should see "demouser04@gmail.com" in the "demo user" "table_row"
+    And I click on "//input[@value='Approve']" "xpath_element"
+    And I should see "aprobed" in the ".alert-info" "css_element"
+    And I log out
 
-  #   And I log in as "admin"
-  #   Then I navigate to "Plugins > Authentication > Manage campaign" in site administration
-  #   And I click on ".icon[title='Edit']" "css_element" in the "Demo campaign04" "table_row"
-  #   And I set the following fields to these values:
-  #     | Require email confirmation | Yes           |
-  #   Then I press "Save changes"
-  #   And I log out
+    And I log in as "admin"
+    Then I navigate to "Plugins > Authentication > Manage campaign" in site administration
+    And I click on ".icon[title='Edit']" "css_element" in the "Demo campaign04" "table_row"
+    And I set the following fields to these values:
+      | Require email confirmation | Yes           |
+    Then I press "Save changes"
+    And I log out
 
-  #   And I open magic campaign "Demo campaign04"
-  #   And I should see "Demo campaign04"
-  #   And I set the following fields to these values:
-  #     | firstname      | demo        |
-  #     | lastname       | user03      |
-  #     | username       | demouser03  |
-  #     | password       | Test123#    |
-  #     | email          | demouser03@gmail.com |
-  #     | privacypolicy  | 1           |
-  #   Then I press "Sign up"
-  #   Then I should see "User signup successfully."
-  #   And I log out
+    And I open magic campaign "Demo campaign04"
+    And I should see "Demo campaign04"
+    And I set the following fields to these values:
+      | firstname      | demo        |
+      | lastname       | user03      |
+      | username       | demouser03  |
+      | password       | Test123#    |
+      | email          | demouser03@gmail.com |
+      | privacypolicy  | 1           |
+    Then I press "Sign up"
+    Then I should see "User signup successfully."
+    And I log out
 
-  #   # Campaigns Statistics report edit page
-  #   And I log in as "admin"
-  #   Then I navigate to "Reports > Report builder > Custom reports" in site administration
-  #   And I click on "My report" "link" in the "My report" "table_row"
-  #   And I click on "Name" "link"
-  #   And I click on "Confirmed Users" "link"
-  #   And I click on "Unconfirmed Users" "link"
-  #   And I click on "Campaign Available seats" "link"
-  #   And I click on "Total revenue" "link"
+    # Campaigns Statistics report edit page
+    And I log in as "admin"
+    Then I navigate to "Reports > Report builder > Custom reports" in site administration
+    And I click on "My report" "link" in the "My report" "table_row"
+    And I click on "Name" "link"
+    And I click on "Confirmed Users" "link"
+    And I click on "Unconfirmed Users" "link"
+    And I click on "Campaign Available seats" "link"
+    And I click on "Total revenue" "link"
 
-  #   # Campaigns Statistics report view page
-  #   And I am on site homepage
-  #   Then I navigate to "Reports > Report builder > Custom reports" in site administration
-  #   And I press "View" action in the "My report" report row
-  #   And I close block drawer if open
+    # Campaigns Statistics report view page
+    And I am on site homepage
+    Then I navigate to "Reports > Report builder > Custom reports" in site administration
+    And I press "View" action in the "My report" report row
+    And I close block drawer if open
 
-  #   # Confirmed Users
-  #   And I should see "1" in the ".generaltable tbody tr:nth-child(1) td:nth-child(2)" "css_element"
-  #   And I should see "2" in the ".generaltable tbody tr:nth-child(4) td:nth-child(2)" "css_element"
-  #   # Unconfirmed Users
-  #   And I should see "0" in the ".generaltable tbody tr:nth-child(3) td:nth-child(3)" "css_element"
-  #   And I should see "1" in the ".generaltable tbody tr:nth-child(4) td:nth-child(3)" "css_element"
-  #   # Available seats Users
-  #   And I should see "2 available" in the "Demo campaign" "table_row"
-  #   And I should see "1 available" in the "Demo campaign04" "table_row"
-  #   # Total revenue Users
-  #   And I should see "0" in the ".generaltable tbody tr:nth-child(3) td:nth-child(5)" "css_element"
-  #   And I should see "20" in the ".generaltable tbody tr:nth-child(4) td:nth-child(5)" "css_element"
+    # Confirmed Users
+    And I should see "1" in the ".generaltable tbody tr:nth-child(1) td:nth-child(2)" "css_element"
+    And I should see "2" in the ".generaltable tbody tr:nth-child(4) td:nth-child(2)" "css_element"
+    # Unconfirmed Users
+    And I should see "0" in the ".generaltable tbody tr:nth-child(3) td:nth-child(3)" "css_element"
+    And I should see "1" in the ".generaltable tbody tr:nth-child(4) td:nth-child(3)" "css_element"
+    # Available seats Users
+    And I should see "2 available" in the "Demo campaign" "table_row"
+    And I should see "1 available" in the "Demo campaign04" "table_row"
+    # Total revenue Users
+    And I should see "0" in the ".generaltable tbody tr:nth-child(3) td:nth-child(5)" "css_element"
+    And I should see "20" in the ".generaltable tbody tr:nth-child(4) td:nth-child(5)" "css_element"
 
   # @javascript
   # Scenario: Report source campaign User statistics

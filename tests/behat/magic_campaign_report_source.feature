@@ -69,8 +69,8 @@ Feature: Magic campaign report source workflow.
       | expirytime[enabled]    | 1                 |
       | expirytime[number]     | 5                 |
       | expirytime[timeunit]   | days              |
-      | Available from         | ##23 September 2024## |
-      | Available closes       | ##25 September 2025## |
+      | Available from         | ##3 October 2024## |
+      | Available closes       | ##5 October 2025## |
       | Campaign password      |                   |
       | Cohort membership      | Cohort 1          |
       | Global role            | Disabled          |
@@ -244,8 +244,8 @@ Feature: Magic campaign report source workflow.
     And I should see "Visible" in the "Demo campaign2" "table_row"
     And I should see "Student" in the "Demo campaign" "table_row"
     And I should see "Teacher" in the "Demo campaign1" "table_row"
-    # And I should see "##2 days ago##%A, %d %B %Y##" in the "Demo campaign" "table_row"
-    # And I should see "##+1 year##%A, %d %B %Y##" in the "Demo campaign" "table_row"
+    And I should see "##2 days ago##%A, %d %B %Y##" in the "Demo campaign" "table_row"
+    And I should see "##+1 year##%A, %d %B %Y##" in the "Demo campaign" "table_row"
     And I should see "Yes" in the "Demo campaign1" "table_row"
     And I should see "No" in the "Demo campaign" "table_row"
     And I should see "Cohort 1" in the "Demo campaign" "table_row"
@@ -254,12 +254,12 @@ Feature: Magic campaign report source workflow.
     And I should see "Course creator" in the "Demo campaign2" "table_row"
     And I should see "parentuser_01 parentuser_01" in the "Demo campaign" "table_row"
     And I should see "user_01 user_01" in the "Demo campaign1" "table_row"
-    And I should see "Yes" in the ".generaltable tbody tr:nth-child(1) td:nth-child(13)" "css_element"
-    And I should see "No" in the ".generaltable tbody tr:nth-child(2) td:nth-child(13)" "css_element"
-    And I should see "No" in the ".generaltable tbody tr:nth-child(2) td:nth-child(14)" "css_element"
-    And I should see "Yes" in the ".generaltable tbody tr:nth-child(3) td:nth-child(14)" "css_element"
-    And I should see "0" in the ".generaltable tbody tr:nth-child(2) td:nth-child(15)" "css_element"
-    And I should see "1" in the ".generaltable tbody tr:nth-child(3) td:nth-child(15)" "css_element"
+    And I should see "Yes" in the ".generaltable tbody tr:nth-child(1) td:nth-child(15)" "css_element"
+    And I should see "No" in the ".generaltable tbody tr:nth-child(2) td:nth-child(15)" "css_element"
+    And I should see "No" in the ".generaltable tbody tr:nth-child(2) td:nth-child(16)" "css_element"
+    And I should see "Yes" in the ".generaltable tbody tr:nth-child(3) td:nth-child(16)" "css_element"
+    And I should see "0" in the ".generaltable tbody tr:nth-child(2) td:nth-child(17)" "css_element"
+    And I should see "1" in the ".generaltable tbody tr:nth-child(3) td:nth-child(17)" "css_element"
     And I should see "Course C1" in the "Demo campaign" "table_row"
     And I should see "Course C2" in the "Demo campaign1" "table_row"
     And I should see "3" in the "Demo campaign2" "table_row"

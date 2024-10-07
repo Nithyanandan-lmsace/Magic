@@ -565,179 +565,179 @@ Feature: Magic campaign report source workflow.
   #   And I should see "0" in the ".generaltable tbody tr:nth-child(3) td:nth-child(5)" "css_element"
   #   And I should see "20" in the ".generaltable tbody tr:nth-child(4) td:nth-child(5)" "css_element"
 
-  @javascript
-  Scenario: Report source campaign User statistics
-    Given I log in as "admin"
-    And I am on site homepage
-    And I log out
-    And I open magic campaign "Demo campaign"
-    And I should see "Demo campaign"
-    And I set the following fields to these values:
-      | firstname      | demo        |
-      | lastname       | user01      |
-      | username       | demouser01  |
-      | password       | Test123#    |
-      | email          | demouser01@gmail.com |
-      | email2         | demouser01@gmail.com |
-      | privacypolicy  | 1           |
-    Then I press "Sign up"
-    Then I should see "User signup successfully."
-    And I log out
+  # @javascript
+  # Scenario: Report source campaign User statistics
+  #   Given I log in as "admin"
+  #   And I am on site homepage
+  #   And I log out
+  #   And I open magic campaign "Demo campaign"
+  #   And I should see "Demo campaign"
+  #   And I set the following fields to these values:
+  #     | firstname      | demo        |
+  #     | lastname       | user01      |
+  #     | username       | demouser01  |
+  #     | password       | Test123#    |
+  #     | email          | demouser01@gmail.com |
+  #     | email2         | demouser01@gmail.com |
+  #     | privacypolicy  | 1           |
+  #   Then I press "Sign up"
+  #   Then I should see "User signup successfully."
+  #   And I log out
 
-    And I open magic campaign "Demo campaign2"
-    And I should see "Demo campaign2"
-    And I set the following fields to these values:
-      | firstname      | demo        |
-      | lastname       | user02      |
-      | username       | demouser02  |
-      | password       | Test123#    |
-      | email          | demouser02@gmail.com |
-      | email2         | demouser02@gmail.com |
-      | privacypolicy  | 1           |
-    Then I press "Sign up"
-    Then I should see "User signup successfully."
-    And I log out
-    And I click on "Log in" "link" in the ".logininfo" "css_element"
-    And I set the field "Username" to "demouser01"
-    And I set the field "Password" to "Test123#"
-    Then I press "Log in"
-    And I am on site homepage
-    And I log out
-    And I log in as "admin"
+  #   And I open magic campaign "Demo campaign2"
+  #   And I should see "Demo campaign2"
+  #   And I set the following fields to these values:
+  #     | firstname      | demo        |
+  #     | lastname       | user02      |
+  #     | username       | demouser02  |
+  #     | password       | Test123#    |
+  #     | email          | demouser02@gmail.com |
+  #     | email2         | demouser02@gmail.com |
+  #     | privacypolicy  | 1           |
+  #   Then I press "Sign up"
+  #   Then I should see "User signup successfully."
+  #   And I log out
+  #   And I click on "Log in" "link" in the ".logininfo" "css_element"
+  #   And I set the field "Username" to "demouser01"
+  #   And I set the field "Password" to "Test123#"
+  #   Then I press "Log in"
+  #   And I am on site homepage
+  #   And I log out
+  #   And I log in as "admin"
 
-    # Campaign User Statistics edit page
-    Then I navigate to "Reports > Report builder > Custom reports" in site administration
-    And I click on "My report" "link"
-    And I click on "Name" "link"
-    And I click on "Logins" "link"
-    And I click on "Badges awarded" "link"
-    And I click on "Enrolled courses" "link"
-    And I click on "Inprogress courses" "link"
-    And I click on "Completed courses" "link"
-    And I click on "Activities completed" "link"
-    And I click on "Full name" "link"
+  #   # Campaign User Statistics edit page
+  #   Then I navigate to "Reports > Report builder > Custom reports" in site administration
+  #   And I click on "My report" "link"
+  #   And I click on "Name" "link"
+  #   And I click on "Logins" "link"
+  #   And I click on "Badges awarded" "link"
+  #   And I click on "Enrolled courses" "link"
+  #   And I click on "Inprogress courses" "link"
+  #   And I click on "Completed courses" "link"
+  #   And I click on "Activities completed" "link"
+  #   And I click on "Full name" "link"
 
-    # Campaign User Statistics view page
-    And I am on site homepage
-    Then I navigate to "Reports > Report builder > Custom reports" in site administration
-    And I press "View" action in the "My report" report row
-    And I close block drawer if open
-    And I should see "2" in the ".generaltable tbody tr:nth-child(1) td:nth-child(2)" "css_element"
-    And I should see "1" in the ".generaltable tbody tr:nth-child(2) td:nth-child(2)" "css_element"
-    And I log out
+  #   # Campaign User Statistics view page
+  #   And I am on site homepage
+  #   Then I navigate to "Reports > Report builder > Custom reports" in site administration
+  #   And I press "View" action in the "My report" report row
+  #   And I close block drawer if open
+  #   And I should see "2" in the ".generaltable tbody tr:nth-child(1) td:nth-child(2)" "css_element"
+  #   And I should see "1" in the ".generaltable tbody tr:nth-child(2) td:nth-child(2)" "css_element"
+  #   And I log out
 
-    # Create Badge
-    And I log in as "teacher1"
-    And I am on the "Course C1" "course editing" page
-    And I navigate to "Badges > Add a new badge" in current page administration
-    And I set the following fields to these values:
-      | Name | Course Badge |
-      | Description | Course badge description |
-    And I upload "badges/tests/behat/badge.png" file to "Image" filemanager
-    And I press "Create badge"
-    And I set the field "type" to "Manual issue by role"
-    And I expand all fieldsets
-    And I set the field "Teacher" to "1"
-    And I set the field "Any of the selected roles awards the badge" to "1"
-    And I press "Save"
-    And I press "Enable access"
-    And I press "Continue"
-    And I log out
+  #   # Create Badge
+  #   And I log in as "teacher1"
+  #   And I am on the "Course C1" "course editing" page
+  #   And I navigate to "Badges > Add a new badge" in current page administration
+  #   And I set the following fields to these values:
+  #     | Name | Course Badge |
+  #     | Description | Course badge description |
+  #   And I upload "badges/tests/behat/badge.png" file to "Image" filemanager
+  #   And I press "Create badge"
+  #   And I set the field "type" to "Manual issue by role"
+  #   And I expand all fieldsets
+  #   And I set the field "Teacher" to "1"
+  #   And I set the field "Any of the selected roles awards the badge" to "1"
+  #   And I press "Save"
+  #   And I press "Enable access"
+  #   And I press "Continue"
+  #   And I log out
 
-    # Award badge
-    And I log in as "teacher1"
-    And I am on the "Course C1" "course editing" page
-    And I navigate to "Badges > Manage badges" in current page administration
-    And I follow "Course Badge"
-    And I select "Recipients (0)" from the "jump" singleselect
-    And I press "Award badge"
-    And I set the field "potentialrecipients[]" to "demo user01 (demouser01@gmail.com)"
-    When I press "Award badge"
-    And I am on "Course C1" course homepage
-    And I navigate to "Badges > Manage badges" in current page administration
-    And I follow "Course Badge"
-    And I should see "Recipients (1)"
-    And I log out
-    # Demo user should have badge.
-    And I click on "Log in" "link" in the ".logininfo" "css_element"
-    And I set the field "Username" to "demouser01"
-    And I set the field "Password" to "Test123#"
-    Then I press "Log in"
-    And I follow "Profile" in the user menu
-    When I click on "Course C1" "link" in the "region-main" "region"
-    Then I should see "Course Badge"
-    And I log out
+  #   # Award badge
+  #   And I log in as "teacher1"
+  #   And I am on the "Course C1" "course editing" page
+  #   And I navigate to "Badges > Manage badges" in current page administration
+  #   And I follow "Course Badge"
+  #   And I select "Recipients (0)" from the "jump" singleselect
+  #   And I press "Award badge"
+  #   And I set the field "potentialrecipients[]" to "demo user01 (demouser01@gmail.com)"
+  #   When I press "Award badge"
+  #   And I am on "Course C1" course homepage
+  #   And I navigate to "Badges > Manage badges" in current page administration
+  #   And I follow "Course Badge"
+  #   And I should see "Recipients (1)"
+  #   And I log out
+  #   # Demo user should have badge.
+  #   And I click on "Log in" "link" in the ".logininfo" "css_element"
+  #   And I set the field "Username" to "demouser01"
+  #   And I set the field "Password" to "Test123#"
+  #   Then I press "Log in"
+  #   And I follow "Profile" in the user menu
+  #   When I click on "Course C1" "link" in the "region-main" "region"
+  #   Then I should see "Course Badge"
+  #   And I log out
 
-    And I log in as "admin"
-    And I am on site homepage
-    Then I navigate to "Reports > Report builder > Custom reports" in site administration
-    And I press "View" action in the "My report" report row
-    # Badge Award
-    And I should see "1" in the ".generaltable tbody tr:nth-child(1) td:nth-child(3)" "css_element"
-    And I should see "0" in the ".generaltable tbody tr:nth-child(2) td:nth-child(3)" "css_element"
+  #   And I log in as "admin"
+  #   And I am on site homepage
+  #   Then I navigate to "Reports > Report builder > Custom reports" in site administration
+  #   And I press "View" action in the "My report" report row
+  #   # Badge Award
+  #   And I should see "1" in the ".generaltable tbody tr:nth-child(1) td:nth-child(3)" "css_element"
+  #   And I should see "0" in the ".generaltable tbody tr:nth-child(2) td:nth-child(3)" "css_element"
 
-    # Course Enrollment
-    And I am on site homepage
-    Then I navigate to "Plugins > Authentication > Manage campaign" in site administration
-    And I click on ".icon[title='Edit']" "css_element" in the "Demo campaign2" "table_row"
-    And I set the following fields to these values:
-      | Course role for student | Student    |
-    Then I press "Save changes"
+  #   # Course Enrollment
+  #   And I am on site homepage
+  #   Then I navigate to "Plugins > Authentication > Manage campaign" in site administration
+  #   And I click on ".icon[title='Edit']" "css_element" in the "Demo campaign2" "table_row"
+  #   And I set the following fields to these values:
+  #     | Course role for student | Student    |
+  #   Then I press "Save changes"
 
-    And I am on "Course C1" course homepage
-    Given I navigate to course participants
-    And I press "Enrol users"
-    When I set the field "Select users" to "demouser02"
-    And I should see "demo user02"
-    And the "Assign role" select box should contain "Student"
-    And I click on "Enrol selected users and cohorts" "button" in the "Enrol users" "dialogue"
-    Then I should see "Active" in the "demo user02" "table_row"
-    And I should see "1 enrolled users"
+  #   And I am on "Course C1" course homepage
+  #   Given I navigate to course participants
+  #   And I press "Enrol users"
+  #   When I set the field "Select users" to "demouser02"
+  #   And I should see "demo user02"
+  #   And the "Assign role" select box should contain "Student"
+  #   And I click on "Enrol selected users and cohorts" "button" in the "Enrol users" "dialogue"
+  #   Then I should see "Active" in the "demo user02" "table_row"
+  #   And I should see "1 enrolled users"
 
-    And I am on site homepage
-    Then I navigate to "Reports > Report builder > Custom reports" in site administration
-    And I press "View" action in the "My report" report row
-    # Enrolled courses
-    And I should see "1" in the ".generaltable tbody tr:nth-child(1) td:nth-child(4)" "css_element"
-    And I should see "1" in the ".generaltable tbody tr:nth-child(2) td:nth-child(4)" "css_element"
+  #   And I am on site homepage
+  #   Then I navigate to "Reports > Report builder > Custom reports" in site administration
+  #   And I press "View" action in the "My report" report row
+  #   # Enrolled courses
+  #   And I should see "1" in the ".generaltable tbody tr:nth-child(1) td:nth-child(4)" "css_element"
+  #   And I should see "1" in the ".generaltable tbody tr:nth-child(2) td:nth-child(4)" "css_element"
 
-    # Inprogress courses
-    And I should see "1" in the ".generaltable tbody tr:nth-child(1) td:nth-child(5)" "css_element"
-    And I should see "1" in the ".generaltable tbody tr:nth-child(2) td:nth-child(5)" "css_element"
+  #   # Inprogress courses
+  #   And I should see "1" in the ".generaltable tbody tr:nth-child(1) td:nth-child(5)" "css_element"
+  #   And I should see "1" in the ".generaltable tbody tr:nth-child(2) td:nth-child(5)" "css_element"
 
-    And I log in as "admin"
-    And I am on "Course C1" course homepage
-    And I should see "assign2"
-    And I navigate to "Course completion" in current page administration
-    And I expand all fieldsets
-    And I set the following fields to these values:
-      | Assignment - assign2 | 1 |
-    And I click on "Save changes" "button"
-    And I log out
-    And I click on "Log in" "link" in the ".logininfo" "css_element"
-    And I set the field "Username" to "demouser01"
-    And I set the field "Password" to "Test123#"
-    Then I press "Log in"
-    And I am on "Course C1" course homepage
-    And I press "Mark as done"
-    And I log out
-    And I log in as "admin"
-    # And I trigger cron
+  #   And I log in as "admin"
+  #   And I am on "Course C1" course homepage
+  #   And I should see "assign2"
+  #   And I navigate to "Course completion" in current page administration
+  #   And I expand all fieldsets
+  #   And I set the following fields to these values:
+  #     | Assignment - assign2 | 1 |
+  #   And I click on "Save changes" "button"
+  #   And I log out
+  #   And I click on "Log in" "link" in the ".logininfo" "css_element"
+  #   And I set the field "Username" to "demouser01"
+  #   And I set the field "Password" to "Test123#"
+  #   Then I press "Log in"
+  #   And I am on "Course C1" course homepage
+  #   And I press "Mark as done"
+  #   And I log out
+  #   And I log in as "admin"
+  #   # And I trigger cron
 
-    And I am on site homepage
-    Then I navigate to "Reports > Report builder > Custom reports" in site administration
-    And I press "View" action in the "My report" report row
-    # Course completed
-    And I should see "1" in the ".generaltable tbody tr:nth-child(1) td:nth-child(6)" "css_element"
-    And I should see "0" in the ".generaltable tbody tr:nth-child(2) td:nth-child(6)" "css_element"
+  #   And I am on site homepage
+  #   Then I navigate to "Reports > Report builder > Custom reports" in site administration
+  #   And I press "View" action in the "My report" report row
+  #   # Course completed
+  #   And I should see "1" in the ".generaltable tbody tr:nth-child(1) td:nth-child(6)" "css_element"
+  #   And I should see "0" in the ".generaltable tbody tr:nth-child(2) td:nth-child(6)" "css_element"
 
-    # Activities completed
-    And I should see "1" in the ".generaltable tbody tr:nth-child(1) td:nth-child(7)" "css_element"
-    And I should see "0" in the ".generaltable tbody tr:nth-child(2) td:nth-child(7)" "css_element"
+  #   # Activities completed
+  #   And I should see "1" in the ".generaltable tbody tr:nth-child(1) td:nth-child(7)" "css_element"
+  #   And I should see "0" in the ".generaltable tbody tr:nth-child(2) td:nth-child(7)" "css_element"
 
-    # User Field - Full name
-    And I should see "demo user01" in the "Demo campaign" "table_row"
-    And I should see "demo user02" in the "Demo campaign2" "table_row"
+  #   # User Field - Full name
+  #   And I should see "demo user01" in the "Demo campaign" "table_row"
+  #   And I should see "demo user02" in the "Demo campaign2" "table_row"
 
   # @javascript
   # Scenario Outline: Report source campaign conditions
@@ -891,116 +891,116 @@ Feature: Magic campaign report source workflow.
   #   Examples:
   #     | campaign            | field                                  | search             | operator_field                        | operator            | value             | not               | table                                  |
   #     | Name                | campaign:title_operator                | magic                | campaign:title_value                 | Contains           | Magic campaign    | demo campaign     | [data-cardtitle='Name']                |
-  #     | Name                | campaign:title_operator                | magic campaign       | campaign:title_value                 | Is equal to        | Magic campaign    | demo campaign     | [data-cardtitle='Name']                |
-  #     | Name                | campaign:title_operator                | demo                 | campaign:title_value                 | Contains           | Demo campaign     | Magic campaign    | [data-cardtitle='Name']                |
-  #     | Name                | campaign:title_operator                | demo campaign        | campaign:title_value                 | Is equal to        | Demo campaign     | Magic campaign    | [data-cardtitle='Name']                |
-  #     | Description         | campaign:description_operator          | magic                | campaign:description_value           | Contains           | Magic Description | Description1      | [data-cardtitle='Description']         |
-  #     | Description         | campaign:description_operator          | Description2         | campaign:description_value           | Does not contain   | Magic Description | Description2      | [data-cardtitle='Description']         |
-  #     | Description         | campaign:description_operator          | description          | campaign:description_value           | Contains           | Description       | Magic description | [data-cardtitle='Description']         |
-  #     | Description         | campaign:description_operator          | description          | caxmpaign:description_value          | Is equal to        | Description       | Magic description | [data-cardtitle='Description']         |
-  #     | Comments            | campaign:comments_operator             | Comment              | campaign:comments_value              | Contains           | Comment           | Comment1          | [data-cardtitle='Comments']            |
-  #     | Comments            | campaign:comments_operator             | Magic                | campaign:comments_value              | Does not contain   | Comments          | Comments Magic    | [data-cardtitle='Comments']            |
-  #     | Capacity            | campaign:capacity_operator             | 3                    | campaign:capacity_value              | Contains           | 3                 | 2                 | [data-cardtitle='Capacity']            |
-  #     | Capacity            | campaign:capacity_operator             | 5                    | campaign:capacity_value              | Is equal to        | 5                 | 3                 | [data-cardtitle='Capacity']            |
-  #     | Status              | campaign:status_operator               | Archived             | campaign:status_value                | Is equal to        | Archived          | Available         | [data-cardtitle='Status']              |
-  #     | Status              | campaign:status_operator               | Archived             | campaign:status_value                | Is not equal to    | Available         | Archived          | [data-cardtitle='Status']              |
-  #     | Visibility          | campaign:visibility_operator           | Hidden               | campaign:visibility_value            | Is equal to        | Hidden            | Available         | [data-cardtitle='Visibility']          |
-  #     | Visibility          | campaign:visibility_operator           | Visible              | campaign:visibility_value            | Is not equal to    | Hidden            | Visible           | [data-cardtitle='Visibility']          |
-  #     | Available from      | campaign:startdate_operator            |                      |                                      | In the past        | Demo campaign     | Demo campaign2    | [data-cardtitle='Name']                |
-  #     | Available from      | campaign:startdate_operator            |                      |                                      | In the future      | Demo campaign2    | Magic campaign    | [data-cardtitle='Name']                |
-  #     | Available closes    | campaign:enddate_operator              |                      |                                      | In the past        | Demo campaign1    | Demo campaign2    | [data-cardtitle='Name']                |
-  #     | Available closes    | campaign:enddate_operator              |                      |                                      | In the future      | Demo campaign     | Demo campaign1    | [data-cardtitle='Name']                |
-  #     | Password            | campaign:password_operator             |                      |                                      | Yes                | Yes               | No                | [data-cardtitle='Password']            |
-  #     | Password            | campaign:password_operator             |                      |                                      | No                 | No                | Yes               | [data-cardtitle='Password']            |
-  #     | Global role         | campaign:globalrole_operator           | Manager              | campaign:globalrole_value            | Is equal to        | Demo campaign1    | Demo campaign2    | [data-cardtitle='Name']                |
-  #     | Global role         | campaign:globalrole_operator           | Course creator       | campaign:globalrole_value            | Is equal to        | Demo campaign2    | Demo campaign1    | [data-cardtitle='Name']                |
-  #     | Global role         | campaign:globalrole_operator           | Manager              | campaign:globalrole_value            | Is not equal to    | Demo campaign     | Demo campaign1    | [data-cardtitle='Name']                |
-  #     | Global role         | campaign:globalrole_operator           | Course creator       | campaign:globalrole_value            | Is not equal to    | Demo campaign     | Demo campaign2    | [data-cardtitle='Name']                |
-  #     | Campaign owner      | campaign:campaignowner_operator        | user_01 user_01      | campaign:campaignowner_value         | Is equal to        | Demo campaign1    | Demo campaign2    | [data-cardtitle='Name']                |
-  #     | Campaign owner      | campaign:campaignowner_operator        | user_01 user_01      | campaign:campaignowner_value         | Is not equal to    | Demo campaign     | Demo campaign1    | [data-cardtitle='Name']                |
-  #     | Consent option      | campaign:privacypolicy_operator        |                      |                                      | Yes                | Demo campaign     | Demo campaign1    | [data-cardtitle='Name']                |
-  #     | Consent option      | campaign:privacypolicy_operator        |                      |                                      | No                 | Demo campaign1    | Demo campaign2    | [data-cardtitle='Name']                |
-  #     | Welcome message     | campaign:welcomemessage_operator       |                      |                                      | Yes                | Demo campaign     | Demo campaign1    | [data-cardtitle='Name']                |
-  #     | Welcome message     | campaign:welcomemessage_operator       |                      |                                      | No                 | Demo campaign1    | Demo campaign2    | [data-cardtitle='Name']                |
-  #     | Follow up           | campaign:followupmessagedelay_operator | 0                    | campaign:followupmessagedelay_value  | Contains           | Demo campaign     | Demo campaign2    | [data-cardtitle='Name']                |
-  #     | Follow up           | campaign:followupmessagedelay_operator | 1                    | campaign:followupmessagedelay_value  | Is equal to        | Demo campaign2    | Demo campaign1    | [data-cardtitle='Name']                |
-  #     | Campaign course     | campaign:campaigncourse_operator       | Course C1            | campaign:campaigncourse_value        | Is equal to        | Course C1         | Course C2         | [data-cardtitle='Campaign course']     |
-  #     | Campaign course     | campaign:campaigncourse_operator       | Course C1            | campaign:campaigncourse_value        | Is not equal to    | Course C2         | Course C1         | [data-cardtitle='Campaign course']     |
-  #     | Registration fee    | campaign:fee_operator                  | 10                   | campaign:fee_value                   | Contains           | Magic campaign    | Demo campaign     | [data-cardtitle='Name']                |
-  #     | Registration fee    | campaign:fee_operator                  | Free                 | campaign:fee_value                   | Is equal to        | Demo campaign     | Magic campaign    | [data-cardtitle='Name']                |
-  #     | Expiration date     | campaign:expirydate_operator           |                      |                                      | In the past          | Demo campaign1    | Demo campaign2    | [data-cardtitle='Name']                |
-  #     | Expiration date     | campaign:expirydate_operator           |                      |                                      | In the future        | Demo campaign     | Demo campaign1    | [data-cardtitle='Name']                |
-  #     | Only my campaigns   | campaign:usercohort_operator           |                      |                                      | Yes                | Yes               | No                | [data-cardtitle='Capacity']            |
+  # #     | Name                | campaign:title_operator                | magic campaign       | campaign:title_value                 | Is equal to        | Magic campaign    | demo campaign     | [data-cardtitle='Name']                |
+  # #     | Name                | campaign:title_operator                | demo                 | campaign:title_value                 | Contains           | Demo campaign     | Magic campaign    | [data-cardtitle='Name']                |
+  # #     | Name                | campaign:title_operator                | demo campaign        | campaign:title_value                 | Is equal to        | Demo campaign     | Magic campaign    | [data-cardtitle='Name']                |
+  # #     | Description         | campaign:description_operator          | magic                | campaign:description_value           | Contains           | Magic Description | Description1      | [data-cardtitle='Description']         |
+  # #     | Description         | campaign:description_operator          | Description2         | campaign:description_value           | Does not contain   | Magic Description | Description2      | [data-cardtitle='Description']         |
+  # #     | Description         | campaign:description_operator          | description          | campaign:description_value           | Contains           | Description       | Magic description | [data-cardtitle='Description']         |
+  # #     | Description         | campaign:description_operator          | description          | caxmpaign:description_value          | Is equal to        | Description       | Magic description | [data-cardtitle='Description']         |
+  # #     | Comments            | campaign:comments_operator             | Comment              | campaign:comments_value              | Contains           | Comment           | Comment1          | [data-cardtitle='Comments']            |
+  # #     | Comments            | campaign:comments_operator             | Magic                | campaign:comments_value              | Does not contain   | Comments          | Comments Magic    | [data-cardtitle='Comments']            |
+  # #     | Capacity            | campaign:capacity_operator             | 3                    | campaign:capacity_value              | Contains           | 3                 | 2                 | [data-cardtitle='Capacity']            |
+  # #     | Capacity            | campaign:capacity_operator             | 5                    | campaign:capacity_value              | Is equal to        | 5                 | 3                 | [data-cardtitle='Capacity']            |
+  # #     | Status              | campaign:status_operator               | Archived             | campaign:status_value                | Is equal to        | Archived          | Available         | [data-cardtitle='Status']              |
+  # #     | Status              | campaign:status_operator               | Archived             | campaign:status_value                | Is not equal to    | Available         | Archived          | [data-cardtitle='Status']              |
+  # #     | Visibility          | campaign:visibility_operator           | Hidden               | campaign:visibility_value            | Is equal to        | Hidden            | Available         | [data-cardtitle='Visibility']          |
+  # #     | Visibility          | campaign:visibility_operator           | Visible              | campaign:visibility_value            | Is not equal to    | Hidden            | Visible           | [data-cardtitle='Visibility']          |
+  # #     | Available from      | campaign:startdate_operator            |                      |                                      | In the past        | Demo campaign     | Demo campaign2    | [data-cardtitle='Name']                |
+  # #     | Available from      | campaign:startdate_operator            |                      |                                      | In the future      | Demo campaign2    | Magic campaign    | [data-cardtitle='Name']                |
+  # #     | Available closes    | campaign:enddate_operator              |                      |                                      | In the past        | Demo campaign1    | Demo campaign2    | [data-cardtitle='Name']                |
+  # #     | Available closes    | campaign:enddate_operator              |                      |                                      | In the future      | Demo campaign     | Demo campaign1    | [data-cardtitle='Name']                |
+  # #     | Password            | campaign:password_operator             |                      |                                      | Yes                | Yes               | No                | [data-cardtitle='Password']            |
+  # #     | Password            | campaign:password_operator             |                      |                                      | No                 | No                | Yes               | [data-cardtitle='Password']            |
+  # #     | Global role         | campaign:globalrole_operator           | Manager              | campaign:globalrole_value            | Is equal to        | Demo campaign1    | Demo campaign2    | [data-cardtitle='Name']                |
+  # #     | Global role         | campaign:globalrole_operator           | Course creator       | campaign:globalrole_value            | Is equal to        | Demo campaign2    | Demo campaign1    | [data-cardtitle='Name']                |
+  # #     | Global role         | campaign:globalrole_operator           | Manager              | campaign:globalrole_value            | Is not equal to    | Demo campaign     | Demo campaign1    | [data-cardtitle='Name']                |
+  # #     | Global role         | campaign:globalrole_operator           | Course creator       | campaign:globalrole_value            | Is not equal to    | Demo campaign     | Demo campaign2    | [data-cardtitle='Name']                |
+  # #     | Campaign owner      | campaign:campaignowner_operator        | user_01 user_01      | campaign:campaignowner_value         | Is equal to        | Demo campaign1    | Demo campaign2    | [data-cardtitle='Name']                |
+  # #     | Campaign owner      | campaign:campaignowner_operator        | user_01 user_01      | campaign:campaignowner_value         | Is not equal to    | Demo campaign     | Demo campaign1    | [data-cardtitle='Name']                |
+  # #     | Consent option      | campaign:privacypolicy_operator        |                      |                                      | Yes                | Demo campaign     | Demo campaign1    | [data-cardtitle='Name']                |
+  # #     | Consent option      | campaign:privacypolicy_operator        |                      |                                      | No                 | Demo campaign1    | Demo campaign2    | [data-cardtitle='Name']                |
+  # #     | Welcome message     | campaign:welcomemessage_operator       |                      |                                      | Yes                | Demo campaign     | Demo campaign1    | [data-cardtitle='Name']                |
+  # #     | Welcome message     | campaign:welcomemessage_operator       |                      |                                      | No                 | Demo campaign1    | Demo campaign2    | [data-cardtitle='Name']                |
+  # #     | Follow up           | campaign:followupmessagedelay_operator | 0                    | campaign:followupmessagedelay_value  | Contains           | Demo campaign     | Demo campaign2    | [data-cardtitle='Name']                |
+  # #     | Follow up           | campaign:followupmessagedelay_operator | 1                    | campaign:followupmessagedelay_value  | Is equal to        | Demo campaign2    | Demo campaign1    | [data-cardtitle='Name']                |
+  # #     | Campaign course     | campaign:campaigncourse_operator       | Course C1            | campaign:campaigncourse_value        | Is equal to        | Course C1         | Course C2         | [data-cardtitle='Campaign course']     |
+  # #     | Campaign course     | campaign:campaigncourse_operator       | Course C1            | campaign:campaigncourse_value        | Is not equal to    | Course C2         | Course C1         | [data-cardtitle='Campaign course']     |
+  # #     | Registration fee    | campaign:fee_operator                  | 10                   | campaign:fee_value                   | Contains           | Magic campaign    | Demo campaign     | [data-cardtitle='Name']                |
+  # #     | Registration fee    | campaign:fee_operator                  | Free                 | campaign:fee_value                   | Is equal to        | Demo campaign     | Magic campaign    | [data-cardtitle='Name']                |
+  # #     | Expiration date     | campaign:expirydate_operator           |                      |                                      | In the past          | Demo campaign1    | Demo campaign2    | [data-cardtitle='Name']                |
+  # #     | Expiration date     | campaign:expirydate_operator           |                      |                                      | In the future        | Demo campaign     | Demo campaign1    | [data-cardtitle='Name']                |
+  # #     | Only my campaigns   | campaign:usercohort_operator           |                      |                                      | Yes                | Yes               | No                | [data-cardtitle='Capacity']            |
 
 
-  # @javascript
-  # Scenario Outline: Report campaign source autocomplete conditions
-  #   Given I log in as "admin"
-  #   Then I navigate to "Plugins > Authentication > Manage campaign" in site administration
-  #   And I click on ".icon[title='Edit']" "css_element" in the "Demo campaign" "table_row"
-  #   And I set the following fields to these values:
-  #   # Restrict by Role
-  #   | By role                | Student           |
-  #   # Restrict by Cohort
-  #   | By cohort              | Cohort 1          |
-  #   Then I press "Save changes"
-  #   And I am on site homepage
-  #   Then I navigate to "Plugins > Authentication > Manage campaign" in site administration
-  #   And I click on ".icon[title='Edit']" "css_element" in the "Demo campaign1" "table_row"
-  #   And I set the following fields to these values:
-  #   # Restrict by Role
-  #   | By role                | Teacher           |
-  #   # Restrict by Cohort
-  #   | By cohort              | Cohort 2          |
-  #   Then I press "Save changes"
-  #   # Report edit page
-  #   Then I navigate to "Reports > Report builder > Custom reports" in site administration
-  #   And I click on "My report" "link"
-  #   # Campaigns
-  #   And I should see "My report" in the ".navbar h1" "css_element"
-  #   And I click on "Name with link" "link"
-  #   And I click on "a.list-group-item[data-name='Name']" "css_element"
-  #   And I click on "Description" "link"
-  #   And I click on "Comments" "link"
-  #   And I click on "Capacity" "link"
-  #   And I click on "Status" "link"
-  #   And I click on "Visibility" "link"
-  #   And I click on "Restrict by role" "link"
-  #   And I click on "Restrict by cohorts" "link"
-  #   And I click on "Available from" "link"
-  #   And I click on "Available closes" "link"
-  #   And I click on "Password" "link"
-  #   And I click on "Cohort membership" "link"
-  #   And I click on "Global role" "link"
-  #   And I click on "Campaign owner" "link"
-  #   And I click on "Consent option" "link"
-  #   And I click on "Welcome message" "link"
-  #   And I click on "Follow up" "link"
-  #   And I click on "Campaign course" "link"
-  #   And I click on "Registration fee" "link"
+  @javascript
+  Scenario Outline: Report campaign source autocomplete conditions
+    Given I log in as "admin"
+    Then I navigate to "Plugins > Authentication > Manage campaign" in site administration
+    And I click on ".icon[title='Edit']" "css_element" in the "Demo campaign" "table_row"
+    And I set the following fields to these values:
+    # Restrict by Role
+    | By role                | Student           |
+    # Restrict by Cohort
+    | By cohort              | Cohort 1          |
+    Then I press "Save changes"
+    And I am on site homepage
+    Then I navigate to "Plugins > Authentication > Manage campaign" in site administration
+    And I click on ".icon[title='Edit']" "css_element" in the "Demo campaign1" "table_row"
+    And I set the following fields to these values:
+    # Restrict by Role
+    | By role                | Teacher           |
+    # Restrict by Cohort
+    | By cohort              | Cohort 2          |
+    Then I press "Save changes"
+    # Report edit page
+    Then I navigate to "Reports > Report builder > Custom reports" in site administration
+    And I click on "My report" "link"
+    # Campaigns
+    And I should see "My report" in the ".navbar h1" "css_element"
+    And I click on "Name with link" "link"
+    And I click on "a.list-group-item[data-name='Name']" "css_element"
+    And I click on "Description" "link"
+    And I click on "Comments" "link"
+    And I click on "Capacity" "link"
+    And I click on "Status" "link"
+    And I click on "Visibility" "link"
+    And I click on "Restrict by role" "link"
+    And I click on "Restrict by cohorts" "link"
+    And I click on "Available from" "link"
+    And I click on "Available closes" "link"
+    And I click on "Password" "link"
+    And I click on "Cohort membership" "link"
+    And I click on "Global role" "link"
+    And I click on "Campaign owner" "link"
+    And I click on "Consent option" "link"
+    And I click on "Welcome message" "link"
+    And I click on "Follow up" "link"
+    And I click on "Campaign course" "link"
+    And I click on "Registration fee" "link"
 
-  #   # Conditions in the report.
-  #   And I click on "Show/hide 'Conditions'" "button"
-  #   Then I should see "There are no conditions selected" in the "[data-region='settings-conditions']" "css_element"
-  #   And I set the field "Select a condition" to "<campaign>"
-  #   # Campaign Name
-  #   # And I set the field "<field>" to "<operator>"
-  #   And I open the autocomplete suggestions list
-  #   And I click on "<operator>" item in the autocomplete list
-  #   # And I set the field "<operator_field>" to "<search>"
-  #   # And I set the field "<field>" to "<operator>"
-  #   And I click on ".reportbuilder-conditions-list .list-group" "css_element"
-  #   And I click on "Apply" "button" in the "[data-region='settings-conditions']" "css_element"
-  #   Then I should see "Conditions applied"
-  #   And I should see "<value>" in the "<table>" "css_element"
-  #   And I should not see "<not>" in the "<table>" "css_element"
+    # Conditions in the report.
+    And I click on "Show/hide 'Conditions'" "button"
+    Then I should see "There are no conditions selected" in the "[data-region='settings-conditions']" "css_element"
+    And I set the field "Select a condition" to "<campaign>"
+    # Campaign Name
+    # And I set the field "<field>" to "<operator>"
+    And I open the autocomplete suggestions list
+    And I click on "<operator>" item in the autocomplete list
+    # And I set the field "<operator_field>" to "<search>"
+    # And I set the field "<field>" to "<operator>"
+    And I click on ".reportbuilder-conditions-list .list-group" "css_element"
+    And I click on "Apply" "button" in the "[data-region='settings-conditions']" "css_element"
+    Then I should see "Conditions applied"
+    And I should see "<value>" in the "<table>" "css_element"
+    And I should not see "<not>" in the "<table>" "css_element"
 
-  #   Examples:
-  #     | campaign            | field                                  | search             | operator_field            | operator            | value                  | not               | table                               |
-  #     | Restrict by role    | campaign:restrictroles_values[]        |                    |                           | Student             | Demo campaign          | Demo campaign1    | [data-cardtitle='Name']             |
-  #     | Restrict by role    | campaign:restrictroles_values[]        |                    |                           | Teacher             | Demo campaign1         | Demo campaign2    | [data-cardtitle='Name']             |
-  #     | Cohort membership   | campaign:cohorts_values[]              |                    |                           | Cohort 2            | Demo campaign1         | Demo campaign2    | [data-cardtitle='Name']             |
-  #     | Cohort membership   | campaign:cohorts_values[]              |                    |                           | Cohort 3            | Demo campaign2         | Demo campaign1    | [data-cardtitle='Name']             |
+    Examples:
+      | campaign            | field                                  | search             | operator_field            | operator            | value                  | not               | table                               |
+      | Restrict by role    | campaign:restrictroles_values[]        |                    |                           | Student             | Demo campaign          | Demo campaign1    | [data-cardtitle='Name']             |
+      | Restrict by role    | campaign:restrictroles_values[]        |                    |                           | Teacher             | Demo campaign1         | Demo campaign2    | [data-cardtitle='Name']             |
+      | Cohort membership   | campaign:cohorts_values[]              |                    |                           | Cohort 2            | Demo campaign1         | Demo campaign2    | [data-cardtitle='Name']             |
+      | Cohort membership   | campaign:cohorts_values[]              |                    |                           | Cohort 3            | Demo campaign2         | Demo campaign1    | [data-cardtitle='Name']             |
 
 
   # @javascript

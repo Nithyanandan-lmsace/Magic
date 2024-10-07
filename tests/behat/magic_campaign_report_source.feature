@@ -395,181 +395,44 @@ Feature: Magic campaign report source workflow.
   #   And I should see "Available" in the "Demo campaign" "table_row"
   #   And I should see "Archived" in the ".generaltable tbody tr:nth-child(3) td:nth-child(5)" "css_element"
 
-  @javascript
-  Scenario: Report source campaign statistics
-    # Campaign statistics
-    Given I log in as "admin"
-    And I am on site homepage
-    Then I navigate to "Plugins > Authentication > Manage campaign" in site administration
-    Then I should see "Create campaign"
-    And I click on "Create campaign" "button"
-    And I set the following fields to these values:
-      | Title                  | Demo campaign04   |
-      | Description            | Description4      |
-      | Comments               | Comments4         |
-      | Capacity               | 4                 |
-      | Status                 | Available         |
-      | Visibility             | Visible           |
-      | Require email confirmation | No            |
-      | Type                   | Paid              |
-      | Fee                    | 10                |
-      | Currency               | US Dollar         |
-      | Account                | Bank Transfer     |
-      | Available from         | ##31 March 2024## |
-      | Available closes       | ##31 March 2025## |
-      | Campaign password      |                   |
-      | Cohort membership      | Cohort 1          |
-      | Global role            | Disabled          |
-      | Campaign owner account | parentuser_01 parentuser_01 |
-      | Display consent option | 1                 |
-      | Send welcome message to new accounts   | 1 |
-      | Send follow up message to new accounts | 1 |
-      | Campaign course        | Course C1         |
-      | First name             | Required          |
-      | Last name              | Required          |
-      | Username               | Required          |
-      | e-Mail                 | Required          |
-      | Password               | Required Once     |
-    Then I press "Save changes"
-    And I log out
-
-    And I open magic campaign "Demo campaign"
-    And I should see "Demo campaign"
-    And I set the following fields to these values:
-      | firstname      | demo        |
-      | lastname       | user01      |
-      | username       | demouser01  |
-      | password       | Test123#    |
-      | email          | demouser01@gmail.com |
-      | email2         | demouser01@gmail.com |
-      | privacypolicy  | 1           |
-    Then I press "Sign up"
-    Then I should see "User signup successfully."
-    And I log out
-
-    And I open magic campaign "Demo campaign04"
-    And I should see "Demo campaign04"
-    And I set the following fields to these values:
-      | firstname      | demo        |
-      | lastname       | user02      |
-      | username       | demouser02  |
-      | password       | Test123#    |
-      | email          | demouser02@gmail.com |
-      | email2         | demouser02@gmail.com |
-      | privacypolicy  | 1           |
-    Then I press "Sign up"
-    Then I should see "User signup successfully."
-    Then I should see "This campaign requires a payment for entry."
-    And I should see "10.00"
-    And I should see "USD"
-    Then "Select payment type" "button" should exist
-    And I click on "Select payment type" "button"
-    And I should see "Bank Transfer" in the ".core_payment_gateways_modal p" "css_element"
-    And I click on "Proceed" "button"
-    And I should see "Access the Demo campaign04 campaign." in the ".list-group .list-group-item div" "css_element"
-    And I click on "//input[@value='Start process']" "xpath_element"
-    And I should see "Transfer process initiated" in the ".alert-info" "css_element"
-    And I am on site homepage
-    And I should see "This campaign requires a payment for entry." in the ".auth_magic_payment_region" "css_element"
-    And I log out
-
-    # Campaign Payment approval
-    And I log in as "admin"
-    Then I navigate to "Site administration > Bank Transfer > Manage Transfers" in site administration
-    And I should see "demouser02@gmail.com" in the "demo user" "table_row"
-    And I click on "//input[@value='Approve']" "xpath_element"
-    And I should see "aprobed" in the ".alert-info" "css_element"
-    And I log out
-
-    And I open magic campaign "Demo campaign04"
-    And I should see "Demo campaign04"
-    And I set the following fields to these values:
-      | firstname      | demo        |
-      | lastname       | user04      |
-      | username       | demouser04  |
-      | password       | Test123#    |
-      | email          | demouser04@gmail.com |
-      | email2         | demouser04@gmail.com |
-      | privacypolicy  | 1           |
-    Then I press "Sign up"
-    Then I should see "User signup successfully."
-    Then I should see "This campaign requires a payment for entry."
-    And I should see "10.00"
-    And I should see "USD"
-    Then "Select payment type" "button" should exist
-    And I click on "Select payment type" "button"
-    And I should see "Bank Transfer" in the ".core_payment_gateways_modal p" "css_element"
-    And I click on "Proceed" "button"
-    And I should see "Access the Demo campaign04 campaign." in the ".list-group .list-group-item div" "css_element"
-    And I click on "//input[@value='Start process']" "xpath_element"
-    And I should see "Transfer process initiated" in the ".alert-info" "css_element"
-    And I am on site homepage
-    And I should see "This campaign requires a payment for entry." in the ".auth_magic_payment_region" "css_element"
-    And I log out
-
-    # Campaign Payment approval
-    And I log in as "admin"
-    Then I navigate to "Site administration > Bank Transfer > Manage Transfers" in site administration
-    And I should see "demouser04@gmail.com" in the "demo user" "table_row"
-    And I click on "//input[@value='Approve']" "xpath_element"
-    And I should see "aprobed" in the ".alert-info" "css_element"
-    And I log out
-
-    And I log in as "admin"
-    Then I navigate to "Plugins > Authentication > Manage campaign" in site administration
-    And I click on ".icon[title='Edit']" "css_element" in the "Demo campaign04" "table_row"
-    And I set the following fields to these values:
-      | Require email confirmation | Yes           |
-    Then I press "Save changes"
-    And I log out
-
-    And I open magic campaign "Demo campaign04"
-    And I should see "Demo campaign04"
-    And I set the following fields to these values:
-      | firstname      | demo        |
-      | lastname       | user03      |
-      | username       | demouser03  |
-      | password       | Test123#    |
-      | email          | demouser03@gmail.com |
-      | privacypolicy  | 1           |
-    Then I press "Sign up"
-    Then I should see "User signup successfully."
-    And I log out
-
-    # Campaigns Statistics report edit page
-    And I log in as "admin"
-    Then I navigate to "Reports > Report builder > Custom reports" in site administration
-    And I click on "My report" "link" in the "My report" "table_row"
-    And I click on "Name" "link"
-    And I click on "Confirmed Users" "link"
-    And I click on "Unconfirmed Users" "link"
-    And I click on "Campaign Available seats" "link"
-    And I click on "Total revenue" "link"
-
-    # Campaigns Statistics report view page
-    And I am on site homepage
-    Then I navigate to "Reports > Report builder > Custom reports" in site administration
-    And I press "View" action in the "My report" report row
-    And I close block drawer if open
-
-    # Confirmed Users
-    And I should see "1" in the ".generaltable tbody tr:nth-child(1) td:nth-child(2)" "css_element"
-    And I should see "2" in the ".generaltable tbody tr:nth-child(4) td:nth-child(2)" "css_element"
-    # Unconfirmed Users
-    And I should see "0" in the ".generaltable tbody tr:nth-child(3) td:nth-child(3)" "css_element"
-    And I should see "1" in the ".generaltable tbody tr:nth-child(4) td:nth-child(3)" "css_element"
-    # Available seats Users
-    And I should see "2 available" in the "Demo campaign" "table_row"
-    And I should see "1 available" in the "Demo campaign04" "table_row"
-    # Total revenue Users
-    And I should see "0" in the ".generaltable tbody tr:nth-child(3) td:nth-child(5)" "css_element"
-    And I should see "20" in the ".generaltable tbody tr:nth-child(4) td:nth-child(5)" "css_element"
-
   # @javascript
-  # Scenario: Report source campaign User statistics
+  # Scenario: Report source campaign statistics
+  #   # Campaign statistics
   #   Given I log in as "admin"
   #   And I am on site homepage
+  #   Then I navigate to "Plugins > Authentication > Manage campaign" in site administration
+  #   Then I should see "Create campaign"
+  #   And I click on "Create campaign" "button"
+  #   And I set the following fields to these values:
+  #     | Title                  | Demo campaign04   |
+  #     | Description            | Description4      |
+  #     | Comments               | Comments4         |
+  #     | Capacity               | 4                 |
+  #     | Status                 | Available         |
+  #     | Visibility             | Visible           |
+  #     | Require email confirmation | No            |
+  #     | Type                   | Paid              |
+  #     | Fee                    | 10                |
+  #     | Currency               | US Dollar         |
+  #     | Account                | Bank Transfer     |
+  #     | Available from         | ##31 March 2024## |
+  #     | Available closes       | ##31 March 2025## |
+  #     | Campaign password      |                   |
+  #     | Cohort membership      | Cohort 1          |
+  #     | Global role            | Disabled          |
+  #     | Campaign owner account | parentuser_01 parentuser_01 |
+  #     | Display consent option | 1                 |
+  #     | Send welcome message to new accounts   | 1 |
+  #     | Send follow up message to new accounts | 1 |
+  #     | Campaign course        | Course C1         |
+  #     | First name             | Required          |
+  #     | Last name              | Required          |
+  #     | Username               | Required          |
+  #     | e-Mail                 | Required          |
+  #     | Password               | Required Once     |
+  #   Then I press "Save changes"
   #   And I log out
+
   #   And I open magic campaign "Demo campaign"
   #   And I should see "Demo campaign"
   #   And I set the following fields to these values:
@@ -584,8 +447,8 @@ Feature: Magic campaign report source workflow.
   #   Then I should see "User signup successfully."
   #   And I log out
 
-  #   And I open magic campaign "Demo campaign2"
-  #   And I should see "Demo campaign2"
+  #   And I open magic campaign "Demo campaign04"
+  #   And I should see "Demo campaign04"
   #   And I set the following fields to these values:
   #     | firstname      | demo        |
   #     | lastname       | user02      |
@@ -596,148 +459,285 @@ Feature: Magic campaign report source workflow.
   #     | privacypolicy  | 1           |
   #   Then I press "Sign up"
   #   Then I should see "User signup successfully."
-  #   And I log out
-  #   And I click on "Log in" "link" in the ".logininfo" "css_element"
-  #   And I set the field "Username" to "demouser01"
-  #   And I set the field "Password" to "Test123#"
-  #   Then I press "Log in"
+  #   Then I should see "This campaign requires a payment for entry."
+  #   And I should see "10.00"
+  #   And I should see "USD"
+  #   Then "Select payment type" "button" should exist
+  #   And I click on "Select payment type" "button"
+  #   And I should see "Bank Transfer" in the ".core_payment_gateways_modal p" "css_element"
+  #   And I click on "Proceed" "button"
+  #   And I should see "Access the Demo campaign04 campaign." in the ".list-group .list-group-item div" "css_element"
+  #   And I click on "//input[@value='Start process']" "xpath_element"
+  #   And I should see "Transfer process initiated" in the ".alert-info" "css_element"
   #   And I am on site homepage
+  #   And I should see "This campaign requires a payment for entry." in the ".auth_magic_payment_region" "css_element"
   #   And I log out
+
+  #   # Campaign Payment approval
   #   And I log in as "admin"
+  #   Then I navigate to "Site administration > Bank Transfer > Manage Transfers" in site administration
+  #   And I should see "demouser02@gmail.com" in the "demo user" "table_row"
+  #   And I click on "//input[@value='Approve']" "xpath_element"
+  #   And I should see "aprobed" in the ".alert-info" "css_element"
+  #   And I log out
 
-  #   # Campaign User Statistics edit page
+  #   And I open magic campaign "Demo campaign04"
+  #   And I should see "Demo campaign04"
+  #   And I set the following fields to these values:
+  #     | firstname      | demo        |
+  #     | lastname       | user04      |
+  #     | username       | demouser04  |
+  #     | password       | Test123#    |
+  #     | email          | demouser04@gmail.com |
+  #     | email2         | demouser04@gmail.com |
+  #     | privacypolicy  | 1           |
+  #   Then I press "Sign up"
+  #   Then I should see "User signup successfully."
+  #   Then I should see "This campaign requires a payment for entry."
+  #   And I should see "10.00"
+  #   And I should see "USD"
+  #   Then "Select payment type" "button" should exist
+  #   And I click on "Select payment type" "button"
+  #   And I should see "Bank Transfer" in the ".core_payment_gateways_modal p" "css_element"
+  #   And I click on "Proceed" "button"
+  #   And I should see "Access the Demo campaign04 campaign." in the ".list-group .list-group-item div" "css_element"
+  #   And I click on "//input[@value='Start process']" "xpath_element"
+  #   And I should see "Transfer process initiated" in the ".alert-info" "css_element"
+  #   And I am on site homepage
+  #   And I should see "This campaign requires a payment for entry." in the ".auth_magic_payment_region" "css_element"
+  #   And I log out
+
+  #   # Campaign Payment approval
+  #   And I log in as "admin"
+  #   Then I navigate to "Site administration > Bank Transfer > Manage Transfers" in site administration
+  #   And I should see "demouser04@gmail.com" in the "demo user" "table_row"
+  #   And I click on "//input[@value='Approve']" "xpath_element"
+  #   And I should see "aprobed" in the ".alert-info" "css_element"
+  #   And I log out
+
+  #   And I log in as "admin"
+  #   Then I navigate to "Plugins > Authentication > Manage campaign" in site administration
+  #   And I click on ".icon[title='Edit']" "css_element" in the "Demo campaign04" "table_row"
+  #   And I set the following fields to these values:
+  #     | Require email confirmation | Yes           |
+  #   Then I press "Save changes"
+  #   And I log out
+
+  #   And I open magic campaign "Demo campaign04"
+  #   And I should see "Demo campaign04"
+  #   And I set the following fields to these values:
+  #     | firstname      | demo        |
+  #     | lastname       | user03      |
+  #     | username       | demouser03  |
+  #     | password       | Test123#    |
+  #     | email          | demouser03@gmail.com |
+  #     | privacypolicy  | 1           |
+  #   Then I press "Sign up"
+  #   Then I should see "User signup successfully."
+  #   And I log out
+
+  #   # Campaigns Statistics report edit page
+  #   And I log in as "admin"
   #   Then I navigate to "Reports > Report builder > Custom reports" in site administration
-  #   And I click on "My report" "link"
+  #   And I click on "My report" "link" in the "My report" "table_row"
   #   And I click on "Name" "link"
-  #   And I click on "Logins" "link"
-  #   And I click on "Badges awarded" "link"
-  #   And I click on "Enrolled courses" "link"
-  #   And I click on "Inprogress courses" "link"
-  #   And I click on "Completed courses" "link"
-  #   And I click on "Activities completed" "link"
-  #   And I click on "Full name" "link"
+  #   And I click on "Confirmed Users" "link"
+  #   And I click on "Unconfirmed Users" "link"
+  #   And I click on "Campaign Available seats" "link"
+  #   And I click on "Total revenue" "link"
 
-  #   # Campaign User Statistics view page
+  #   # Campaigns Statistics report view page
   #   And I am on site homepage
   #   Then I navigate to "Reports > Report builder > Custom reports" in site administration
   #   And I press "View" action in the "My report" report row
   #   And I close block drawer if open
-  #   # And I should see "2" in the ".generaltable tbody tr:nth-child(1) td:nth-child(2)" "css_element"
-  #   # And I should see "1" in the ".generaltable tbody tr:nth-child(2) td:nth-child(2)" "css_element"
-  #   And I log out
 
-  #   # Create Badge
-  #   And I log in as "teacher1"
-  #   And I am on the "Course C1" "course editing" page
-  #   And I navigate to "Badges > Add a new badge" in current page administration
-  #   And I set the following fields to these values:
-  #     | Name | Course Badge |
-  #     | Description | Course badge description |
-  #   And I upload "badges/tests/behat/badge.png" file to "Image" filemanager
-  #   And I press "Create badge"
-  #   And I set the field "type" to "Manual issue by role"
-  #   And I expand all fieldsets
-  #   And I set the field "Teacher" to "1"
-  #   And I set the field "Any of the selected roles awards the badge" to "1"
-  #   And I press "Save"
-  #   And I press "Enable access"
-  #   And I press "Continue"
-  #   And I log out
+  #   # Confirmed Users
+  #   And I should see "1" in the ".generaltable tbody tr:nth-child(1) td:nth-child(2)" "css_element"
+  #   And I should see "2" in the ".generaltable tbody tr:nth-child(4) td:nth-child(2)" "css_element"
+  #   # Unconfirmed Users
+  #   And I should see "0" in the ".generaltable tbody tr:nth-child(3) td:nth-child(3)" "css_element"
+  #   And I should see "1" in the ".generaltable tbody tr:nth-child(4) td:nth-child(3)" "css_element"
+  #   # Available seats Users
+  #   And I should see "2 available" in the "Demo campaign" "table_row"
+  #   And I should see "1 available" in the "Demo campaign04" "table_row"
+  #   # Total revenue Users
+  #   And I should see "0" in the ".generaltable tbody tr:nth-child(3) td:nth-child(5)" "css_element"
+  #   And I should see "20" in the ".generaltable tbody tr:nth-child(4) td:nth-child(5)" "css_element"
 
-  #   # Award badge
-  #   And I log in as "teacher1"
-  #   And I am on the "Course C1" "course editing" page
-  #   And I navigate to "Badges > Manage badges" in current page administration
-  #   And I follow "Course Badge"
-  #   And I select "Recipients (0)" from the "jump" singleselect
-  #   And I press "Award badge"
-  #   And I set the field "potentialrecipients[]" to "demo user01 (demouser01@gmail.com)"
-  #   When I press "Award badge"
-  #   And I am on "Course C1" course homepage
-  #   And I navigate to "Badges > Manage badges" in current page administration
-  #   And I follow "Course Badge"
-  #   And I should see "Recipients (1)"
-  #   And I log out
-  #   # Demo user should have badge.
-  #   And I click on "Log in" "link" in the ".logininfo" "css_element"
-  #   And I set the field "Username" to "demouser01"
-  #   And I set the field "Password" to "Test123#"
-  #   Then I press "Log in"
-  #   And I follow "Profile" in the user menu
-  #   When I click on "Course C1" "link" in the "region-main" "region"
-  #   Then I should see "Course Badge"
-  #   And I log out
+  @javascript
+  Scenario: Report source campaign User statistics
+    Given I log in as "admin"
+    And I am on site homepage
+    And I log out
+    And I open magic campaign "Demo campaign"
+    And I should see "Demo campaign"
+    And I set the following fields to these values:
+      | firstname      | demo        |
+      | lastname       | user01      |
+      | username       | demouser01  |
+      | password       | Test123#    |
+      | email          | demouser01@gmail.com |
+      | email2         | demouser01@gmail.com |
+      | privacypolicy  | 1           |
+    Then I press "Sign up"
+    Then I should see "User signup successfully."
+    And I log out
 
-  #   And I log in as "admin"
-  #   And I am on site homepage
-  #   Then I navigate to "Reports > Report builder > Custom reports" in site administration
-  #   And I press "View" action in the "My report" report row
-  #   # Badge Award
-  #   # And I should see "1" in the ".generaltable tbody tr:nth-child(1) td:nth-child(3)" "css_element"
-  #   # And I should see "0" in the ".generaltable tbody tr:nth-child(2) td:nth-child(3)" "css_element"
+    And I open magic campaign "Demo campaign2"
+    And I should see "Demo campaign2"
+    And I set the following fields to these values:
+      | firstname      | demo        |
+      | lastname       | user02      |
+      | username       | demouser02  |
+      | password       | Test123#    |
+      | email          | demouser02@gmail.com |
+      | email2         | demouser02@gmail.com |
+      | privacypolicy  | 1           |
+    Then I press "Sign up"
+    Then I should see "User signup successfully."
+    And I log out
+    And I click on "Log in" "link" in the ".logininfo" "css_element"
+    And I set the field "Username" to "demouser01"
+    And I set the field "Password" to "Test123#"
+    Then I press "Log in"
+    And I am on site homepage
+    And I log out
+    And I log in as "admin"
 
-  #   # Course Enrollment
-  #   And I am on site homepage
-  #   Then I navigate to "Plugins > Authentication > Manage campaign" in site administration
-  #   And I click on ".icon[title='Edit']" "css_element" in the "Demo campaign2" "table_row"
-  #   And I set the following fields to these values:
-  #     | Course role for student | Student    |
-  #   Then I press "Save changes"
+    # Campaign User Statistics edit page
+    Then I navigate to "Reports > Report builder > Custom reports" in site administration
+    And I click on "My report" "link"
+    And I click on "Name" "link"
+    And I click on "Logins" "link"
+    And I click on "Badges awarded" "link"
+    And I click on "Enrolled courses" "link"
+    And I click on "Inprogress courses" "link"
+    And I click on "Completed courses" "link"
+    And I click on "Activities completed" "link"
+    And I click on "Full name" "link"
 
-  #   And I am on "Course C1" course homepage
-  #   Given I navigate to course participants
-  #   And I press "Enrol users"
-  #   When I set the field "Select users" to "demouser02"
-  #   And I should see "demo user02"
-  #   And the "Assign role" select box should contain "Student"
-  #   And I click on "Enrol selected users and cohorts" "button" in the "Enrol users" "dialogue"
-  #   Then I should see "Active" in the "demo user02" "table_row"
-  #   And I should see "1 enrolled users"
+    # Campaign User Statistics view page
+    And I am on site homepage
+    Then I navigate to "Reports > Report builder > Custom reports" in site administration
+    And I press "View" action in the "My report" report row
+    And I close block drawer if open
+    And I should see "2" in the ".generaltable tbody tr:nth-child(1) td:nth-child(2)" "css_element"
+    And I should see "1" in the ".generaltable tbody tr:nth-child(2) td:nth-child(2)" "css_element"
+    And I log out
 
-  #   And I am on site homepage
-  #   Then I navigate to "Reports > Report builder > Custom reports" in site administration
-  #   And I press "View" action in the "My report" report row
-  #   # Enrolled courses
-  #   And I should see "1" in the ".generaltable tbody tr:nth-child(1) td:nth-child(4)" "css_element"
-  #   And I should see "1" in the ".generaltable tbody tr:nth-child(2) td:nth-child(4)" "css_element"
+    # Create Badge
+    And I log in as "teacher1"
+    And I am on the "Course C1" "course editing" page
+    And I navigate to "Badges > Add a new badge" in current page administration
+    And I set the following fields to these values:
+      | Name | Course Badge |
+      | Description | Course badge description |
+    And I upload "badges/tests/behat/badge.png" file to "Image" filemanager
+    And I press "Create badge"
+    And I set the field "type" to "Manual issue by role"
+    And I expand all fieldsets
+    And I set the field "Teacher" to "1"
+    And I set the field "Any of the selected roles awards the badge" to "1"
+    And I press "Save"
+    And I press "Enable access"
+    And I press "Continue"
+    And I log out
 
-  #   # Inprogress courses
-  #   And I should see "1" in the ".generaltable tbody tr:nth-child(1) td:nth-child(5)" "css_element"
-  #   And I should see "1" in the ".generaltable tbody tr:nth-child(2) td:nth-child(5)" "css_element"
+    # Award badge
+    And I log in as "teacher1"
+    And I am on the "Course C1" "course editing" page
+    And I navigate to "Badges > Manage badges" in current page administration
+    And I follow "Course Badge"
+    And I select "Recipients (0)" from the "jump" singleselect
+    And I press "Award badge"
+    And I set the field "potentialrecipients[]" to "demo user01 (demouser01@gmail.com)"
+    When I press "Award badge"
+    And I am on "Course C1" course homepage
+    And I navigate to "Badges > Manage badges" in current page administration
+    And I follow "Course Badge"
+    And I should see "Recipients (1)"
+    And I log out
+    # Demo user should have badge.
+    And I click on "Log in" "link" in the ".logininfo" "css_element"
+    And I set the field "Username" to "demouser01"
+    And I set the field "Password" to "Test123#"
+    Then I press "Log in"
+    And I follow "Profile" in the user menu
+    When I click on "Course C1" "link" in the "region-main" "region"
+    Then I should see "Course Badge"
+    And I log out
 
-  #   And I log in as "admin"
-  #   And I am on "Course C1" course homepage
-  #   And I should see "assign2"
-  #   And I navigate to "Course completion" in current page administration
-  #   And I expand all fieldsets
-  #   And I set the following fields to these values:
-  #     | Assignment - assign2 | 1 |
-  #   And I click on "Save changes" "button"
-  #   And I log out
-  #   And I click on "Log in" "link" in the ".logininfo" "css_element"
-  #   And I set the field "Username" to "demouser01"
-  #   And I set the field "Password" to "Test123#"
-  #   Then I press "Log in"
-  #   And I am on "Course C1" course homepage
-  #   And I press "Mark as done"
-  #   And I log out
-  #   And I log in as "admin"
-  #   And I trigger cron
+    And I log in as "admin"
+    And I am on site homepage
+    Then I navigate to "Reports > Report builder > Custom reports" in site administration
+    And I press "View" action in the "My report" report row
+    # Badge Award
+    And I should see "1" in the ".generaltable tbody tr:nth-child(1) td:nth-child(3)" "css_element"
+    And I should see "0" in the ".generaltable tbody tr:nth-child(2) td:nth-child(3)" "css_element"
 
-  #   And I am on site homepage
-  #   Then I navigate to "Reports > Report builder > Custom reports" in site administration
-  #   And I press "View" action in the "My report" report row
-  #   # Course completed
-  #   And I should see "1" in the ".generaltable tbody tr:nth-child(1) td:nth-child(6)" "css_element"
-  #   And I should see "1" in the ".generaltable tbody tr:nth-child(2) td:nth-child(6)" "css_element"
+    # Course Enrollment
+    And I am on site homepage
+    Then I navigate to "Plugins > Authentication > Manage campaign" in site administration
+    And I click on ".icon[title='Edit']" "css_element" in the "Demo campaign2" "table_row"
+    And I set the following fields to these values:
+      | Course role for student | Student    |
+    Then I press "Save changes"
 
-  #   # Activities completed
-  #   And I should see "1" in the ".generaltable tbody tr:nth-child(1) td:nth-child(7)" "css_element"
-  #   And I should see "0" in the ".generaltable tbody tr:nth-child(2) td:nth-child(7)" "css_element"
+    And I am on "Course C1" course homepage
+    Given I navigate to course participants
+    And I press "Enrol users"
+    When I set the field "Select users" to "demouser02"
+    And I should see "demo user02"
+    And the "Assign role" select box should contain "Student"
+    And I click on "Enrol selected users and cohorts" "button" in the "Enrol users" "dialogue"
+    Then I should see "Active" in the "demo user02" "table_row"
+    And I should see "1 enrolled users"
 
-  #   # User Field - Full name
-  #   And I should see "demo user01" in the "Demo campaign" "table_row"
-  #   And I should see "demo user02" in the "Demo campaign2" "table_row"
+    And I am on site homepage
+    Then I navigate to "Reports > Report builder > Custom reports" in site administration
+    And I press "View" action in the "My report" report row
+    # Enrolled courses
+    And I should see "1" in the ".generaltable tbody tr:nth-child(1) td:nth-child(4)" "css_element"
+    And I should see "1" in the ".generaltable tbody tr:nth-child(2) td:nth-child(4)" "css_element"
+
+    # Inprogress courses
+    And I should see "1" in the ".generaltable tbody tr:nth-child(1) td:nth-child(5)" "css_element"
+    And I should see "1" in the ".generaltable tbody tr:nth-child(2) td:nth-child(5)" "css_element"
+
+    And I log in as "admin"
+    And I am on "Course C1" course homepage
+    And I should see "assign2"
+    And I navigate to "Course completion" in current page administration
+    And I expand all fieldsets
+    And I set the following fields to these values:
+      | Assignment - assign2 | 1 |
+    And I click on "Save changes" "button"
+    And I log out
+    And I click on "Log in" "link" in the ".logininfo" "css_element"
+    And I set the field "Username" to "demouser01"
+    And I set the field "Password" to "Test123#"
+    Then I press "Log in"
+    And I am on "Course C1" course homepage
+    And I press "Mark as done"
+    And I log out
+    And I log in as "admin"
+    # And I trigger cron
+
+    And I am on site homepage
+    Then I navigate to "Reports > Report builder > Custom reports" in site administration
+    And I press "View" action in the "My report" report row
+    # Course completed
+    And I should see "1" in the ".generaltable tbody tr:nth-child(1) td:nth-child(6)" "css_element"
+    And I should see "0" in the ".generaltable tbody tr:nth-child(2) td:nth-child(6)" "css_element"
+
+    # Activities completed
+    And I should see "1" in the ".generaltable tbody tr:nth-child(1) td:nth-child(7)" "css_element"
+    And I should see "0" in the ".generaltable tbody tr:nth-child(2) td:nth-child(7)" "css_element"
+
+    # User Field - Full name
+    And I should see "demo user01" in the "Demo campaign" "table_row"
+    And I should see "demo user02" in the "Demo campaign2" "table_row"
 
   # @javascript
   # Scenario Outline: Report source campaign conditions

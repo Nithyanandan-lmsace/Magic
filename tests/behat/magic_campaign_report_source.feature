@@ -933,74 +933,74 @@ Feature: Magic campaign report source workflow.
   # #     | Only my campaigns   | campaign:usercohort_operator           |                      |                                      | Yes                | Yes               | No                | [data-cardtitle='Capacity']            |
 
 
-  @javascript
-  Scenario Outline: Report campaign source autocomplete conditions
-    Given I log in as "admin"
-    Then I navigate to "Plugins > Authentication > Manage campaign" in site administration
-    And I click on ".icon[title='Edit']" "css_element" in the "Demo campaign" "table_row"
-    And I set the following fields to these values:
-    # Restrict by Role
-    | By role                | Student           |
-    # Restrict by Cohort
-    | By cohort              | Cohort 1          |
-    Then I press "Save changes"
-    And I am on site homepage
-    Then I navigate to "Plugins > Authentication > Manage campaign" in site administration
-    And I click on ".icon[title='Edit']" "css_element" in the "Demo campaign1" "table_row"
-    And I set the following fields to these values:
-    # Restrict by Role
-    | By role                | Teacher           |
-    # Restrict by Cohort
-    | By cohort              | Cohort 2          |
-    Then I press "Save changes"
-    # Report edit page
-    Then I navigate to "Reports > Report builder > Custom reports" in site administration
-    And I click on "My report" "link"
-    # Campaigns
-    And I should see "My report" in the ".navbar h1" "css_element"
-    And I click on "Name with link" "link"
-    And I click on "a.list-group-item[data-name='Name']" "css_element"
-    And I click on "Description" "link"
-    And I click on "Comments" "link"
-    And I click on "Capacity" "link"
-    And I click on "Status" "link"
-    And I click on "Visibility" "link"
-    And I click on "Restrict by role" "link"
-    And I click on "Restrict by cohorts" "link"
-    And I click on "Available from" "link"
-    And I click on "Available closes" "link"
-    And I click on "Password" "link"
-    And I click on "Cohort membership" "link"
-    And I click on "Global role" "link"
-    And I click on "Campaign owner" "link"
-    And I click on "Consent option" "link"
-    And I click on "Welcome message" "link"
-    And I click on "Follow up" "link"
-    And I click on "Campaign course" "link"
-    And I click on "Registration fee" "link"
+  # @javascript
+  # Scenario Outline: Report campaign source autocomplete conditions
+  #   Given I log in as "admin"
+  #   Then I navigate to "Plugins > Authentication > Manage campaign" in site administration
+  #   And I click on ".icon[title='Edit']" "css_element" in the "Demo campaign" "table_row"
+  #   And I set the following fields to these values:
+  #   # Restrict by Role
+  #   | By role                | Student           |
+  #   # Restrict by Cohort
+  #   | By cohort              | Cohort 1          |
+  #   Then I press "Save changes"
+  #   And I am on site homepage
+  #   Then I navigate to "Plugins > Authentication > Manage campaign" in site administration
+  #   And I click on ".icon[title='Edit']" "css_element" in the "Demo campaign1" "table_row"
+  #   And I set the following fields to these values:
+  #   # Restrict by Role
+  #   | By role                | Teacher           |
+  #   # Restrict by Cohort
+  #   | By cohort              | Cohort 2          |
+  #   Then I press "Save changes"
+  #   # Report edit page
+  #   Then I navigate to "Reports > Report builder > Custom reports" in site administration
+  #   And I click on "My report" "link"
+  #   # Campaigns
+  #   And I should see "My report" in the ".navbar h1" "css_element"
+  #   And I click on "Name with link" "link"
+  #   And I click on "a.list-group-item[data-name='Name']" "css_element"
+  #   And I click on "Description" "link"
+  #   And I click on "Comments" "link"
+  #   And I click on "Capacity" "link"
+  #   And I click on "Status" "link"
+  #   And I click on "Visibility" "link"
+  #   And I click on "Restrict by role" "link"
+  #   And I click on "Restrict by cohorts" "link"
+  #   And I click on "Available from" "link"
+  #   And I click on "Available closes" "link"
+  #   And I click on "Password" "link"
+  #   And I click on "Cohort membership" "link"
+  #   And I click on "Global role" "link"
+  #   And I click on "Campaign owner" "link"
+  #   And I click on "Consent option" "link"
+  #   And I click on "Welcome message" "link"
+  #   And I click on "Follow up" "link"
+  #   And I click on "Campaign course" "link"
+  #   And I click on "Registration fee" "link"
 
-    # Conditions in the report.
-    And I click on "Show/hide 'Conditions'" "button"
-    Then I should see "There are no conditions selected" in the "[data-region='settings-conditions']" "css_element"
-    And I set the field "Select a condition" to "<campaign>"
-    # Campaign Name
-    # And I set the field "<field>" to "<operator>"
-    And I open the autocomplete suggestions list
-    And I click on "<operator>" item in the autocomplete list
-    # And I set the field "<operator_field>" to "<search>"
-    # And I set the field "<field>" to "<operator>"
-    And I click on ".reportbuilder-conditions-list .list-group" "css_element"
-    And I click on "Apply" "button" in the "[data-region='settings-conditions']" "css_element"
-    Then I should see "Conditions applied"
-    And I should see "<value>" in the "<table>" "css_element"
-    And I should not see "<not>" in the "<table>" "css_element"
+  #   # Conditions in the report.
+  #   And I click on "Show/hide 'Conditions'" "button"
+  #   Then I should see "There are no conditions selected" in the "[data-region='settings-conditions']" "css_element"
+  #   And I set the field "Select a condition" to "<campaign>"
+  #   # Campaign Name
+  #   # And I set the field "<field>" to "<operator>"
+  #   And I open the autocomplete suggestions list
+  #   And I click on "<operator>" item in the autocomplete list
+  #   # And I set the field "<operator_field>" to "<search>"
+  #   # And I set the field "<field>" to "<operator>"
+  #   And I click on ".reportbuilder-conditions-list .list-group" "css_element"
+  #   And I click on "Apply" "button" in the "[data-region='settings-conditions']" "css_element"
+  #   Then I should see "Conditions applied"
+  #   And I should see "<value>" in the "<table>" "css_element"
+  #   And I should not see "<not>" in the "<table>" "css_element"
 
-    Examples:
-      | campaign            | field                                  | search             | operator_field            | operator            | value                  | not               | table                               |
-      | Restrict by role    | campaign:restrictroles_values[]        |                    |                           | Student             | Demo campaign          | Demo campaign1    | [data-cardtitle='Name']             |
-      | Restrict by role    | campaign:restrictroles_values[]        |                    |                           | Teacher             | Demo campaign1         | Demo campaign2    | [data-cardtitle='Name']             |
-      | Cohort membership   | campaign:cohorts_values[]              |                    |                           | Cohort 2            | Demo campaign1         | Demo campaign2    | [data-cardtitle='Name']             |
-      | Cohort membership   | campaign:cohorts_values[]              |                    |                           | Cohort 3            | Demo campaign2         | Demo campaign1    | [data-cardtitle='Name']             |
+  #   Examples:
+  #     | campaign            | field                                  | search             | operator_field            | operator            | value                  | not               | table                               |
+  #     | Restrict by role    | campaign:restrictroles_values[]        |                    |                           | Student             | Demo campaign          | Demo campaign1    | [data-cardtitle='Name']             |
+  #     | Restrict by role    | campaign:restrictroles_values[]        |                    |                           | Teacher             | Demo campaign1         | Demo campaign2    | [data-cardtitle='Name']             |
+  #     | Cohort membership   | campaign:cohorts_values[]              |                    |                           | Cohort 2            | Demo campaign1         | Demo campaign2    | [data-cardtitle='Name']             |
+  #     | Cohort membership   | campaign:cohorts_values[]              |                    |                           | Cohort 3            | Demo campaign2         | Demo campaign1    | [data-cardtitle='Name']             |
 
 
   # @javascript
@@ -1200,67 +1200,67 @@ Feature: Magic campaign report source workflow.
   #     | Registration fee    | campaign:fee_operator                  | Free                 | campaign:fee_value                   | Is equal to        | Demo campaign     | Magic campaign    | [data-cardtitle='Name']                |
 
 
-  # @javascript
-  # Scenario Outline: Report source campaign Cohorts filter
-  #   Given I log in as "admin"
-  #   Then I navigate to "Plugins > Authentication > Manage campaign" in site administration
-  #   And I click on ".icon[title='Edit']" "css_element" in the "Demo campaign" "table_row"
-  #   And I set the following fields to these values:
-  #   # Restrict by Role
-  #   | By role                | Student           |
-  #   # Restrict by Cohort
-  #   | By cohort              | Cohort 1          |
-  #   Then I press "Save changes"
-  #   And I am on site homepage
-  #   Then I navigate to "Plugins > Authentication > Manage campaign" in site administration
-  #   And I click on ".icon[title='Edit']" "css_element" in the "Demo campaign1" "table_row"
-  #   And I set the following fields to these values:
-  #   # Restrict by Role
-  #   | By role                | Teacher           |
-  #   # Restrict by Cohort
-  #   | By cohort              | Cohort 2          |
-  #   Then I press "Save changes"
-  #   # Report edit page
-  #   Then I navigate to "Reports > Report builder > Custom reports" in site administration
-  #   And I click on "My report" "link"
-  #   # Campaigns
-  #   And I should see "My report" in the ".navbar h1" "css_element"
-  #   And I click on "Name with link" "link"
-  #   And I click on "a.list-group-item[data-name='Name']" "css_element"
-  #   And I click on "Description" "link"
-  #   And I click on "Comments" "link"
-  #   And I click on "Capacity" "link"
-  #   And I click on "Status" "link"
-  #   And I click on "Visibility" "link"
-  #   And I click on "Available from" "link"
-  #   And I click on "Available closes" "link"
-  #   And I click on "Password" "link"
-  #   And I click on "Cohort membership" "link"
-  #   And I click on "Global role" "link"
-  #   And I click on "Campaign owner" "link"
-  #   And I click on "Consent option" "link"
-  #   And I click on "Welcome message" "link"
-  #   And I click on "Follow up" "link"
-  #   And I click on "Campaign course" "link"
-  #   And I click on "Registration fee" "link"
+  @javascript
+  Scenario Outline: Report source campaign Cohorts filter
+    Given I log in as "admin"
+    Then I navigate to "Plugins > Authentication > Manage campaign" in site administration
+    And I click on ".icon[title='Edit']" "css_element" in the "Demo campaign" "table_row"
+    And I set the following fields to these values:
+    # Restrict by Role
+    | By role                | Student           |
+    # Restrict by Cohort
+    | By cohort              | Cohort 1          |
+    Then I press "Save changes"
+    And I am on site homepage
+    Then I navigate to "Plugins > Authentication > Manage campaign" in site administration
+    And I click on ".icon[title='Edit']" "css_element" in the "Demo campaign1" "table_row"
+    And I set the following fields to these values:
+    # Restrict by Role
+    | By role                | Teacher           |
+    # Restrict by Cohort
+    | By cohort              | Cohort 2          |
+    Then I press "Save changes"
+    # Report edit page
+    Then I navigate to "Reports > Report builder > Custom reports" in site administration
+    And I click on "My report" "link"
+    # Campaigns
+    And I should see "My report" in the ".navbar h1" "css_element"
+    And I click on "Name with link" "link"
+    And I click on "a.list-group-item[data-name='Name']" "css_element"
+    And I click on "Description" "link"
+    And I click on "Comments" "link"
+    And I click on "Capacity" "link"
+    And I click on "Status" "link"
+    And I click on "Visibility" "link"
+    And I click on "Available from" "link"
+    And I click on "Available closes" "link"
+    And I click on "Password" "link"
+    And I click on "Cohort membership" "link"
+    And I click on "Global role" "link"
+    And I click on "Campaign owner" "link"
+    And I click on "Consent option" "link"
+    And I click on "Welcome message" "link"
+    And I click on "Follow up" "link"
+    And I click on "Campaign course" "link"
+    And I click on "Registration fee" "link"
 
-  #   # Filter options in the report
-  #   And I click on "Show/hide 'Filters'" "button"
-  #   Then I should see "There are no filters selected" in the "[data-region='settings-filters']" "css_element"
-  #   And I set the field "Select a filter" to "<campaign>"
-  #   And I should not see "There are no conditions selected" in the "[data-region='settings-conditions']" "css_element"
-  #   When I click on "Switch to preview mode" "button"
-  #   And I click on "Filters" "button" in the "[data-region='core_reportbuilder/report-header']" "css_element"
-  #   And I open the autocomplete suggestions list
-  #   And I click on "<select>" item in the autocomplete list
-  #   And I click on ".filter-header .filter-name" "css_element"
-  #   And I click on "Apply" "button" in the "[data-region='core_reportbuilder/report-header']" "css_element"
-  #   And I should see "<value>" in the "<table>" "css_element"
-  #   And I should not see "<not>" in the "<table>" "css_element"
+    # Filter options in the report
+    And I click on "Show/hide 'Filters'" "button"
+    Then I should see "There are no filters selected" in the "[data-region='settings-filters']" "css_element"
+    And I set the field "Select a filter" to "<campaign>"
+    And I should not see "There are no conditions selected" in the "[data-region='settings-conditions']" "css_element"
+    When I click on "Switch to preview mode" "button"
+    And I click on "Filters" "button" in the "[data-region='core_reportbuilder/report-header']" "css_element"
+    And I open the autocomplete suggestions list
+    And I click on "<select>" item in the autocomplete list
+    And I click on ".filter-header .filter-name" "css_element"
+    And I click on "Apply" "button" in the "[data-region='core_reportbuilder/report-header']" "css_element"
+    And I should see "<value>" in the "<table>" "css_element"
+    And I should not see "<not>" in the "<table>" "css_element"
 
-  #   Examples:
-  #     | campaign            | field                          | select             | operator             | operator_field                  | value             | not               | table                       |
-  #     | Cohort membership   | campaign:cohorts_values[]      | Cohort 2           | Cohort 2             | campaign:cohorts_operator       | Demo campaign1    | Demo campaign2    | [data-cardtitle='Name']     |
-  #     | Cohort membership   | campaign:cohorts_values[]      | Cohort 2           | Cohort 3             | campaign:cohorts_operator       | Demo campaign1    | Demo campaign 2   | [data-cardtitle='Name']     |
-  #     | Restrict by role    | campaign:restrictroles_values[] | Student           |                      | Student                         | Demo campaign     | Demo campaign1    | [data-cardtitle='Name']     |
-  #     | Restrict by role    | campaign:restrictroles_values[] | Teacher           |                      | Teacher                         | Demo campaign1    | Demo campaign2    | [data-cardtitle='Name']     |
+    Examples:
+      | campaign            | field                          | select             | operator             | operator_field                  | value             | not               | table                       |
+      | Cohort membership   | campaign:cohorts_values[]      | Cohort 2           | Cohort 2             | campaign:cohorts_operator       | Demo campaign1    | Demo campaign2    | [data-cardtitle='Name']     |
+      | Cohort membership   | campaign:cohorts_values[]      | Cohort 2           | Cohort 3             | campaign:cohorts_operator       | Demo campaign1    | Demo campaign 2   | [data-cardtitle='Name']     |
+      | Restrict by role    | campaign:restrictroles_values[] | Student           |                      | Student                         | Demo campaign     | Demo campaign1    | [data-cardtitle='Name']     |
+      | Restrict by role    | campaign:restrictroles_values[] | Teacher           |                      | Teacher                         | Demo campaign1    | Demo campaign2    | [data-cardtitle='Name']     |

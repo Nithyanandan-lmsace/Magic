@@ -38,10 +38,10 @@ $tasks = [
     [
         'classname' => 'auth_magic\task\campaign_expiry_actions',
         'blocking' => 0,
-        'minute' => '*/1', // Runs every 1 minutes
+        'minute' => '*/1', // Runs every 1 minutes.
         'hour' => '*',
         'day' => '*',
         'month' => '*',
         'dayofweek' => '*',
-    ]
+    ],
 ];

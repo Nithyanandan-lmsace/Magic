@@ -17,7 +17,7 @@
 /**
  * Filters results to current course only.
  *
- * @package    block_dash
+ * @package    auth_magic
  * @copyright  2020 bdecent gmbh <https://bdecent.de>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -107,7 +107,8 @@ class campaign_dates_condition extends condition {
                         $params += ['cdc_now_'.$key => time()];
                         break;
                     case 'present':
-                        $sql[] = "( ( amc.startdate < :cdc_startdate_$key OR amc.startdate = 0) AND ( amc.enddate = 0 OR amc.enddate > :cdc_enddate_$key) )";
+                        $sql[] = "( ( amc.startdate < :cdc_startdate_$key OR amc.startdate = 0) AND
+                            ( amc.enddate = 0 OR amc.enddate > :cdc_enddate_$key) )";
                         $params += ['cdc_enddate_'.$key => time(), 'cdc_startdate_'.$key => time()];
                         break;
                     case 'future':

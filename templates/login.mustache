@@ -89,4 +89,10 @@
     {{#error}}
         document.getElementById('id_password').value = "";
     {{/error}}
+
+     {{#togglepassword}}
+        require(['core/togglesensitive'], function(ToggleSensitive) {
+            ToggleSensitive.init("id_password", {{smallscreensonly}});
+        });
+    {{/togglepassword}}
 {{/js}}

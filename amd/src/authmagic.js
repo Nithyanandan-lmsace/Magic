@@ -20,8 +20,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-define(['core/str', 'core/ajax'],
-function(String, Ajax) {
+define(['jquery', 'core/str', 'core/ajax'],
+function($, String, Ajax) {
 
     /**
     * Controls Custom styles tool action.
@@ -32,10 +32,51 @@ function(String, Ajax) {
         if (params.loginhook) {
             self.magicLoginHook(params);
         }
+
         if (params.customloginhook) {
             self.magicCustomLoginHook(params);
         }
+
+        if (params.paymentgatbank) {
+            self.paymentgatbankaction(params);
+        }
+
         return true;
+    };
+
+    AuthMagic.prototype.paymentgatbankaction = function(params) {
+        var self = this;
+        // Update the bank payment gatway amount.
+        var paymentTabletr = document.querySelectorAll("#page-content table tbody tr");
+        var paymentTabletbody = document.querySelector("#page-content table tbody");
+        if (paymentTabletbody) {
+            $("#page-content table tbody").append('<tr class="loader-table"><td colspan="9"><i class="fa fa-circle-o-notch"></i></td>');
+
+            if (paymentTabletr) {
+                paymentTabletr.forEach(function(item) {
+                    var element = item.querySelector('td form input[name="id"]');
+                    if (element) {
+                        var entryid = element.value;
+                        self.setPaymentGatAmount(entryid, item);
+                    }
+                });
+            }
+            paymentTabletbody.classList.add('show-table');
+        }
+    };
+
+
+    AuthMagic.prototype.setPaymentGatAmount = function(entryid, item) {
+        var self = this;
+        Ajax.call([{
+            methodname: 'auth_magic_get_bankgat_amount',
+            args: {entryid: parseInt(entryid)},
+            done: function(data) {
+                if (data) {
+                    item.querySelector("td.cell.c5").innerHTML = parseInt(data['amount']);
+                }
+            }
+        }]);
     };
 
     AuthMagic.prototype.magicCustomLoginHook = function(params) {
@@ -89,7 +130,7 @@ function(String, Ajax) {
                 params.linkbtnpos = 2;
             }
             if (params.linkbtnpos == 0) {
-                var MagicLinkBlock = document.querySelectorAll("#page-login-index form#login .form-group")[params.linkbtnpos];
+                var MagicLinkBlock = document.querySelectorAll("#page-login-index form#login .login-form-username")[0];
                 if (MagicLinkBlock) {
                     MagicLinkBlock.appendChild(MagicLink);
                     // Create a span.
@@ -103,7 +144,7 @@ function(String, Ajax) {
                 }
             }
             if (params.linkbtnpos == 1) {
-                var MagicLinkBlock = document.querySelectorAll("#page-login-index form#login .form-group")[params.linkbtnpos];
+                var MagicLinkBlock = document.querySelectorAll("#page-login-index form#login .login-form-password")[0];
                 if (MagicLinkBlock) {
                     MagicLinkBlock.appendChild(MagicLink);
                 }

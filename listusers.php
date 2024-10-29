@@ -271,7 +271,7 @@ if (has_capability('auth/magic:viewloginlinks', $sitecontext)) {
     $sql = "SELECT u.id
     FROM {auth_magic_loginlinks} ml
     JOIN {user} u ON (ml.userid = u.id)
-    WHERE u.deleted = 0 AND u.suspended = 0";
+    WHERE u.deleted = 0";
     $records = $DB->get_records_sql($sql, null);
     if (!empty($records)) {
         $otherusers = array_keys($records);
@@ -315,7 +315,7 @@ if (!$users) {
 } else {
 
     $table = new html_table();
-    $table->head = array();
+    $table->head = [];
     $table->colclasses = [];
     $table->head[] = $fullnamedisplay;
     $table->attributes['class'] = 'magicinvitationlink generaltable table-sm';

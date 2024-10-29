@@ -86,8 +86,8 @@ function auth_magic_get_user_login_link($userid) {
  */
 function auth_magic_messagetouser($userto, $subject, $messageplain, $messagehtml, $courseid = null) {
     $eventdata = new \core\message\message();
-    $eventdata->name = 'instantmessage';
-    $eventdata->component = 'moodle';
+    $eventdata->name = 'notification';
+    $eventdata->component = 'auth_magic';
     $eventdata->courseid = empty($courseid) ? SITEID : $courseid;
     $eventdata->userfrom = core_user::get_support_user();
     $eventdata->userto = $userto;
@@ -710,6 +710,11 @@ function auth_magic_import_auth_details($loginform, $email, $errormessage, $pass
     }
     $template['error'] = $errormessage;
     $template['customclass'] = ($CFG->version < 2022030300) ? true : false;
+    if ($CFG->branch > 403) {
+        $template['togglepassword'] = get_config('core', 'loginpasswordtoggle') == TOGGLE_SENSITIVE_ENABLED ||
+            get_config('core', 'loginpasswordtoggle') == TOGGLE_SENSITIVE_SMALL_SCREENS_ONLY;
+        $template['smallscreensonly'] = get_config('core', 'loginpasswordtoggle') == TOGGLE_SENSITIVE_SMALL_SCREENS_ONLY;
+    }
     return $OUTPUT->render_from_template('auth_magic/login', $template);
 }
 
@@ -759,7 +764,7 @@ function auth_magic_generate_footer_links($menuname = '') {
  */
 function auth_magic_is_user_privilege($user) {
     global $DB;
-    if (!get_config('auth_magic', 'supportpassword')) {
+    if (!$user->password || $user->password == 'not cached') {
         return false;
     }
     $privilegeroles = get_config('auth_magic', 'privilegedrole');
@@ -829,27 +834,33 @@ function auth_magic_extend_navigation_user_settings(navigation_node $useraccount
         'payment-gateway-bank-pay',
         'user-edit',
     ];
+    if ($PAGE->pagetype == 'payment-gateway-bank-manage') {
+        $PAGE->requires->js_call_amd('auth_magic/authmagic', 'init', [['paymentgatbank' => true,
+            'contextid' => $PAGE->context->id]]);
+    }
 
     if (is_enabled_auth('magic') && !\core\session\manager::is_loggedinas() && $user->id == $USER->id
     && !in_array($PAGE->pagetype, $pagetypes) && $PAGE->pagetype != 'login-change_password') {
 
         require_once($CFG->dirroot.'/auth/magic/campaigns/campaign_helper.php');
-        if ($campaignuser = $DB->get_record('auth_magic_campaigns_users', ['userid' => $user->id])) {
-            $campaigndata  = \campaign_helper::get_campaign($campaignuser->campaignid);
-            if (auth_magic_is_campaign_signup_user($user->id, $campaignuser->campaignid)) {
-                $campaigninfo = new campaign($campaignuser->campaignid);
-                $campaign = $campaigninfo->get_campaign();
-                if (auth_magic_is_paid_campaign($campaign) && !$campaigninfo->is_coupon_user()) {
-                    $returnurl = new moodle_url('/auth/magic/campaigns/payment.php',
-                        ['campaignid' => $campaignuser->campaignid, 'userid' => $user->id, 'sesskey' => sesskey()]);
-                    if ($paymentstatus = $DB->get_record('auth_magic_payment_logs', ['userid' => $user->id,
-                        'campaignid' => $campaignuser->campaignid])) {
-                        if ($paymentstatus->status != 'completed') {
-                            // Implemented the make payment Workflow.
+        if ($campaignusers = $DB->get_records('auth_magic_campaigns_users', ['userid' => $user->id])) {
+            foreach ($campaignusers as $campaignuser) {
+                $campaigndata  = \campaign_helper::get_campaign($campaignuser->campaignid);
+                if (auth_magic_is_campaign_signup_user($user->id, $campaignuser->campaignid)) {
+                    $campaigninfo = new campaign($campaignuser->campaignid);
+                    $campaign = $campaigninfo->get_campaign();
+                    if (auth_magic_is_paid_campaign($campaign) && !$campaigninfo->is_coupon_user()) {
+                        $returnurl = new moodle_url('/auth/magic/campaigns/payment.php',
+                            ['campaignid' => $campaignuser->campaignid, 'userid' => $user->id, 'sesskey' => sesskey()]);
+                        if ($paymentstatus = $DB->get_record('auth_magic_payment_logs', ['userid' => $user->id,
+                            'campaignid' => $campaignuser->campaignid])) {
+                            if ($paymentstatus->status != 'completed') {
+                                // Implemented the make payment Workflow.
+                                return redirect($returnurl);
+                            }
+                        } else {
                             return redirect($returnurl);
                         }
-                    } else {
-                        return redirect($returnurl);
                     }
                 }
             }
@@ -901,7 +912,7 @@ function auth_magic_output_fragment_get_user_formfield($args) {
     $campaignform = new \auth_magic\form\campaigns_form(new moodle_url("/auth/magic/campaigns/edit.php"),
         ['id' => $currentcampaignid]);
     if ($relateduser) {
-        $campaignuser = $DB->get_record('auth_magic_campaigns_users', ['userid' => $relateduser]);
+        $campaignuser = $DB->get_record('auth_magic_campaigns_users', ['userid' => $relateduser, 'campaignid' => $currentcampaignid]);
     }
 
     if ($campaignuser) {
@@ -925,7 +936,7 @@ function auth_magic_output_fragment_get_user_formfield($args) {
  */
 function auth_magic_is_paid_campaign($campaign, $coupon = '') {
     if (isset($campaign->paymentinfo->fee) && $campaign->paymentinfo->type != 'free') {
-        if (!empty($coupon) && $campaign->is_valid_coupon_campaign()) {
+        if (!empty($coupon) && $campaign->is_valid_coupon_campaign($coupon)) {
             return false;
         }
         return true;
@@ -995,6 +1006,7 @@ function auth_magic_count_gradebook_role_groupusers($groupid) {
     return $count;
 }
 
+
 /**
  * Send email to specified user with confirmation text and activation link.
  *
@@ -1003,7 +1015,7 @@ function auth_magic_count_gradebook_role_groupusers($groupid) {
  * @param int $childuser
  * @return bool Returns true if mail was sent OK and false if there was an error.
  */
-function auth_magic_send_confirmation_email($user, $confirmationurl = null, $childuser = 0) {
+function auth_magic_send_confirmation_email($user, $campaignid, $childuser = 0) {
     global $CFG;
 
     $site = get_site();
@@ -1015,29 +1027,20 @@ function auth_magic_send_confirmation_email($user, $confirmationurl = null, $chi
 
     $subject = get_string('emailconfirmationsubject', '', format_string($site->fullname));
 
-    if (empty($confirmationurl)) {
-        $confirmationurl = '/login/confirm.php';
-    }
-
-    $confirmationurl = new moodle_url($confirmationurl);
-    // Remove data parameter just in case it was included in the confirmation so we can add it manually later.
-    $confirmationurl->remove_params('data');
-    $confirmationpath = $confirmationurl->out(false);
-
-    // We need to custom encode the username to include trailing dots in the link.
-    // Because of this custom encoding we can't use moodle_url directly.
-    // Determine if a query string is present in the confirmation url.
-    $hasquerystring = strpos($confirmationpath, '?') !== false;
     // Perform normal url encoding of the username first.
     $username = urlencode($user->username);
     // Prevent problems with trailing dots not being included as part of link in some mail clients.
     $username = str_replace('.', '%2E', $username);
 
-    $link = $confirmationpath . ( $hasquerystring ? '&' : '?') . 'data='. $user->secret .'/'. $username;
+
+    $urlparams = ['data' => $user->secret .'/'. $username, 'campaignid' => $campaignid];
+
     if ($childuser) {
-        $link .= '&childuser='. $childuser;
+        $urlparams['childuser'] = $childuser;
     }
-    $data->link = $link;
+
+    $confirmlink = new moodle_url('/auth/magic/confim.php', $urlparams);
+    $data->link = $confirmlink->out(false);
 
     $message     = get_string('emailconfirmation', '', $data);
     $messagehtml = text_to_html(get_string('emailconfirmation', '', $data), false, false, true);
@@ -1046,7 +1049,12 @@ function auth_magic_send_confirmation_email($user, $confirmationurl = null, $chi
     return email_to_user($user, $supportuser, $subject, $message, $messagehtml);
 }
 
-
+/**
+ * Sent the revocation link to parent users.
+ * @param int $campaignid
+ * @param object $user
+ * @param object $parentuser
+ */
 function auth_magic_send_revocationlink_email($campaignid, $user, $parentuser) {
     $site = get_site();
     $supportuser = core_user::get_support_user();
@@ -1057,8 +1065,13 @@ function auth_magic_send_revocationlink_email($campaignid, $user, $parentuser) {
 
     $subject = get_string('emailrevocationsubject', 'auth_magic', format_string($site->fullname));
 
+    // Perform normal url encoding of the username first.
+    $username = urlencode($parentuser->username);
+    // Prevent problems with trailing dots not being included as part of link in some mail clients.
+    $username = str_replace('.', '%2E', $username);
+
     $revocationurl = new moodle_url('/auth/magic/campaigns/revocation.php',
-        ['campaignid' => $campaignid, 'userid' => $user->id]);
+        ['data' => $parentuser->secret .'/'. $username, 'campaignid' => $campaignid, 'userid' => $user->id]);
     $data->link = $revocationurl->out(false);
     $data->user = fullname($user);
 
@@ -1106,11 +1119,12 @@ function auth_magic_confirm_parentuser($username) {
  * Campaign assigement update after confirm the user.
  *
  * @param [int] $userid
+ * @param int $campaignid
  * @return void
  */
-function auth_magic_user_confirmation_campaign_assignments($userid) {
+function auth_magic_user_confirmation_campaign_assignments($userid, $campaignid) {
     global $DB;
-    if ($campaignuser = $DB->get_record('auth_magic_campaigns_users', ['userid' => $userid])) {
+    if ($campaignuser = $DB->get_records('auth_magic_campaigns_users', ['userid' => $userid, 'campaignid' => $campaignid])) {
         $campaigninstance = campaign::instance($campaignuser->campaignid);
         $campaignhelper = new \campaign_helper($campaigninstance->id);
         $user = $DB->get_record('user', ['id' => $userid]);
@@ -1127,7 +1141,12 @@ function auth_magic_user_confirmation_campaign_assignments($userid) {
     }
 }
 
-
+/**
+ * Get the assignment customvaluess
+ * @param object $data
+ * @param string $roles
+ * @return array
+ */
 function auth_magic_managerole_assignments_customvalues($data, $roles) {
     $customfieldvalues = [];
     if (!empty($roles)) {

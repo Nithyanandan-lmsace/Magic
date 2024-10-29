@@ -42,10 +42,13 @@ class service_provider implements \core_payment\local\callback\service_provider 
      * @return \core_payment\local\entities\payable
      */
     public static function get_payable(string $paymentarea, int $instanceid): \core_payment\local\entities\payable {
-        global $DB;
+        global $DB, $SESSION;
         $instance = $DB->get_record('auth_magic_campaigns_payment', ['campaignid' => $instanceid], '*', MUST_EXIST);
-
-        return new \core_payment\local\entities\payable($instance->fee, $instance->currency, $instance->paymentaccount);
+        $payfee = $instance->fee;
+        if (isset($SESSION->auth_magic_teamusers)) {
+            $payfee = $SESSION->auth_magic_teamusers * $payfee;
+        }
+        return new \core_payment\local\entities\payable($payfee, $instance->currency, $instance->paymentaccount);
     }
 
     /**

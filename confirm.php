@@ -17,7 +17,7 @@
 /**
  *  Confirm page for auth_magic.
  *
- * @subpackage auth
+ * @package auth_magic
  * @copyright  2023 bdecent gmbh <https://bdecent.de>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -34,15 +34,18 @@ if (!is_enabled_auth('magic')) {
 
 require_once($CFG->libdir . '/authlib.php');
 
-$data = optional_param('data', default: '', PARAM_RAW);  // Formatted as:  secret/username.
+$data = required_param('data', PARAM_RAW);  // Formatted as:  secret/username.
+$campaignid = required_param('campaignid', PARAM_INT);
+
 $childuser = optional_param('childuser', 0, PARAM_INT);
-$parentuserdata = optional_param('childdata', '', PARAM_RAW);  // Formatted as:  secret/username.
+$relateduserlogin = optional_param('relateduserlogin', 1, PARAM_INT);
+$redirecturl = optional_param('redirecturl', null, PARAM_RAW);
 
 $p = optional_param('p', '', PARAM_ALPHANUM);   // Old parameter:  secret.
 $s = optional_param('s', '', PARAM_RAW);        // Old parameter:  username.
 $redirect = optional_param('redirect', '', PARAM_LOCALURL);    // Where to redirect the browser once the user has been confirmed.
 
-$PAGE->set_url('/auth/magic/confirm.php');
+$PAGE->set_url(new moodle_url('/auth/magic/confirm.php', ['data' => $data, 'campaignid' => $campaignid]));
 $PAGE->set_context(context_system::instance());
 
 
@@ -66,10 +69,10 @@ if (!empty($data) || (!empty($p) && !empty($s))) {
     $confirmed = $authplugin->user_confirm($username, $usersecret);
     $childuserconfirmed = false;
     if ($childuser) { // Check the child user confirmed or not.
-        if ($campaignuser = $DB->get_record('auth_magic_campaigns_users', ['userid' => $childuser])) {
+        if ($campaignuser = $DB->get_record('auth_magic_campaigns_users', ['userid' => $childuser, 'campaignid' => $campaignid])) {
             $campaigninstance = campaign::instance($campaignuser->campaignid);
             $campaignrecord = $campaigninstance->get_campaign();
-            $childconfirm = auth_magic_confirm_childuser($childuser);
+            $childconfirm = auth_magic_confirm_childuser($childuser, $campaignid);
             if ($campaignrecord->approvaltype == 'optionalin') {
                 $user = $DB->get_record('user', ['id' => $childuser]);
                 setnew_password_and_mail($user);
@@ -98,9 +101,20 @@ if (!empty($data) || (!empty($p) && !empty($s))) {
     } else if ($confirmed == AUTH_CONFIRM_OK) {
 
         // The user has confirmed successfully, let's log them in.
-
         if (!$user = get_complete_user_data('username', $username)) {
             throw new \moodle_exception('cannotfinduser', '', '', s($username));
+        }
+
+        if (!$DB->record_exists('auth_magic_confirmation_logs', ['userid' => $user->id, 'campaignid' => $campaignid])) {
+            $record = new stdClass;
+            $record->userid = $user->id;
+            $record->campaignid = $campaignid;
+            $record->timecreated = time();
+            $DB->insert_record('auth_magic_confirmation_logs', $record);
+        }
+
+        if ($redirecturl != null && !$relateduserlogin) {
+            redirect(urldecode($redirecturl));
         }
 
         if (!$user->suspended) {
@@ -128,19 +142,14 @@ if (!empty($data) || (!empty($p) && !empty($s))) {
         echo $OUTPUT->box_end();
         echo $OUTPUT->footer();
         exit;
-    } /* else if ($childuserconfirmed) {
-
+    } else if ($childuserconfirmed) {
         // The user has confirmed successfully, let's log them in.
-
         if (!$user = $DB->get_record('user', ['id' => $childuser])) {
             throw new \moodle_exception('cannotfinduser');
         }
-
         if (!isloggedin() && !$user->suspended) {
             complete_user_login($user);
-
             \core\session\manager::apply_concurrent_login_limit($user->id, session_id());
-
             // Check where to go, $redirect has a higher preference.
             if (!empty($redirect)) {
                 if (!empty($SESSION->wantsurl)) {
@@ -149,7 +158,6 @@ if (!empty($data) || (!empty($p) && !empty($s))) {
                 redirect($redirect);
             }
         }
-
         $PAGE->navbar->add(get_string("confirmed"));
         $PAGE->set_title(get_string("confirmed"));
         $PAGE->set_heading($COURSE->fullname);
@@ -161,7 +169,7 @@ if (!empty($data) || (!empty($p) && !empty($s))) {
         echo $OUTPUT->box_end();
         echo $OUTPUT->footer();
         exit;
-    } */ else {
+    } else {
         throw new \moodle_exception('invalidconfirmdata');
     }
 } else {
@@ -169,4 +177,3 @@ if (!empty($data) || (!empty($p) && !empty($s))) {
 }
 
 redirect("$CFG->wwwroot/");
-

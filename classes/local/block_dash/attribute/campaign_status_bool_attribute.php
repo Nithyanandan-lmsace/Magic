@@ -17,7 +17,7 @@
 /**
  * Transforms data to yes or no.
  *
- * @package    block_dash
+ * @package    auth_magic
  * @copyright  2019 bdecent gmbh <https://bdecent.de>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

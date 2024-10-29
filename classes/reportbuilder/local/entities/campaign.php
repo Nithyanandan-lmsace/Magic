@@ -40,6 +40,7 @@ use core_user;
 use auth_magic\campaign as campaignmagic;
 use core_reportbuilder\local\filters\boolean_select;
 
+defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot . "/cohort/lib.php");
 
 
@@ -52,6 +53,19 @@ require_once($CFG->dirroot . "/cohort/lib.php");
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class campaign extends base {
+
+    /**
+     * Database tables that this entity uses
+     *
+     * @return array
+     */
+    protected function get_default_tables(): array {
+        return [
+            'auth_magic_campaigns',
+            'auth_magic_campaigns_payment',
+            'auth_magic_campaigns_users',
+        ];
+    }
 
     /**
      * Database tables that this entity uses and their default aliases
@@ -98,7 +112,7 @@ class campaign extends base {
         return $this;
     }
 
-     /**
+    /**
      * Returns list of all available columns
      *
      * @return column[]
@@ -106,13 +120,12 @@ class campaign extends base {
     protected function get_all_conditions(): array {
         global $USER;
 
-        $campaigntablealias = $this->get_table_alias('auth_magic_campaigns');
         $conditions[] = (new filter(
             boolean_select::class,
             'usercohort',
             new lang_string('onlymycampaign', 'auth_magic'),
             $this->get_entity_name(),
-            "{$campaigntablealias}.campaignowner = :userid",
+            "amc.campaignowner = :userid",
             ['userid' => $USER->id]
         ))
         ->set_options([boolean_select::CHECKED => new lang_string('yes')])
@@ -128,7 +141,6 @@ class campaign extends base {
      */
     protected function get_all_columns(): array {
         global $DB;
-        $campaigntablealias = $this->get_table_alias('auth_magic_campaigns');
 
         $columns[] = (new column(
             'campaigntitlelink',
@@ -136,11 +148,12 @@ class campaign extends base {
             $this->get_entity_name(),
         ))
             ->set_type(column::TYPE_TEXT)
-            ->add_field("{$campaigntablealias}.title", 'campaigntitlelink')
-            ->add_fields("{$campaigntablealias}.id")
+            ->add_field("amc.title", 'campaigntitlelink')
+            ->add_fields("amc.id")
             ->set_is_sortable($this->is_sortable('fee'))
-            ->add_callback(static function(?string $value, stdClass $row) : string {
-                return html_writer::link(new moodle_url('/auth/magic/campaigns/edit.php', ['id' => $row->id, 'sesskey' => sesskey()]),
+            ->add_callback(static function(?string $value, stdClass $row): string {
+                return html_writer::link(new moodle_url('/auth/magic/campaigns/edit.php',
+                    ['id' => $row->id, 'sesskey' => sesskey()]),
                 $value);
             });
 
@@ -148,7 +161,7 @@ class campaign extends base {
         foreach ($campaignfields as $campaignfield => $campaignfieldlang) {
             $columntype = $this->get_campaign_field_type($campaignfield);
 
-            $columnfieldsql = "{$campaigntablealias}.{$campaignfield}";
+            $columnfieldsql = "amc.{$campaignfield}";
             if ($columntype === column::TYPE_LONGTEXT && $DB->get_dbfamily() === 'oracle') {
                 $columnfieldsql = $DB->sql_order_by_text($columnfieldsql, 1024);
             }
@@ -168,20 +181,21 @@ class campaign extends base {
 
             if ($campaignfield === 'description') {
                 $column
-                    ->add_fields("{$campaigntablealias}.descriptionformat, {$campaigntablealias}.id");
+                    ->add_fields("amc.descriptionformat, amc.id");
             } else if ($campaignfield === 'comments') {
                 $column
-                    ->add_fields("{$campaigntablealias}.commentsformat, {$campaigntablealias}.id");
+                    ->add_fields("amc.commentsformat, amc.id");
             } else if ($campaignfield === 'status') {
                 $column->add_callback(function(?string $value): string {
-                    return ($value == 0) ? get_string('campaigns:available', 'auth_magic') : get_string('campaigns:archived', 'auth_magic');
+                    return ($value == 0) ? get_string('campaigns:available', 'auth_magic') :
+                        get_string('campaigns:archived', 'auth_magic');
                 });
             } else if ($campaignfield === 'visibility') {
                 $column->add_callback(function(?string $value): string {
                     return ($value == 0) ? get_string('campaigns:hidden', 'auth_magic') : get_string('visible');
                 });
             } else if ($campaignfield === 'campaignowner') {
-                $column->add_callback(function(?string $value, stdClass $row) use($viewfullnames) : string {
+                $column->add_callback(function(?string $value, stdClass $row) use($viewfullnames): string {
                     return html_writer::link(new moodle_url('/user/profile.php', ['id' => $row->campaignowner]),
                     fullname(core_user::get_user($row->campaignowner), $viewfullnames));
                 });
@@ -191,7 +205,7 @@ class campaign extends base {
                         $cohortids = json_decode($row->cohorts);
                         $cohortnames = "";
                         foreach ($cohortids as $cohortid) {
-                            $cohortname = $DB->get_field('cohort', 'name', array('id' => $cohortid));
+                            $cohortname = $DB->get_field('cohort', 'name', ['id' => $cohortid]);
                             $cohortnames .= $cohortname;
                             if ($cohortid != end($cohortids)) {
                                 $cohortnames .= ", ";
@@ -242,7 +256,7 @@ class campaign extends base {
                         $cohortids = json_decode($row->restrictcohorts);
                         $cohortnames = "";
                         foreach ($cohortids as $cohortid) {
-                            $cohortname = $DB->get_field('cohort', 'name', array('id' => $cohortid));
+                            $cohortname = $DB->get_field('cohort', 'name', ['id' => $cohortid]);
                             $cohortnames .= $cohortname;
                             if ($cohortid != end($cohortids)) {
                                 $cohortnames .= ", ";
@@ -255,16 +269,18 @@ class campaign extends base {
             }
             $columns[] = $column;
         }
-        $campaignpaymenttablealias = $this->get_table_alias('auth_magic_campaigns_payment');
+        $campaignpaymenttablealias = "amcp";
 
-
-        $feefield = "CASE WHEN {$campaignpaymenttablealias}.fee IS NOT NULL THEN ". $DB->sql_concat("{$campaignpaymenttablealias}.fee", "' '", "{$campaignpaymenttablealias}.currency"). " ELSE '" . get_string('campaigns:strfree', 'auth_magic') . "' END";
+        $feefield = "CASE WHEN {$campaignpaymenttablealias}.fee IS NOT NULL THEN ".
+            $DB->sql_concat("{$campaignpaymenttablealias}.fee", "' '", "{$campaignpaymenttablealias}.currency").
+            " ELSE '" . get_string('campaigns:strfree', 'auth_magic') . "' END";
         $columns[] = (new column(
             'fee',
             new lang_string('campaignsource:field_fee', 'auth_magic'),
             $this->get_entity_name(),
         ))
-            ->add_joins(["LEFT JOIN {auth_magic_campaigns_payment} $campaignpaymenttablealias ON {$campaignpaymenttablealias}.campaignid = {$campaigntablealias}.id"])
+            ->add_joins(["LEFT JOIN {auth_magic_campaigns_payment} $campaignpaymenttablealias
+                ON {$campaignpaymenttablealias}.campaignid = amc.id"])
             ->set_type(column::TYPE_TEXT)
             ->add_field($feefield, 'fee')
             ->set_is_sortable($this->is_sortable('fee'))
@@ -307,7 +323,6 @@ class campaign extends base {
             return format::userdate($value, $row);
         }
 
-
         if ($fieldname === 'description' || $fieldname === 'comments') {
             if (empty($row->id)) {
                 return '';
@@ -325,6 +340,9 @@ class campaign extends base {
         return s($value);
     }
 
+    /**
+     * Get the campaign field type.
+     */
     protected function get_campaign_field_type($campaignfield) {
         switch ($campaignfield) {
             case 'description':
@@ -354,6 +372,9 @@ class campaign extends base {
         return $fieldtype;
     }
 
+    /**
+     * Get campaign fields.
+     */
     protected function get_campaign_fields() {
         return [
             'title' => new lang_string('campaignsource:field_name', 'auth_magic'),
@@ -389,8 +410,8 @@ class campaign extends base {
         global $DB;
         $filters = [];
         $filterparams = [];
-        $tablealias = $this->get_table_alias('auth_magic_campaigns');
-        $campaignpaymenttablealias = $this->get_table_alias('auth_magic_campaigns_payment');
+        $tablealias = "amc";
+        $campaignpaymenttablealias = "amcp";
         $campaignfields = $this->get_campaign_fields();
         $autocompletefields = ['restrictroles', 'restrictcohorts', 'cohorts'];
         foreach ($campaignfields as $field => $name) {
@@ -430,7 +451,9 @@ class campaign extends base {
             $filters[] = $filter;
         }
 
-        $feefield = "CASE WHEN {$campaignpaymenttablealias}.fee IS NOT NULL THEN ". $DB->sql_concat("{$campaignpaymenttablealias}.fee", "' '", "{$campaignpaymenttablealias}.currency"). " ELSE '" . get_string('campaigns:strfree', 'auth_magic') . "' END";
+        $feefield = "CASE WHEN {$campaignpaymenttablealias}.fee IS NOT NULL THEN ".
+            $DB->sql_concat("{$campaignpaymenttablealias}.fee", "' '", "{$campaignpaymenttablealias}.currency").
+            " ELSE '" . get_string('campaigns:strfree', 'auth_magic') . "' END";
         // Fee.
         $filters[] = (new filter(
             text::class,
@@ -444,7 +467,10 @@ class campaign extends base {
         return $filters;
     }
 
-    public static function get_options_for_restrictroles() : array {
+    /**
+     * Get the restrict roles options.
+     */
+    public static function get_options_for_restrictroles(): array {
         $rolelist = role_get_names(\context_system::instance());
         $roleoptions = [];
         foreach ($rolelist as $role) {
@@ -453,13 +479,18 @@ class campaign extends base {
         return $roleoptions;
     }
 
-    public static function get_options_for_restrictcohorts() : array {
+    /**
+     * Get options for the restrict cohorts.
+     */
+    public static function get_options_for_restrictcohorts(): array {
         return self::get_options_for_cohorts();
     }
 
-
+    /**
+     * Get campaign course options.
+     */
     public static function get_options_for_campaigncourse() {
-        global $DB, $SITE;
+        global $DB, $SITE, $USER;
         $courses = ['0' => get_string('disabled', 'auth_magic')];
         $records = get_user_capability_course("moodle/course:update", $USER->id, true, 'fullname');
         if ($records) {
@@ -473,8 +504,10 @@ class campaign extends base {
         return $courses;
     }
 
-
-    public static function get_options_for_cohorts() : array {
+    /**
+     * Get the cohorts options.
+     */
+    public static function get_options_for_cohorts(): array {
         $cohortslist = \cohort_get_all_cohorts();
         $cohorts = $cohortslist['cohorts'];
         if ($cohorts) {
@@ -485,8 +518,10 @@ class campaign extends base {
         return $cohorts;
     }
 
-
-    public static function get_options_for_campaignowner() : array {
+    /**
+     * Get the campaign owner options.
+     */
+    public static function get_options_for_campaignowner(): array {
         global $CFG, $DB;
         require_once($CFG->dirroot . "/auth/magic/lib.php");
         $users = $DB->get_records_sql("SELECT *
@@ -495,7 +530,10 @@ class campaign extends base {
         return auth_magic_get_usernames_choices($users);
     }
 
-    public static function get_options_for_globalrole() : array {
+    /**
+     * Get the global role.
+     */
+    public static function get_options_for_globalrole(): array {
         global $DB;
         $roles = get_roles_for_contextlevels(CONTEXT_SYSTEM);
         list($insql, $inparams) = $DB->get_in_or_equal(array_values($roles));

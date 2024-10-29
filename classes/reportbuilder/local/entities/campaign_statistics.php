@@ -18,8 +18,7 @@
  * Payment entity class implementation.
  *
  * @package   auth_magic
- * @copyright 2023 Medical Access Uganda Limited
- * @author    Renaat Debleu <info@eWallah.net>
+ * @copyright 2023 bdecent gmbh <https://bdecent.de>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -39,6 +38,18 @@ use core_reportbuilder\local\helpers\format;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class campaign_statistics extends base {
+
+
+    /**
+     * Database tables that this entity uses
+     *
+     * @return array
+     */
+    protected function get_default_tables(): array {
+        return [
+            'auth_magic_campaigns',
+        ];
+    }
 
     /**
      * Database tables that this entity uses and their default aliases
@@ -79,7 +90,7 @@ class campaign_statistics extends base {
      */
     protected function get_all_columns(): array {
         global $DB;
-        $campaigntablealias = $this->get_table_alias('auth_magic_campaigns');
+        $campaigntablealias = "amc";
         $name = $this->get_entity_name();
 
         // Confirmed users.
@@ -94,7 +105,7 @@ class campaign_statistics extends base {
                     LEFT JOIN {auth_magic_campaigns_users} amcu ON amcu.userid = u.id
                     WHERE amcu.campaignid = ? AND u.confirmed = 1
                 ", [$value]);
-        });
+            });
 
         $columns[] = (new column('unconfirmedusers', new lang_string('campaignsource:field_unconfirmedusers', 'auth_magic'), $name))
             ->add_joins($this->get_joins())
@@ -107,14 +118,15 @@ class campaign_statistics extends base {
                     LEFT JOIN {auth_magic_campaigns_users} amcu ON amcu.userid = u.id
                     WHERE amcu.campaignid = ? AND u.confirmed = 0
                 ", [$value]);
-        });
+            });
 
-        $columns[] = (new column('availableseats', new lang_string('campaignsource:field_campaignavailableseats', 'auth_magic'), $name))
+        $columns[] = (new column('availableseats', new lang_string('campaignsource:field_campaignavailableseats',
+            'auth_magic'), $name))
             ->add_joins($this->get_joins())
             ->set_type(column::TYPE_INTEGER)
             ->set_is_sortable(true)
             ->add_field("{$campaigntablealias}.id")
-            ->add_fields("amc.capacity")
+            ->add_fields("{$campaigntablealias}.capacity")
             ->add_callback(static function(?int $value, \stdClass $row) use ($DB): String {
                 $capacity = $row->capacity;
                 if ($capacity) {
@@ -126,14 +138,14 @@ class campaign_statistics extends base {
                     return get_string("countavailableseats", "auth_magic", $availableseats);
                 }
                 return get_string('campaigns:unlimited', 'auth_magic');
-        });
+            });
 
         $columns[] = (new column('totalrevenue', new lang_string('campaignsource:field_totalrevenue', 'auth_magic'), $name))
             ->add_joins($this->get_joins())
             ->set_type(column::TYPE_INTEGER)
             ->set_is_sortable(true)
             ->add_field("{$campaigntablealias}.id")
-            ->add_callback(static function(?int $value) use ($DB) : int {
+            ->add_callback(static function(?int $value) use ($DB): int {
                 $val = $DB->get_record_sql("
                     SELECT
                         SUM(ampl.count_id * p.amount) AS amount
@@ -149,34 +161,35 @@ class campaign_statistics extends base {
                     LEFT JOIN {payments} p ON p.id = ampl.paymentid;
                 ", [$value]);
                 return !isset($val->amount) ? 0 : $val->amount;
-        });
+            });
 
         $columns[] = (new column('firstsignup', new lang_string('campaignsource:field_firstsignup', 'auth_magic'), $name))
-        ->add_joins($this->get_joins())
-        ->set_type(column::TYPE_INTEGER)
-        ->set_is_sortable(true)
-        ->add_field("{$campaigntablealias}.id")
-        ->add_callback(static function(?int $value, \stdClass $row) use ($DB): String {
-            $record = $DB->get_record_sql("SELECT timecreated FROM {auth_magic_campaigns_users} WHERE campaignid = ? ORDER BY timecreated ASC LIMIT 1", [$value]);
-            if (isset($record->timecreated)) {
-                return format::userdate($record->timecreated, $row);
-            }
-            return "";
-        });
+            ->add_joins($this->get_joins())
+            ->set_type(column::TYPE_INTEGER)
+            ->set_is_sortable(true)
+            ->add_field("{$campaigntablealias}.id")
+            ->add_callback(static function(?int $value, \stdClass $row) use ($DB): String {
+                $record = $DB->get_record_sql("SELECT timecreated FROM {auth_magic_campaigns_users} WHERE campaignid = ? ORDER BY timecreated ASC LIMIT 1", [$value]);
+                if (isset($record->timecreated)) {
+                    return format::userdate($record->timecreated, $row);
+                }
+                return "";
+            });
 
 
         $columns[] = (new column('recentsignup', new lang_string('campaignsource:field_recentsignup', 'auth_magic'), $name))
-        ->add_joins($this->get_joins())
-        ->set_type(column::TYPE_INTEGER)
-        ->set_is_sortable(true)
-        ->add_field("{$campaigntablealias}.id")
-        ->add_callback(static function(?int $value, \stdClass $row) use ($DB): String {
-            $record = $DB->get_record_sql("SELECT timecreated FROM {auth_magic_campaigns_users} WHERE campaignid = ? ORDER BY timecreated DESC LIMIT 1", [$value]);
-            if (isset($record->timecreated)) {
-                return format::userdate($record->timecreated, $row);
-            }
-            return "";
-        });
+            ->add_joins($this->get_joins())
+            ->set_type(column::TYPE_INTEGER)
+            ->set_is_sortable(true)
+            ->add_field("{$campaigntablealias}.id")
+            ->add_callback(static function(?int $value, \stdClass $row) use ($DB): String {
+                $record = $DB->get_record_sql("SELECT timecreated FROM {auth_magic_campaigns_users}
+                    WHERE campaignid = ? ORDER BY timecreated DESC LIMIT 1", [$value]);
+                if (isset($record->timecreated)) {
+                    return format::userdate($record->timecreated, $row);
+                }
+                return "";
+            });
 
         return $columns;
     }

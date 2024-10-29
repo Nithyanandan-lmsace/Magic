@@ -33,6 +33,8 @@ use auth_magic\reportbuilder\local\entities\campaign;
 use auth_magic\reportbuilder\local\entities\campaign_statistics;
 use auth_magic\reportbuilder\local\entities\user_statistics;
 use auth_magic\reportbuilder\local\entities\campaign_groups;
+use auth_magic\reportbuilder\local\entities\campaign_approval_staus;
+
 
 /**
  * Payments datasource
@@ -49,13 +51,11 @@ class campaigns extends datasource {
     protected function initialise(): void {
 
         $main = new campaign();
-        $mainalias = $main->get_table_alias('auth_magic_campaigns');
+        $mainalias = "amc";
         $mainname = $main->get_entity_name();
 
         $this->set_main_table('auth_magic_campaigns', $mainalias);
         $this->add_entity($main);
-
-
         // Campaign Groups.
         $campaigngroups = new campaign_groups();
         $campaigngroupsname = $campaigngroups->get_entity_name();
@@ -66,13 +66,22 @@ class campaigns extends datasource {
         $campaignstatisticsname = $campaignstatistics->get_entity_name();
         $this->add_entity($campaignstatistics);
 
-        $magiccampaignusersalias = $main->get_table_alias('auth_magic_campaigns_users');
+        $magiccampaignusersalias = "amcu";
+
+        // Campaign approval status.
+        $approvalstatus = new campaign_approval_staus($this->get_report_persistent()->get('id'));
+        $approvalstatusname = $approvalstatus->get_entity_name();
+        $this->add_entity($approvalstatus->add_join(
+            "LEFT JOIN {auth_magic_campaigns_users} {$magiccampaignusersalias} ON
+                {$magiccampaignusersalias}.campaignid = {$mainalias}.id"
+        ));
 
         // User Statistics.
         $userstatistics = new user_statistics();
         $userstatisticsname = $userstatistics->get_entity_name();
         $this->add_entity($userstatistics->add_join(
-            "LEFT JOIN {auth_magic_campaigns_users} {$magiccampaignusersalias} ON {$magiccampaignusersalias}.campaignid = {$mainalias}.id"
+            "LEFT JOIN {auth_magic_campaigns_users} {$magiccampaignusersalias} ON
+                {$magiccampaignusersalias}.campaignid = {$mainalias}.id"
         ));
 
         $user = new user();
@@ -116,9 +125,6 @@ class campaigns extends datasource {
     public static function get_name(): string {
         return get_string('reportsource_campaign', 'auth_magic');
     }
-
-    // alex        saeed      alex
-    // aaleex      ssaaedd    aaleexa
 
     /**
      * Return the columns that will be added to the report once is created

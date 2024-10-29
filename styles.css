@@ -8,7 +8,8 @@
 }
 #page-auth-magic-campaigns-edit.load-icon:before {
     content: '\f1ce';
-    font-family: fontawesome;
+    font-family: var(--fa-style-family, "Font Awesome 6 Free", "Font Awesome 6 Brands", fontawesome);
+    font-weight: var(--fa-style, 400);
     font-size: 40px;
     position: fixed;
     top: 50%;
@@ -116,6 +117,7 @@
 }
 .loginform.magic {
     max-width: 254px;
+    margin: 0 auto;
 }
 .loginform.magic .logo-block img {
     width: 100%;
@@ -147,16 +149,34 @@
 .loginform.magic .login-form .fdescription.required {
     display: none;
 }
-.loginform.magic .login-form .form-group {
+.loginform.magic .login-form .fitem {
     margin: 0 0 5px 0;
 }
-.loginform.magic .login-form .form-group.magic-submit-action {
-    margin-bottom: 0;
-    position: absolute;
-    top: 0;
-    right: 0;
+.loginform.magic .login-form {
+    #fitem_id_submitbutton {
+        padding-right: 0;
+        &.fitem.magic-submit-action {
+            padding-right: 0;
+            margin-bottom: 0;
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: 1;
+        }
+    }
+    #fitem_id_password .felement {
+        height: 100%;
+        .input-group {
+            .input-group-append {
+                height: 100%;
+                position: absolute;
+                right: 0;
+                z-index: 1;
+            }
+        }
+    }
 }
-.loginform.magic .login-form .form-group .col-form-label {
+.loginform.magic .login-form .fitem .col-form-label {
     max-width: none;
     width: 0;
     height: 0;
@@ -164,40 +184,43 @@
     overflow: hidden;
     flex: none;
 }
-.loginform.magic .login-form .form-group.magic-submit-action .felement input {
+.loginform.magic .login-form .fitem.magic-submit-action .felement input {
     height: 100%;
     font-size: 28px;
-    font-family: fontawesome;
+    font-family: var(--fa-style-family, "Font Awesome 6 Free", "Font Awesome 6 Brands", fontawesome);
+    font-weight: var(--fa-style, 400);
     color: #121212;
     border: 0;
     background: none;
     padding: 0 10px 0 0;
+    margin-bottom: 0;
     opacity: .3;
 }
-.loginform.magic .login-form .form-group .felement {
+.loginform.magic .login-form .fitem .felement {
     max-width: none;
     height: 100%;
     padding: 0;
     flex: auto;
 }
-.loginform.magic .login-form .form-group .felement input {
+.loginform.magic .login-form .fitem .felement input {
     width: 100%;
     height: 42px;
 }
-.loginform.magic .login-form .form-group .felement input.form-control {
+.loginform.magic .login-form .fitem .felement input.form-control {
     border: 1px solid #8c8c8c;
     border-radius: 0.5rem;
+    z-index: 0;
 }
-.loginform.magic .login-form .form-group:not(.magic-submit-action) .felement input[type="submit"] {
+.loginform.magic .login-form .fitem:not(.magic-submit-action) .felement input[type="submit"] {
     height: 36px;
     border-radius: .5rem;
 }
-.loginform.magic .login-form .form-group .felement input.form-control[type="text"] {
+.loginform.magic .login-form .fitem .felement input.form-control[type="text"] {
     padding-right: 40px;
     border: 1px solid #8c8c8c;
     border-radius: 0.5rem;
 }
-.loginform.magic .login-form .form-group .felement input.form-control.is-invalid {
+.loginform.magic .login-form .fitem .felement input.form-control.is-invalid {
     background-image: none;
 }
 .magic-login-footer {
@@ -266,6 +289,9 @@
     .magic-login-footer ul li a {
         color: #000;
     }
+    #page-auth-magic-signin.path-auth-magic #page-wrapper {
+        height: auto;
+    }
 }
 
 /* End of Magic signup */
@@ -292,13 +318,60 @@
     .magic-campaign-signup .campaign-block .mform:not(.full-width-labels) .col-form-label .form-label-addon {
         margin-left: 5px;
     }
-    .magic-campaign-signup .campaign-block .form-inline .form-control {
+    .magic-campaign-signup .campaign-block .felement .form-control {
         width: 100%;
     }
 }
-.magic-campaign-signup .campaign-block .campaign-wrapper .campaign-container .form-group > div {
-    flex: 0 0 100%;
-    max-width: 100%;
+.magic-campaign-signup .campaign-block .campaign-wrapper .campaign-container {
+    form .fitem {
+        margin-left: 0;
+        &:not(#fitem_id_teammembers) > div {
+            max-width: 100%;
+            flex: 0 0 100%;
+            .form-control {
+                width: 100%;
+            }
+        }
+        > div {
+            display: flex;
+            &.femptylabel,
+            .form-control-static {
+                width: 100%;
+                text-align: center;
+                justify-content: center;
+            }
+            .form-autocomplete-selection {
+                text-align: left;
+            }
+            &.felement .flex-wrap {
+                justify-content: center;
+            }
+        }
+    }
+    .campaign-signup-block .nav-tabs {
+        margin: 20px 0;
+        .nav-item {
+            flex: auto;
+            .nav-link {
+                font-weight: bold;
+                border: 1px solid #dee2e6;
+                border-radius: 0;
+                &.active {
+                    color: #fff;
+                    border-color: var(--primary);
+                    background: var(--primary);
+                }
+            }
+            &:first-child .nav-link {
+                border-top-left-radius: 5px;
+                border-bottom-left-radius: 5px;
+            }
+            &:last-child .nav-link {
+                border-top-right-radius: 5px;
+                border-bottom-right-radius: 5px;
+            }
+        }
+    }
 }
 .magic-campaign-signup .campaign-owner-profile {
     font-weight: bold;
@@ -307,52 +380,70 @@
 /* Campaign block - Edit page custom field */
 .custom-field-group {
     display: flex;
+    .fitem {
+        flex-wrap: nowrap;
+        max-width: 40.3%;
+        flex: 0 0 40.3%;
+        .col-form-label {
+            flex: 1 0 63%;
+            max-width: 63%;
+        }
+        .felement {
+            max-width: 264px;
+            width: 100%;
+            padding-right: 0;
+            margin: 0;
+            .custom-select {
+                width: 100%;
+            }
+        }
+    }
 }
-.custom-field-group .form-group:first-child {
+.custom-field-group .felement:first-child {
     max-width: 40%;
     flex: 0 0 40%;
     display: inline-flex;
 }
-.custom-field-group .form-group:nth-child(2) {
+.custom-field-group .felement:nth-child(2) {
     margin: 0 5px 1rem;
 }
-.custom-field-group .form-group:nth-child(2) .felement,
-.custom-field-group .form-group:nth-child(3) .felement {
+.custom-field-group .felement:nth-child(2) .felement,
+.custom-field-group .felement:nth-child(3) .felement {
     max-width: 210px;
     flex: none;
 }
-.custom-field-group .form-group:nth-child(3) {
+.custom-field-group .felement:nth-child(3) {
     margin: 0 0 1rem;
 }
-.custom-field-group .form-group .col-form-label {
+.custom-field-group .felement .col-form-label {
     max-width: 64%;
     flex: 0 0 64%;
 }
-.custom-field-group .form-group .felement {
+.custom-field-group .felement .felement {
     max-width: 36%;
     flex: 0 0 36%;
     padding-right: 0;
 }
-.custom-field-group .form-group .felement select {
+.custom-field-group .felement .felement select {
     width: 100%;
 }
-.custom-field-group .form-group:nth-child(3) .felement {
+.custom-field-group .felement:nth-child(3) .felement {
     padding: 0;
 }
-.mform fieldset .fcontainer.collapseable .form-group .felement fieldset .form-group:first-child {
+/* .mform fieldset .fcontainer.collapseable .fitem .felement fieldset .fitem:first-child {
     min-width: 240px;
-}
-.mform fieldset .fcontainer.collapseable .form-group .felement fieldset .form-group span,
-.mform fieldset .fcontainer.collapseable .form-group .felement fieldset .form-group select {
+} */
+.mform fieldset .fcontainer.collapseable .fitem .felement fieldset .fitem span,
+.mform fieldset .fcontainer.collapseable .fitem .felement fieldset .fitem select {
     width: 100%;
 }
-.mform fieldset .fcontainer.collapseable .custom-field-group > .form-group:not(:nth-child(1)) .col-form-label {
+.mform fieldset .fcontainer.collapseable .custom-field-group > .fitem:not(:nth-child(1)) .col-form-label {
     width: 0;
     padding: 0;
     height: 0;
     text-indent: -999em;
 }
-.mform fieldset .fcontainer .magic-campaign-message-vars .form-group .message-vars .campaign-message-clickforword {
+.mform fieldset .fcontainer .magic-campaign-message-vars .fitem .message-vars .campaign-message-clickforword {
     font-size: 10px;
     color: #000;
     border-radius: 5px;
@@ -372,7 +463,7 @@
 .magic-campaign-signup .campaign-block .campaign-background-block {
     width: 100%;
     height: 100%;
-    position: fixed;
+    position: absolute; /* fixed */
     top: 0;
     left: 0;
     z-index: -1;
@@ -421,7 +512,7 @@
     position: relative;
 }
 .magic-campaign-signup .campaign-block .campaign-wrapper .campaign-container {
-    max-width: 700px;
+    max-width: 750px;
     margin: 30px auto;
 }
 
@@ -567,3 +658,15 @@ form > #fgroup_id_buttonar.form-group .felement .form-group {
 }
 /*End of Campaign password modal*/
 /* End of Campaign block*/
+
+
+/* Payment */
+.path-payment-gateway-bank .table-responsive tbody {
+    &.show-table tr.loader-table {
+        display: none;
+    }
+    &:not(.show-table) tr:not(.loader-table) {
+        display: none;
+    }
+}
+/* End of Payment */

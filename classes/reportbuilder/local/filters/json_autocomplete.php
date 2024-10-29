@@ -25,8 +25,8 @@ use core_reportbuilder\local\helpers\database;
 /**
  * Autocomplete report filter
  *
- * @package     core_reportbuilder
- * @copyright   2022 Nathan Nguyen <nathannguyen@catalyst-au.net>
+ * @package     auth_magic
+ * @copyright   2023 Medical Access Uganda Limited
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class json_autocomplete extends autocomplete {
@@ -48,19 +48,17 @@ class json_autocomplete extends autocomplete {
             return ['', []];
         }
 
-         // Loop through the values you want to check against the JSON field
+         // Loop through the values you want to check against the JSON field.
         foreach ($invalues as $index => $value) {
-            // Create a named parameter for each value
-            $paramname = "{$this->filter->get_name()}$index";  // Create unique param name for each iteration
-            $filtersql[] = "JSON_CONTAINS($fieldsql, :$paramname, '$')";
-            // Bind the parameter value
+            // Create a named parameter for each value.
+            $paramname = "{$this->filter->get_name()}$index";  // Create unique param name for each iteration.
+            $filtersql[] = "$fieldsql IS NOT NULL AND $fieldsql != '' AND JSON_CONTAINS($fieldsql, :$paramname, '$')";
+            // Bind the parameter value.
             $params[$paramname] = json_encode($value);
         }
 
-        // Combine all JSON_CONTAINS conditions using OR (if any of the values should match)
+        // Combine all JSON_CONTAINS conditions using OR (if any of the values should match).
         $filtersql = implode(' OR ', $filtersql);
-       /*  print_r([$filtersql, $params]);
-        exit; */
         return [$filtersql, $params];
     }
 }

@@ -42,6 +42,7 @@ class campaign_helper {
 
     /**
      * The campaign object
+     * @var object
      */
     public $campaign;
 
@@ -80,14 +81,181 @@ class campaign_helper {
         return $button;
     }
 
+    /**
+     * User assign the course or course group based on user input enrolment key - MAG-259.
+     *
+     * @return void
+     */
+    public static function assign_course_coursegroup_related_enrolmentkey($enrolmentkey, $user) {
+        global $DB;
+
+        // Get course base on enrolmentkey.
+        $enrolself = enrol_get_plugin('self');
+        $enrolmanual = enrol_get_plugin('manual');
+        $studentarch = get_archetype_roles('student');
+        $studentrole = array_shift($studentarch);
+
+        if (!$studentrole) {
+            return false;
+        }
+
+        $keycourses = $DB->get_records('enrol', ['enrol' => 'self', 'password' => $enrolmentkey]);
+        if ($keycourses) {
+            foreach ($keycourses as $instance) {
+                $enrolself->enrol_user($instance, $user->id, $studentrole->id);
+            }
+        }
+
+        // Get coursegroup base on enrolmentkey.
+        $keygroups = $DB->get_records('groups', ['enrolmentkey' => $enrolmentkey]);
+        if ($keygroups) {
+            foreach ($keygroups as $group) {
+                // Check the if groups enrolled or not. If not enroll the group course.
+                $courseinstance = $DB->get_record('enrol', ['courseid' => $group->courseid, 'enrol' => 'self']);
+                $enrolmethod = $enrolself;
+                if (!$courseinstance) {
+                    $courseinstance = $DB->get_record('enrol', ['courseid' => $group->courseid, 'enrol' => 'manual']);
+                    $enrolmethod = $enrolmanual;
+                }
+
+                // Assign group course.
+                if ($courseinstance) {
+                    $enrolmethod->enrol_user($courseinstance, $user->id, $studentrole->id);
+                }
+
+                // Assign the add group member.
+                groups_add_member($group->id, $user->id);
+            }
+        }
+
+    }
+
+    /**
+     * Assign the user to auth_magic_campaigns_user.
+     * @param mixed $userid
+     * @param mixed $campaignid
+     * @return void
+     */
+    public static function assign_campaign_user($userid, $campaignid) {
+        global $DB;
+        if (!$DB->record_exists('auth_magic_campaigns_users', ['userid' => $userid, 'campaignid' => $campaignid])) {
+            $record = new stdClass;
+            $record->userid = $userid;
+            $record->campaignid = $campaignid;
+            $record->timecreated = time();
+            $DB->insert_record('auth_magic_campaigns_users', $record);
+        }
+    }
+
+    public function get_existing_user_parents($user) {
+        $approvalusers = [];
+        if (!empty($this->campaign->approvalroles)) {
+            foreach ($this->campaign->approvalroles as $roleid) {
+                // Check the user level context or not.
+                if ($contextlevel = get_role_contextlevels($roleid)) {
+                    if (in_array(CONTEXT_USER, $contextlevel)) {
+                        $parentlevelusers = get_role_users($roleid, \context_user::instance($user->id));
+                        foreach ($parentlevelusers as $parentleveluser) {
+                            $approvalusers[$parentleveluser->id] = $parentleveluser;
+                        }
+                    } else { // System level.
+                        $systemlevelusers = get_role_users($roleid, \context_system::instance());
+                        foreach ($systemlevelusers as $systemleveluser) {
+                            $approvalusers[$systemleveluser->id] = $systemleveluser;
+                        }
+                    }
+                }
+            }
+        }
+        return $approvalusers;
+    }
+
+    public function campaign_approval($user) {
+        $approvalusers = $this->get_existing_user_parents($user);
+        if (!empty($approvalusers)) {
+            foreach ($approvalusers as $approvaluser) {
+                $approvaluser = \core_user::get_user($approvaluser->id);
+                self::campaign_confirmation_approval($approvaluser, $user, $this->campaign);
+            }
+        }
+    }
+
+    public function campaign_revokeapproval($user) {
+        $approvalusers = $this->get_existing_user_parents($user);
+        if (!empty($approvalusers)) {
+            foreach ($approvalusers as $approvaluser) {
+                $approvaluser = \core_user::get_user($approvaluser->id);
+                auth_magic_send_revocationlink_email($this->campaign->id, $user, $approvaluser);
+            }
+        }
+    }
+
+
+    public static function campaign_confirmation_approval($approvaluser, $user, $campaign) {
+        $site = get_site();
+        $supportuser = core_user::get_support_user();
+
+        $data = new stdClass();
+        $data->sitename  = format_string($site->fullname);
+        $data->admin     = generate_email_signoff();
+
+        $subject = get_string('emailconfirmationapprovalsubject', 'auth_magic', format_string($site->fullname));
+
+        if (empty($confirmationurl)) {
+            $confirmationurl = '/auth/magic/campaigns/confirmapproval.php';
+        }
+
+        $confirmationurl = new moodle_url($confirmationurl);
+        // Remove data parameter just in case it was included in the confirmation so we can add it manually later.
+        $confirmationurl->remove_params('data');
+        $confirmationpath = $confirmationurl->out(false);
+
+        // We need to custom encode the username to include trailing dots in the link.
+        // Because of this custom encoding we can't use moodle_url directly.
+        // Determine if a query string is present in the confirmation url.
+        $hasquerystring = strpos($confirmationpath, '?') !== false;
+        // Perform normal url encoding of the username first.
+        $username = urlencode($approvaluser->username);
+        // Prevent problems with trailing dots not being included as part of link in some mail clients.
+        $username = str_replace('.', '%2E', $username);
+
+        $link = $confirmationpath . ( $hasquerystring ? '&' : '?') . 'data='. $approvaluser->secret .'/'. $username;
+        $link .= '&user='. $user->id . '&campaignid=' . $campaign->id;
+        $data->link = $link;
+        $data->campaignname = $campaign->title;
+
+        $message     = get_string('emailconfirmationapproval', 'auth_magic', $data);
+        $messagehtml = text_to_html(get_string('emailconfirmationapproval', 'auth_magic', $data), false, false, true);
+        // Directly email rather than using the messaging system to ensure its not routed to a popup or jabber.
+        return email_to_user($approvaluser, $supportuser, $subject, $message, $messagehtml);
+    }
+
+    /**
+     * Update the campaign self form instance.
+     * @param object $data
+     */
     public function update_campaign_selfform($data) {
         global $DB;
         $campaigninstance = campaign::instance($this->campaignid);
         if (isset($data->userid) && !auth_magic_is_paid_campaign($this->campaign, $data->coupon)) {
             $user = $DB->get_record('user', ['id' => $data->userid]);
-            // Assign to the campaign cohorts, roles, parent.
-            $this->process_campaign_assignments($user);
-            $campaigninstance->campaign_after_submission($user, get_string('campaignassignmentapply', 'auth_magic'));
+            $submissonstr = get_string('campaignassignmentapply', 'auth_magic');
+
+            if ($this->campaign->approvaltype != 'optionalin') {
+                // Assign to the campaign cohorts, roles, parent.
+                $this->process_campaign_assignments($user);
+            } else {
+                $submissonstr = get_string('campaignassignmentrequest', 'auth_magic');
+                // Sent the cofirmation approval.
+                $this->campaign_approval($user);
+            }
+
+            // Sent the revocation link to the user.
+            if ($this->campaign->approvaltype == 'optionalout' || $this->campaign->approvaltype == 'fulloptionout') {
+                $this->campaign_revokeapproval($user);
+            }
+
+            $campaigninstance->campaign_after_submission($user, $submissonstr);
         } else {
             $returnurl = new moodle_url('/auth/magic/campaigns/payment.php',
                         ['campaignid' => $this->campaignid, 'userid' => $data->userid, 'sesskey' => sesskey()]);
@@ -95,7 +263,10 @@ class campaign_helper {
         }
     }
 
-
+    /**
+     * Update the campaign teamform instance.
+     * @param object $data
+     */
     public function update_campaign_teamform($data) {
         global $DB, $PAGE;
         if (!empty($data->teammembers)) {
@@ -103,10 +274,25 @@ class campaign_helper {
                 foreach ($data->teammembers as $member) {
                     $user = $DB->get_record('user', ['id' => $member]);
                     // Assign to the campaign cohorts, roles, parent.
-                    $this->process_campaign_assignments($user);
+                    if ($this->campaign->approvaltype != 'optionalin') {
+                        $this->process_campaign_assignments($user);
+                    } else {
+                        // Sent the cofirmation approval.
+                        $this->campaign_approval($user);
+                    }
+
+                    if ($this->campaign->approvaltype == 'optionalout' || $this->campaign->approvaltype == 'fulloptionout') {
+                        $this->campaign_revokeapproval($user);
+                    }
                 }
-                return redirect($PAGE->url, get_string('campaignassignmentapply', 'auth_magic'),
+                if ($this->campaign->approvaltype != 'optionalin') {
+                    $redirectstr = get_string('campaignassignmentapply', 'auth_magic');
+                } else {
+                    $redirectstr = get_string('campaignassignmentrequest', 'auth_magic');
+                }
+                return redirect($PAGE->url, $redirectstr,
                     null, \core\output\notification::NOTIFY_SUCCESS);
+
             } else {
                 $returnurl = new moodle_url('/auth/magic/campaigns/payment.php',
                 ['campaignid' => $this->campaignid, 'sesskey' => sesskey()]);
@@ -121,12 +307,18 @@ class campaign_helper {
         }
     }
 
+    /**
+     * Update the campaign manageform.
+     * @param object $user
+     * @param array $params
+     */
     public function update_campaign_manageform($user, $params) {
         global $DB;
         $campaigninstance = campaign::instance($this->campaignid);
         $parentuser = null;
         $userenrolmentkey = isset($user->enrolpassword) ? $user->enrolpassword : '';
         if ($DB->record_exists('user', ['email' => $user->email])) {
+
             $redirectstr = get_string('campaignassignapplied', 'auth_magic');
             $newuser = $DB->get_record('user', ['email' => $user->email]);
             $customfieldvalues = auth_magic_managerole_assignments_customvalues($user, $this->campaign->approvalroles);
@@ -137,22 +329,23 @@ class campaign_helper {
         } else {
             $redirectstr = get_string('signupsuccess', 'auth_magic');
             // Add missing required fields.
-            $user = campaign_helper::get_campaign_fields_instance($this->campaignid)->reset_placeholder_values($user);
+            $user = self::get_campaign_fields_instance($this->campaignid)->reset_placeholder_values($user);
             if (trim($user->username) === '') {
                 $user->username = $user->email;
             }
-            $user = campaign_helper::signup_setup_new_user($user);
+            $user = self::signup_setup_new_user($user);
             // Plugins can perform post sign up actions once data has been validated.
             core_login_post_signup_requests($user);
             $authplugin = get_auth_plugin($user->auth);
-            $user->password = isset($user->password) && $authplugin->is_internal() ? hash_internal_user_password($user->password) : '';
+            $user->password = isset($user->password) && $authplugin->is_internal() ?
+                hash_internal_user_password($user->password) : '';
             // Prints notice and link to login/index.php.
             if ($userid = user_create_user($user, false, false)) {
                 $user->id = $userid;
                 $newuser = $DB->get_record('user', ['id' => $userid]);
                 // Sent the confirmation link.
                 if ($this->campaign->emailconfirm == campaign::ENABLE && $this->campaign->approvaltype != 'optionalin') {
-                    auth_magic_send_confirmation_email($newuser, new moodle_url('/auth/magic/confirm.php'));
+                    auth_magic_send_confirmation_email($newuser, $this->campaign->id);
                 }
 
                 $usercontext = context_user::instance($newuser->id);
@@ -180,12 +373,16 @@ class campaign_helper {
                 } else if ($this->campaign->emailconfirm == campaign::PARTIAL) {
                     $DB->set_field("user", "confirmed", 0, ["id" => $newuser->id]);
                     if ($this->campaign->approvaltype != 'optionalin') {
-                        auth_magic_send_confirmation_email($newuser, new moodle_url('/auth/magic/confirm.php'));
+                        auth_magic_send_confirmation_email($newuser, $this->campaign->id);
                     }
                 }
             }
         }
 
+        // If user enrollment key is added to user. so enroll the enrolment key related the course or course group.
+        if ($userenrolmentkey) {
+            \campaign_helper::assign_course_coursegroup_related_enrolmentkey($userenrolmentkey, $newuser);
+        }
         if (!auth_magic_is_paid_campaign($this->campaign, $userenrolmentkey) && ($this->campaign->emailconfirm != campaign::ENABLE
             || isloggedin()) && $this->campaign->approvaltype != 'optionalin') {
             // Assign to the campaign cohorts, roles, parent.
@@ -268,7 +465,6 @@ class campaign_helper {
     /**
      * Send the campaign expiry notification.
      * @param mixed $campaign
-     * @param mixed $notifytime
      * @return bool
      */
     public function send_expiry_notification($campaign) {
@@ -276,12 +472,13 @@ class campaign_helper {
         $campaignusers = $DB->get_records("auth_magic_campaigns_users", ['campaignid' => $campaign->id]);
         if (!empty($campaignusers)) {
             foreach ($campaignusers as $campaignuser) {
-                // Parse selected notification schedule
+                // Parse selected notification schedule.
                 $notifyschedule = $campaign->expirybeforenotify;
-                $notifiedstatus = !empty($campaignuser->expirybeforenotifystatus) ? json_decode($campaignuser->expirybeforenotifystatus) : [];
-                $time_now = time();
+                $notifiedstatus = !empty($campaignuser->expirybeforenotifystatus) ?
+                    json_decode($campaignuser->expirybeforenotifystatus) : [];
+                $timenow = time();
                 $notificationstosend = [];
-                // Define notification intervals in seconds
+                // Define notification intervals in seconds.
                 $intervals = [
                     '3month' => 3 * 30 * 24 * 60 * 60,
                     '1month' => 1 * 30 * 24 * 60 * 60,
@@ -294,27 +491,34 @@ class campaign_helper {
                 ];
 
                 foreach ($notifyschedule as $notifytime) {
-                    // Calculate when the notification should be sent
-                    $notifytime_seconds = $intervals[$notifytime];
-                    $notify_date = $campaign->expirydate - $notifytime_seconds;
-                    // Check if it's time to send the notification and if it hasn't been sent yet
-                    if ($time_now >= $notify_date && !in_array($notifytime, $notifiedstatus)) {
+                    // Calculate when the notification should be sent.
+                    $notifytimeseconds = $intervals[$notifytime];
+                    $notifydate = $campaign->expirydate - $notifytimeseconds;
+                    // Check if it's time to send the notification and if it hasn't been sent yet.
+                    if ($timenow >= $notifydate && !in_array($notifytime, $notifiedstatus)) {
                         $notificationstosend[] = $notifytime;
                     }
                 }
 
-
                 if (!empty($notificationstosend)) {
                     foreach ($notificationstosend as $notifytime) {
-                        mtrace("running send_expiry_notification: " . $campaign->title . "notifytime: ". $notifytime);
+                        mtrace("running send_expiry_notification: " . $campaign->title .
+                             "notifytime: ". $notifytime);
                         $user = $DB->get_record('user', ['id' => $campaignuser->userid]);
-                        mtrace("running send_expiry_notification: " . $campaign->title . "notifytime: ". $notifytime . "User" . fullname($user));
+                        mtrace("running send_expiry_notification: " . $campaign->title . "notifytime: "
+                            . $notifytime . "User" . fullname($user));
                         $subject = get_string("subjectcampaignexpirynotify", 'auth_magic', $campaign->title);
-                        $message = get_string('messagecampaignexpirynotify', 'auth_magic', ['campaignname' => $campaign->title, 'notifytime' => $notifytime]);
+                        if ($notifytime == 'upon') {
+                            $message = get_string('messagecampaignexpirynow', 'auth_magic',
+                                ['campaignname' => $campaign->title]);
+                        } else {
+                            $message = get_string('messagecampaignexpirynotify', 'auth_magic',
+                                ['campaignname' => $campaign->title, 'notifytime' => $notifytime]);
+                        }
                         self::campaign_messagetouser($user, $subject, $message, $message);
                     }
 
-                    // Update the notifiedstatus field to mark these notifications as sent
+                    // Update the notifiedstatus field to mark these notifications as sent.
                     $notifiedstatus = array_merge($notifiedstatus, $notificationstosend);
                     $record = $DB->get_record('auth_magic_campaigns_users', ['id' => $campaignuser->id]);
                     $record->expirybeforenotifystatus = json_encode($notifiedstatus);
@@ -334,7 +538,8 @@ class campaign_helper {
         $campaignusers = $DB->get_records('auth_magic_campaigns_users', ['campaignid' => $this->campaignid]);
         if (!empty($campaignusers)) {
             foreach ($campaignusers as $campaignuser) {
-                if ($user = $DB->get_record('user', array('id'=> $campaignuser->userid, 'mnethostid'=> $CFG->mnet_localhost_id, 'deleted' => 0))) {
+                if ($user = $DB->get_record('user', ['id' => $campaignuser->userid,
+                    'mnethostid' => $CFG->mnet_localhost_id, 'deleted' => 0])) {
                     if ($this->campaign->expirysuspenduser && $user->suspended != 1) {
                         $user->suspended = 1;
                         // Force logout.
@@ -367,8 +572,6 @@ class campaign_helper {
     }
 
 
-
-
     /**
      * Implement the campaign assignments workflow.
      * @param object $user
@@ -383,6 +586,8 @@ class campaign_helper {
         $this->assign_parentuser($ownerroleid, $this->campaign->campaignowner, $user->id, $removed);
 
         $campaigninstance = campaign::instance($this->campaignid);
+
+        self::assign_campaign_user($user->id, $this->campaignid);
 
         $usergroupid = $campaigninstance->process_campaign_course($user, $removed);
 
@@ -555,7 +760,6 @@ class campaign_helper {
             $instance->expirydate = !empty($data->expirytime) ? time() + $instance->expirytime : 0;
         }
 
-
         $instance->expirysuspenduser = ($data->expirysuspenduser) ? $data->expirysuspenduser : 0;
         $instance->expirydeleteduser = $data->expirydeleteduser ? $data->expirydeleteduser : 0;
         $instance->expiryassigncohorts = $data->expiryassigncohorts;
@@ -694,6 +898,25 @@ class campaign_helper {
     }
 
     /**
+     * Check the coupon vaild or not through the (course or course group enrolment key).
+     * @return void
+     */
+    public static function check_coupon_site_wide($coupon) {
+        global $DB;
+
+        // Check the course coupon.
+        if ($DB->record_exists('enrol', ['enrol' => 'self', 'password' => $coupon])) {
+            return true;
+        }
+
+        if ($DB->record_exists('groups', ['enrolmentkey' => $coupon])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Get the form fieldname.
      * @param int $data
      * @param string $alias
@@ -745,12 +968,12 @@ class campaign_helper {
             $record->formposition = $record->formposition;
             $record->globalrole = $record->globalrole ?: "";
             $record->cohorts = !empty($record->cohorts) ? json_decode($record->cohorts) : "";
-            $record->restrictroles =  !empty($record->restrictroles) ? json_decode($record->restrictroles) : "";
-            $record->restrictcohorts =  !empty($record->restrictcohorts) ? json_decode($record->restrictcohorts) : "";
+            $record->restrictroles = !empty($record->restrictroles) ? json_decode($record->restrictroles) : "";
+            $record->restrictcohorts = !empty($record->restrictcohorts) ? json_decode($record->restrictcohorts) : "";
             $record->password = base64_decode($record->password) ?: "";
             $record->campaignowner = $record->campaignowner ?: "";
-            $record->approvalroles =  !empty($record->approvalroles) ? json_decode($record->approvalroles) : "";
-            $record->expirybeforenotify =  !empty($record->expirybeforenotify) ? json_decode($record->expirybeforenotify) : "";
+            $record->approvalroles = !empty($record->approvalroles) ? json_decode($record->approvalroles) : "";
+            $record->expirybeforenotify = !empty($record->expirybeforenotify) ? json_decode($record->expirybeforenotify) : "";
             // Set the campaign form fields elements.
             if ($includeformfields) {
                 self::get_campaign_formfied_values($record, $id);
@@ -856,6 +1079,10 @@ class campaign_helper {
             $DB->delete_records('auth_magic_campaigns_users', ['campaignid' => $this->campaignid]);
             $DB->delete_records('auth_magic_campaigns_payment', ['campaignid' => $this->campaignid]);
             $DB->delete_records('auth_magic_payment_logs', ['campaignid' => $this->campaignid]);
+            if ($DB->get_manager()->table_exists('paygw_bank')) {
+                $DB->delete_records('paygw_bank', ['itemid' => $this->campaignid,
+                    'component' => 'auth_magic', 'paymentarea' => 'campaign']);
+            }
             return true;
         }
         return false;
@@ -933,8 +1160,8 @@ class campaign_helper {
     public static function campaign_messagetouser($userto, $subject, $messageplain, $messagehtml, $sender = null) {
 
         $eventdata = new \core\message\message();
-        $eventdata->name = 'instantmessage';
-        $eventdata->component = 'moodle';
+        $eventdata->name = 'notification';
+        $eventdata->component = 'auth_magic';
         $eventdata->courseid = SITEID;
         $eventdata->userfrom = $sender ?: core_user::get_support_user();
         $eventdata->userto = $userto;

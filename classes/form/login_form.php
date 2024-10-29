@@ -47,7 +47,7 @@ class login_form extends \moodleform {
         $email = $this->_customdata['email'];
         $user = $this->_customdata['user'];
         $mform->addElement('text', 'email', get_string('email'),
-            ['placeholder' => get_string('strenteryouremail', 'auth_magic')]);
+            ['placeholder' => get_string('strenteryouremail', 'auth_magic'), 'class' => 'form-group']);
         $mform->setType('email', PARAM_RAW_TRIMMED);
         $mform->addRule('email', null, 'required', null, 'client');
         $mform->setDefault('email', $email);
@@ -62,18 +62,18 @@ class login_form extends \moodleform {
                 ];
                 $PAGE->requires->js_call_amd('auth_magic/authmagic', 'init', [$params]);
                 $mform->addElement('password', 'password', get_string('password'),
-                    ['placeholder' => get_string('password')]);
+                    ['placeholder' => get_string('password'), 'class' => 'form-group']);
                 $mform->setType('password', PARAM_RAW);
                 $mform->addRule('password', null, 'required', null, 'client');
             } else if ($user->auth != 'magic' && $auth->can_reset_password()) {
                 $mform->addElement('password', 'password', get_string('password'),
-                    ['placeholder' => get_string('password')]);
+                    ['placeholder' => get_string('password'), 'class' => 'form-group']);
                 $mform->setType('password', PARAM_RAW);
                 $mform->addElement('submit', 'submitbutton', get_string('strsignin', 'auth_magic'),
-                    ['class' => 'magic-signin']);
+                    ['class' => 'magic-signin form-group']);
             }
         }
-        $mform->addElement('submit', 'submitbutton', "&#xf18e;", ['class' => 'magic-submit-action']);
+        $mform->addElement('submit', 'submitbutton', "&#xf18e;", ['class' => 'magic-submit-action form-group']);
     }
 
     /**

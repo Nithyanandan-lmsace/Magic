@@ -70,10 +70,10 @@ class campaign_data_source extends abstract_data_source {
         global $USER;
         $builder = new builder();
         $builder
-        ->select('amc.id', 'amc_id')
-        ->select('CASE WHEN amc.password = "" THEN 0 ELSE 1 END', 'amc_passwordstatus')
-        ->from('auth_magic_campaigns', 'amc')
-        ->join('auth_magic_campaigns_payment', 'amcp', 'campaignid', 'amc.id', join::TYPE_LEFT_JOIN);
+            ->select('amc.id', 'amc_id')
+            ->select('CASE WHEN amc.password = "" THEN 0 ELSE 1 END', 'amc_passwordstatus')
+            ->from('auth_magic_campaigns', 'amc')
+            ->join('auth_magic_campaigns_payment', 'amcp', 'campaignid', 'amc.id', join::TYPE_LEFT_JOIN);
 
         $builder->where('amc.status', [0]);
         $builder->where_raw('(amc.campaignowner = :userid OR amc.visibility = 1)', ['userid' => $USER->id]);

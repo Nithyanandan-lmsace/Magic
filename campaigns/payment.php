@@ -36,17 +36,28 @@ if (!is_enabled_auth('magic')) {
 require_login();
 require_sesskey();
 
+unset($SESSION->auth_magic_teamusers);
+
 // PAGE URL.
 $userid = optional_param('userid', 0, PARAM_INT);
 $campaignid = optional_param('campaignid', 0, PARAM_INT);
 $users = optional_param_array('users', [], PARAM_INT);
 
-$url = new moodle_url('/auth/magic/campaigns/payment.php', ['userid' => $userid, 'campaignid' => $campaignid,
+$pageurl = new moodle_url('/auth/magic/campaigns/payment.php', ['userid' => $userid, 'campaignid' => $campaignid,
     'sesskey' => sesskey()]);
+
+if (!empty($users)) {
+    $userparams = [];
+    foreach ($users as $user) {
+        $userparams[] = 'users[]=' . $user;
+    }
+    $usersquery = implode('&', $userparams);
+    $pageurl = $pageurl->out(false) . "&" . $usersquery;
+}
 
 $context = context_system::instance();
 $strviewcampaign = get_string('strpaymentcampaign', 'auth_magic');
-$PAGE->set_url($url);
+$PAGE->set_url($pageurl);
 $PAGE->set_context($context);
 $PAGE->set_title("$SITE->fullname: ". $strviewcampaign);
 
@@ -70,8 +81,16 @@ $PAGE->set_heading($campaign->title);
 // Page content display started.
 echo $OUTPUT->header();
 
+$campaignamount = $campaign->paymentinfo->fee;
+if (!empty($users)) {
+    $SESSION->auth_magic_teamusers = count($users);
+    $campaignamount = count($users) * $campaign->paymentinfo->fee;
+}
+
+$cost = \core_payment\helper::get_cost_as_string($campaignamount, $campaign->paymentinfo->currency, 0);
+
 $template = [
-    'cost' => \core_payment\helper::get_cost_as_string($campaign->paymentinfo->fee, $campaign->paymentinfo->currency),
+    'cost' => $cost,
     'instanceid' => $campaign->id,
     'successurl' => \auth_magic\payment\service_provider::get_success_url('campaign', $campaign->id)->out(false),
     'description' => get_string('purchasecampaigndescription', 'auth_magic', $campaign->title),

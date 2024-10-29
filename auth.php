@@ -19,7 +19,7 @@
  *
  * @package auth_magic
  * @copyright  2023 bdecent gmbh <https://bdecent.de>
- * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
+ * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
@@ -122,13 +122,14 @@ class auth_plugin_magic extends auth_plugin_base {
         global $CFG, $DB, $SESSION, $PAGE, $OUTPUT;
         require_once($CFG->dirroot.'/user/profile/lib.php');
         require_once($CFG->dirroot.'/user/lib.php');
+        $plainpassword = null;
         if (get_config('auth_magic', 'supportpassword') && isset($user->password)) {
             $plainpassword = $user->password;
             $user->password = hash_internal_user_password($user->password);
         }
 
         $user->id = user_create_user($user, false, false);
-        if (get_config('auth_magic', 'supportpassword')) {
+        if (get_config('auth_magic', 'supportpassword') && $plainpassword) {
             user_add_password_history($user->id, $plainpassword);
         }
 

@@ -21,33 +21,39 @@
  * @copyright  2023 bdecent gmbh <https://bdecent.de>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 $string['pluginname'] = 'Magic authentication';
 $string['configtitle'] = "Magic authentication";
 $string['defaultenrolmentduration'] = "Default enrolment duration";
+$string['defaultenrolmentduration_desc'] = "The Default Enrolment Duration setting in Quick Registration allows you to specify the default duration for course enrolments.";
 $string['defaultenrolmentrole'] = "Default enrolment role";
+$string['defaultenrolmentrole_desc'] = "The Default Enrolment Role setting enables you to specify the role assigned to users when they are enrolled in a course using the Quick Registration feature.";
 $string['loginexpiry'] = "Magic login link expiry";
+$string['loginexpiry_desc'] = "The setting determines how long the login link is valid after being generated. After the set time, the link expires and can no longer be used.";
 $string['strsupportauth'] = "Supported authentication method";
 $string['magiconly'] = "Magic only";
 $string['anymethod'] = "Any method";
 $string['strowneraccountrole'] = "Owner account role";
+$string['owneraccountrole_desc'] = "The setting is used to define the role assigned to the user who creates a new user account.";
 $string['strkeyaccount'] = "Key account";
 $string['getmagiclinkviagmail'] = "Get a magic link via email";
 $string['courseenrolment'] = "Course enrolment";
 $string['enrolmentduration'] = "Enrolment duration";
-$string['invitationexpiry'] = "";
+$string['invitationexpiry_desc'] = "The setting determines how long the invitation link is valid after being generated. After the set time, the link expires and can no longer be used.";
 $string['invitationexpiry'] = "Magic invitation link expiry";
 $string['hasbeencreated'] = "has been created";
 $string['strenrolinto'] = "enrolled into";
 $string['magiclink'] = "Magic link";
-$string['copyboard'] = "Copy link to cliboard";
+$string['copyboard'] = "Copy link to clipboard";
 $string['copyloginlink'] = "Copy magic login link for the user";
 $string['more'] = '{$a} more';
 $string['loginsubject'] = '{$a}: Magic authentication via login';
 $string['loginlinksubject'] = "Magic authentication login link";
-
+$string['strsupportauth_desc'] = "The setting allows you to define the method by which users can obtain a magic link via email for authentication.";
 $string['pluginisdisabled'] = 'The magic authentication plugin is disabled.';
 $string['emailnotexists'] = "Doesn't exist user email";
 $string['loginlinkbtnpostion'] = 'Magic login link button position';
+$string['loginlinkbtnpostion_desc'] = "This setting allows you to configure the placement of the \"Get a Magic Link\" button on the login form.";
 $string['normal'] = "Normal";
 $string['belowusername'] = "Below username";
 $string['belowpassword'] = "Below password";
@@ -194,13 +200,10 @@ $string['privacy:metadata:auth_magic:campaignid'] = "ID of the campaign";
 $string['privacy:metadata:auth_magic:paymentid'] = "The payment account ID for the paid campaign has been updated.";
 $string['privacy:metadata:auth_magic:paymentstatus'] = "The campaign payment status.";
 
-
 $string['privacy:metadata:auth_magic:enrolpassword'] = "The Campaign user enrolment key.";
 $string['privacy:metadata:auth_magic:passenrolmentkey'] = "Status for the valid user enrolment key.";
 $string['privacy:metadata:auth_magic:roleid'] = "Relative roleid for role assigments";
 $string['privacy:metadata:auth_magic:roleassignstatus'] = "The relative role assignment status.";
-
-
 
 
 $string['privacy:metadata:auth_magic'] = 'Magic authentication';
@@ -215,7 +218,7 @@ $string['strcampaignownerrole'] = 'Campaign owner role';
 $string['strcampaignownerrole_desc'] = 'Add a campaign owner role for magic campaigns';
 $string['managecampaign'] = 'Manage campaign';
 $string['createcampaign'] = 'Create campaign';
-$string['campaigns:generalsection'] = 'Genaral settings';
+$string['campaigns:generalsection'] = 'General settings';
 $string['campaigns:title'] = 'Title';
 $string['campaigns:description'] = 'Description';
 $string['campaigns:comments'] = 'Comments';
@@ -320,6 +323,7 @@ $string['sendmessage'] = 'Send follow up message';
 $string['campaignlink'] = 'Campaign link';
 $string['signupsuccess'] = "User signup successfully.";
 $string['strsupportpassword'] = "Supports password";
+$string['strsupportpassword_desc'] = "The support password setting controls whether users need a password to access Moodle when using the magic authentication method.";
 $string['strsignup'] = 'Sign up';
 $string['auth_emailnoemail'] = 'Tried to send you an email but failed!';
 $string['strprofilefield:'] = 'Profile Field: {$a}';
@@ -389,12 +393,17 @@ $string['campaigns:type_auth_help'] = "";
 
 
 $string['privilegedrole'] = 'Privileged role';
+$string['privilegedrole_desc'] = "
+This setting allows you to define which roles are considered \"privileged\" during the magic login process.
+<br>
+<b> Note: </b> When signing in with an email address linked to an account with a privileged role, users must enter their password before they can receive the magic login link via email on the magic custom login page.
+";
 $string['teacherrole'] = 'Teacher';
 $string['noneditteacherrole'] = 'Non-editing teacher';
 $string['managerrole'] = 'Manager';
 $string['strsignsite'] = 'Sign in to {$a}';
 $string['loginfooter'] = "Login footer links";
-$string['loginfooter_desc'] = 'Enter the content/links on the "Login footer" block. A URL is separated by pipe characters followed by the link text.';
+$string['loginfooter_desc'] = 'Enter the content | links on the "Login footer" block. A URL is separated by pipe characters followed by the link text.';
 $string['loginfooterdefault'] = 'Imprint |#
 Terms & Conditions |#
 Login instructions |#
@@ -655,7 +664,7 @@ $string['valueavailablecapacity'] = '{$a} available';
 $string['valutotalandavailablecapacity'] = '{$a->available} of {$a->total} available';
 $string['approvaltype'] = "Approval type";
 $string['approvaltypes'] = "Approval types";
-$string['campaignsource:field_campaignownerwithlink'] = "Campaign User with link";
+$string['campaignsource:field_campaignownerwithlink'] = "Campaign owner with link";
 $string['mycampaign'] = "My campaigns";
 $string['hidemycampaign'] = "Hide my campaigns";
 $string['strpast'] = "Past";
@@ -694,7 +703,8 @@ $string['daybefore1'] = "1 day before expiry";
 $string['uponbefore'] = "upon expiry";
 
 $string['subjectcampaignexpirynotify'] = 'Campaign Expiry Notification: {$a}';
-$string['messagecampaignexpirynotify'] = 'This is a reminder that the campaign {$a->campaignname} is set to expire in {$a->notifytime}.';
+$string['messagecampaignexpirynotify'] = 'This is a reminder that the campaign <b> {$a->campaignname} </b> is set to expire in : <b> {$a->notifytime} </b>.';
+$string['messagecampaignexpirynow'] = 'This is a reminder that the campaign <b> {$a->campaignname} </b> has now expired';
 $string['campaignexpirycheck'] = "Magic campaign expiry action task";
 
 $string['myself'] = "Myself";
@@ -705,8 +715,53 @@ $string['magic:campaignself'] = "Can able to access the  campaign self section";
 $string['magic:campaignteam'] = "Can able to campaign team section";
 $string['magic:campaignnew'] = "Can able to campaign new section";
 $string['strapply'] = "Apply";
-$string['campaign:myselfinfo'] = "If you click submit, the assignments of this campaign will be applied to your own user account.";
+$string['campaign:myselfinfo'] = "The campaign assignments will be applied your own user account.";
+$string['campaign:myselfexistinfo'] = "You have already used this campaign.";
+$string['campaign:teammemberinfo'] = "The campaign assignments will be applied to the selected team member(s).";
 $string['searchusers'] = "Search users";
-$string['campaignassignmentapply'] = "Campaign assignments appiled successfully.";
+$string['campaignassignmentapply'] = "Campaign assignments applied successfully.";
+$string['campaignassignmentrequest'] = "Campaign assignments requested.";
 $string['campaign:noteaminfo'] = "No team members are available.";
 $string['signupyourself'] = "Please select if you want to sign up yourself or somebody else";
+$string['formembers'] = 'For {$a} members';
+
+$string['notopted-out'] = 'Not opted-out   <a href=\'{$a}\'> (Opt-out now) </a>';
+$string['norolenotopted-out'] = 'No user with approval role  <a href=\'{$a}\'> (Opt-out now) </a>';
+
+$string['waitingforconfirmation'] = 'Waiting for confirmation <a href=\'{$a}\'> (Confirm now)</a>';
+
+$string['waitingforoptin'] = 'Waiting for  opt-in <a href=\'{$a}\'> (Opt-in now)</a>';
+$string['norolewaitingforoptin'] = 'No user with approval role <a href=\'{$a}\'> (Opt-in now)</a>';
+
+$string['approved'] = "Approved";
+$string['rejected'] = "Rejected";
+
+$string['campaignsource:field_open'] = "Open";
+$string['campaignsource:field_approved'] = "Approved";
+$string['campaignsource:field_rejected'] = "Rejected";
+
+$string['entities:campaign_groups'] = "Campaign Groups";
+$string['entities:campaign_approval_staus'] = "Campaign approval status";
+$string['messageprovider:notification'] = "Magic authentication notification";
+$string['passwordinvalid'] = "Incorrect enrolment key, please try again";
+
+$string['emailconfirmationapprovalsubject'] = '{$a}: Campaign user approval confirmation';
+$string['emailconfirmationapproval'] = 'Hi,
+
+A account has been requested to approval campaign assignments at \'{$a->sitename}\'
+<b> campaign: \'{$a->campaignname}\'</b> using your email address.
+
+To confirm campaign approval process to this account, please go to this web address:
+
+{$a->link}
+
+In most mail programs, this should appear as a blue link
+which you can just click on.  If that doesn\'t work,
+then cut and paste the address into the address
+line at the top of your web browser window.
+
+If you need help, please contact the site administrator,
+{$a->admin}';
+
+$string['approvalconfirm'] = "Campaign approval applied successfully.";
+$string['approvalconfirmalready'] = "Campaign approval already applied.";

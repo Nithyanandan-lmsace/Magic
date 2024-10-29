@@ -126,7 +126,7 @@ class roleassignment {
      * @param int $userid
      * @return void
      */
-    public function set_user(int $userid) : void {
+    public function set_user(int $userid): void {
         global $CFG;
 
         require_once($CFG->dirroot. "/user/profile/lib.php");
@@ -228,7 +228,7 @@ class roleassignment {
         $record = $DB->get_record('auth_magic_campaigns_users', ['userid' => $this->user->id]);
         if ($parentuser && $record = $DB->get_record('auth_magic_campaigns_users', ['userid' => $this->user->id])) {
             if (!$DB->record_exists('auth_magic_approval', ['userid' => $this->user->id,
-                'parent' => $parentuser->id, 'campaignid' => $record->campaignid]))  {
+                'parent' => $parentuser->id, 'campaignid' => $record->campaignid])) {
                 $data = new stdClass;
                 $data->userid = $this->user->id;
                 $data->parent = $parentuser->id;
@@ -237,13 +237,13 @@ class roleassignment {
             }
             // Get the campaign info.
             $campaign = campaign::instance($record->campaignid)->get_campaign();
-            if ($usercreate) {
-                $DB->set_field('user', 'confirmed', 0, ['id' => $parentuser->id]);
-            }
 
             // Send email to the user based on the approval type.
             if ($campaign->approvaltype != 'disabled') {
-                auth_magic_send_confirmation_email($parentuser, new \moodle_url('/auth/magic/confirm.php'), $this->user->id);
+                auth_magic_send_confirmation_email($parentuser, $campaign->id, $this->user->id);
+                if ($usercreate) {
+                    $DB->set_field('user', 'confirmed', 0, ['id' => $parentuser->id]);
+                }
             }
 
             if ($campaign->approvaltype == 'optionalout' || $campaign->approvaltype == 'fulloptionout' ) {
@@ -333,7 +333,6 @@ class roleassignment {
             } else if (isset($this->user->$name) && !empty($this->user->$name)) {
                 $userfieldvalue = $this->user->$name;
             }
-
 
             if (!empty($fieldname) && !empty($userfieldvalue)) {
                 // Identifier value of the parent user data.

@@ -254,8 +254,8 @@ class campaign {
 
         list($insql, $inparam) = $DB->get_in_or_equal($roles, SQL_PARAMS_NAMED, 'rl');
 
-        $contextsql = ($this->campaign->restrictrolecontext == campaign::SYSTEMCONTEXT)
-            ? ' AND contextid=:systemcontext ' : '';
+        $contextsql = ($this->campaign->restrictrolecontext == self::SYSTEMCONTEXT)
+            ? ' AND contextid = :systemcontext ' : '';
 
         $sql = "SELECT userid FROM {role_assignments} WHERE roleid $insql AND userid=:rluserid $contextsql";
         $params = [
@@ -287,7 +287,8 @@ class campaign {
 
         // If operator is all then check the count of user assigned cohorts,
         // Confirm the count is same as configured items cohorts count.
-        $condition = ($this->campaign->restrictcohortoperator == campaign::ALL) ? " GROUP BY cm.userid HAVING COUNT(DISTINCT c.id) = :chcount" :
+        $condition = ($this->campaign->restrictcohortoperator == self::ALL) ?
+        " GROUP BY cm.userid HAVING COUNT(DISTINCT c.id) = :chcount" :
         ' HAVING COUNT(DISTINCT c.id) != 0';
 
         $sql = "SELECT count(*) AS member FROM {cohort_members} cm
@@ -378,6 +379,7 @@ class campaign {
         if ($checkoptional && $this->campaign->courseenrolmentkey == 'optional') {
             return $errors;
         }
+
         // If enabled the campaign course then check the match enrolment key.
         if ($this->campaign->campaigncourse) {
             $keytype = $this->campaign->courseenrolmentkey;
@@ -394,12 +396,16 @@ class campaign {
         }
 
         // If check the campaign coupon.
-        if ($this->campaign->courseenrolmentkey != 'strict' && $this->campaign->coupon) {
-            if ($this->campaign->coupon == $enrolpassword) {
+        if ($this->campaign->courseenrolmentkey != 'strict') {
+            if (isset($this->campaign->coupon) && $this->campaign->coupon == $enrolpassword) {
+                return $errors;
+            } else if (\campaign_helper::check_coupon_site_wide($enrolpassword)) {
+                // If check the campaign enrolment key is set to required. (Check the key is vaild any course or group enrolment key)
                 return $errors;
             }
         }
-        $errors['enrolpassword'] = get_string('passwordinvalid', 'enrol_self');
+
+        $errors['enrolpassword'] = get_string('passwordinvalid', 'auth_magic');
         return $errors;
     }
 
@@ -581,7 +587,7 @@ class campaign {
     public function enroll_user_to_campaigncourse($user, $removed) {
         global $DB;
         $context = \context_course::instance($this->campaign->campaigncourse);
-        $record = $DB->get_record('auth_magic_campaigns_users', ['userid' => $user->id]);
+        $record = $DB->get_record('auth_magic_campaigns_users', ['userid' => $user->id, 'campaignid' => $this->campaign->id]);
         $instance = [];
         // If user vaild the enrolment key user will enrol the related.
         if (isset($record->enrolpassword) && !empty($record->enrolpassword)) {
@@ -1036,38 +1042,51 @@ class campaign {
         if (isloggedin()) {
             // Tab html.
             $tabhead = '';
-            $tabhead .= html_writer::tag("div", get_string('signupyourself', 'auth_magic'), ['class' => 'campaign-info-head']);
-            $tabhead .= html_writer::start_tag('ul', ["class" => "nav nav-tabs", "id" => "myTab",  "role" => "tablist"]);
-                foreach ($tabs as $tab) {
-                    if (has_capability($tab['capability'], $tab['context'])) {
-                        $navadditionalclasses = ($tabactive === true) ? " active" : "";
-                        $tabhead .= html_writer::start_tag('li', ['class' => "nav-item" . $navadditionalclasses,  "role" => "presentation"]);
-                        $tabhead .= html_writer::tag('a', $tab['string'], ["class" => "nav-link" . $navadditionalclasses,
-                            "id" => $tab['id'], "data-toggle" => "tab", "href" => "#". $tab['id2'], "role" => "tab",
-                            "aria-selected" => "true"]);
-                        $tabhead .= html_writer::end_tag('li');
-                        $tabactive = false;
-                    }
+            $tabhead .= html_writer::tag("div", get_string('signupyourself', 'auth_magic'),
+                ['class' => 'campaign-info-head']);
+            $tabhead .= html_writer::start_tag('ul', ["class" => "nav nav-tabs",
+                "id" => "myTab", "role" => "tablist"]);
+            $activetabcnt = 0;
+            foreach ($tabs as $tab) {
+                if (has_capability($tab['capability'], $tab['context'])) {
+                    $navadditionalclasses = ($tabactive === true) ? " active" : "";
+                    $tabhead .= html_writer::start_tag('li', ['class' => "nav-item" . $navadditionalclasses,
+                            "role" => "presentation"]);
+                    $tabhead .= html_writer::tag('a', $tab['string'], ["class" => "nav-link" . $navadditionalclasses,
+                        "id" => $tab['id'], "data-toggle" => "tab", "href" => "#". $tab['id2'], "role" => "tab",
+                        "aria-selected" => "true"]);
+                    $tabhead .= html_writer::end_tag('li');
+                    $tabactive = false;
+                    $activetabcnt++;
                 }
+            }
             $tabhead .= html_writer::end_tag('ul');
 
             $tabbody = html_writer::start_tag('div', ["class" => "tab-content", "id" => "myTabContent"]);
-                foreach ($tabs as $tab) {
-                    if (has_capability($tab['capability'], $tab['context'])) {
-                        $tabadditionalclasses = ($tabcontentactive === true) ? " show active" : "";
-                        $tabbody .= html_writer::start_tag('div', ["class" => "tab-pane fade" . $tabadditionalclasses, "id" => $tab['id2'],
-                            "role" => "tabpanel", "aria-labelledby" => $tab['id']]);
-                        $tabbody .= ($tab['contentform'] != null) ? $tab['contentform']->render() : '';
-                        $tabbody .= html_writer::end_tag('div');
-                        $tabcontentactive = false;
-                    }
+            foreach ($tabs as $tab) {
+                if (has_capability($tab['capability'], $tab['context'])) {
+                    $tabadditionalclasses = ($tabcontentactive === true) ? " show active" : "";
+                    $tabbody .= html_writer::start_tag('div', ["class" => "tab-pane fade" . $tabadditionalclasses,
+                        "id" => $tab['id2'],
+                        "role" => "tabpanel", "aria-labelledby" => $tab['id']]);
+                    $tabbody .= ($tab['contentform'] != null) ? $tab['contentform']->render() : '';
+                    $tabbody .= html_writer::end_tag('div');
+                    $tabcontentactive = false;
                 }
+            }
             $tabhead .= html_writer::end_tag('div');
+            if ($activetabcnt == 1) {
+                $tabhead = '';
+            }
             $content .= $tabhead . $tabbody;
         } else {
             $content .= ($campaignmanageform != null) ? $campaignmanageform->render() : '';
         }
         $content .= html_writer::end_div();
+
+        if ($summarycontent) {
+            $content = $summarycontent;
+        }
 
         $template = [
             'campaign' => $campaigndata,
@@ -1081,7 +1100,7 @@ class campaign {
             'title' => format_string($campaigndata->title),
             'description' => format_text($this->campaign->description, FORMAT_HTML),
             'summary' => !empty($summarycontent) ? $summarycontent : '',
-            'istab' => isloggedin() ? true : false,
+            'istab' => (isloggedin() && empty($summarycontent)) ? true : false,
         ];
         return $OUTPUT->render_from_template('auth_magic/signup', $template);
     }
@@ -1091,7 +1110,11 @@ class campaign {
      *
      * @return boolean
      */
-    public function is_valid_coupon_campaign() {
+    public function is_valid_coupon_campaign($coupon) {
+        if (empty($coupon)) {
+            return false;
+        }
+
         if (empty($this->campaign->courseenrolmentkey) || !$this->campaign->campaigncourse
             || $this->campaign->courseenrolmentkey == 'disabled') {
             return true;
@@ -1099,12 +1122,16 @@ class campaign {
         $keytype = $this->campaign->courseenrolmentkey;
         $instances = enrol_get_instances($this->campaign->campaigncourse, true);
         foreach ($instances as $instance) {
-            if (!empty($instance->password) && $instance->password == $enrolpassword) {
+            if (!empty($instance->password) && $instance->password == $coupon) {
                 return true;
             }
         }
-        if ($keytype != 'strict' && enrol_self_check_group_enrolment_key($this->campaign->campaigncourse, $enrolpassword)) {
-            return true;
+
+        if ($keytype != 'strict') {
+            if (enrol_self_check_group_enrolment_key($this->campaign->campaigncourse, $coupon) ||
+                \campaign_helper::check_coupon_site_wide($coupon)) {
+                return true;
+            }
         }
         return false;
     }

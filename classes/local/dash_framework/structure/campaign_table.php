@@ -138,36 +138,39 @@ class campaign_table extends table {
             new field('availablecapacitystatus', new lang_string('availablecapacitystatus', 'auth_magic'), $this, 'amc.capacity', [
                 new campaign_availablecapacitystatus(),
             ]),
-            new field('availableandtotalcapacitystatus', new lang_string('availableandtotalcapacitystatus', 'auth_magic'), $this, 'amc.capacity', [
-                new campaign_availableandtotalcapacitystatus(),
+            new field('availableandtotalcapacitystatus', new lang_string('availableandtotalcapacitystatus', 'auth_magic'),
+             $this, 'amc.capacity', [new campaign_availableandtotalcapacitystatus(),
             ]),
-            new field('status', new lang_string('campaigns:status', 'auth_magic'), $this, 'amc.status', [
+            new field('status', new lang_string('campaigns:status', 'auth_magic'), $this, 'amc.status',
+            [
                 new campaign_status_bool_attribute(),
             ]),
             new field('visibility', new lang_string('campaignsource:field_visibility', 'auth_magic'), $this, 'amc.visibility', [
                 new bool_attribute(),
             ]),
-            new field('restrictbyrole', new lang_string('campaignsource:field_restrictbyrole', 'auth_magic'), $this, 'amc.restrictroles', [
-                new campaign_restrictbyrole(),
+            new field('restrictbyrole', new lang_string('campaignsource:field_restrictbyrole', 'auth_magic'), $this,
+                'amc.restrictroles', [ new campaign_restrictbyrole(),
             ]),
-            new field('restrictbycohort', new lang_string('campaignsource:field_restrictbycohort', 'auth_magic'), $this, 'amc.restrictcohorts', [
-                new campaign_restrictbycohort(),
+            new field('restrictbycohort', new lang_string('campaignsource:field_restrictbycohort', 'auth_magic'), $this,
+                'amc.restrictcohorts', [ new campaign_restrictbycohort(),
             ]),
             new field('approvaltype', new lang_string('approvaltype', 'auth_magic'), $this, 'amc.approvaltype'),
             new field('approvalroles', new lang_string('approvalroles', 'auth_magic'), $this, 'amc.approvalroles', [
                 new campaign_approvalroles(),
             ]),
-            new field('availablefrom', new lang_string('campaignsource:field_startdate', 'auth_magic'), $this, 'amc.startdate', [
+            new field('availablefrom', new lang_string('campaignsource:field_startdate', 'auth_magic'), $this, 'amc.startdate',
+            [
                 new date_attribute(),
             ]),
-            new field('availablecloses', new lang_string('campaignsource:field_enddate', 'auth_magic'), $this, 'amc.enddate', [
+            new field('availablecloses', new lang_string('campaignsource:field_enddate', 'auth_magic'), $this, 'amc.enddate',
+            [
                 new date_attribute(),
             ]),
             new field('password', new lang_string('campaignsource:field_password', 'auth_magic'), $this, 'amc.password', [
                 new bool_attribute(),
             ]),
-            new field('enrolmentkey', new lang_string('campaigns:courseenrolmentkey', 'auth_magic'), $this, 'amc.courseenrolmentkey', [
-                new campaign_enrolmentkey(),
+            new field('enrolmentkey', new lang_string('campaigns:courseenrolmentkey', 'auth_magic'), $this,
+            'amc.courseenrolmentkey', [ new campaign_enrolmentkey(),
             ]),
             new field('cohortmembership', new lang_string('campaignsource:field_cohorts', 'auth_magic'), $this, 'amc.cohorts', [
                 new campaign_cohortmembership(),
@@ -175,11 +178,13 @@ class campaign_table extends table {
             new field('globalrole', new lang_string('campaignsource:field_globalrole', 'auth_magic'), $this, 'amc.globalrole', [
                 new campaign_globalrole(),
             ]),
-            new field('campaignowner', new lang_string('campaignsource:field_campaignowner', 'auth_magic'), $this, 'amc.campaignowner', [
-                new campaign_owner(),
+            new field('campaignowner', new lang_string('campaignsource:field_campaignowner', 'auth_magic'), $this,
+            'amc.campaignowner', [ new campaign_owner(),
             ]),
-            new field('campaignownerwithlink', new lang_string('campaignsource:field_campaignownerwithlink', 'auth_magic'), $this, 'amc.campaignowner', [
-                new campaign_owner(), new linked_data_attribute(['url' =>  new moodle_url('/user/profile.php', ['id' => 'amc_campaignowner'])])
+            new field('campaignownerwithlink', new lang_string('campaignsource:field_campaignownerwithlink', 'auth_magic'),
+            $this, 'amc.campaignowner', [
+                new campaign_owner(), new linked_data_attribute(['url' => new moodle_url('/user/profile.php',
+                ['id' => 'amc_campaignowner'],)])
             ]),
             new field('payment', new lang_string('campaigns:payment', 'auth_magic'), $this, 'amc.id', [
                 new campaign_payment(),
@@ -187,7 +192,8 @@ class campaign_table extends table {
             new field('registerfee', new lang_string('campaignsource:field_fee', 'auth_magic'), $this, 'amc.id', [
                 new campaign_registerfee(),
             ]),
-            new field('expirydate', new lang_string('campaignsource:field_expirydate', 'auth_magic'), $this, 'amc.expirydate', [
+            new field('expirydate', new lang_string('campaignsource:field_expirydate', 'auth_magic'), $this, 'amc.expirydate',
+            [
                 new date_attribute(),
             ]),
         ];

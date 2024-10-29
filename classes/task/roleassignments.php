@@ -110,7 +110,7 @@ class roleassignments extends adhoc_task {
      * @param bool $count
      * @return array
      */
-    public static function get_role_assignment_users(int $roleid, string $field, bool $count=false) : array {
+    public static function get_role_assignment_users(int $roleid, string $field, bool $count=false): array {
 
         $select = $count ? ' COUNT(u.id) ' : ' u.*, ind.data ';
 

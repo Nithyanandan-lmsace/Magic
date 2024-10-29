@@ -48,7 +48,7 @@ class campaign_restrictbycohort extends abstract_field_attribute {
             $cohortids = json_decode($data);
             $cohortnames = "";
             foreach ($cohortids as $cohortid) {
-                $cohortname = $DB->get_field('cohort', 'name', array('id' => $cohortid));
+                $cohortname = $DB->get_field('cohort', 'name', ['id' => $cohortid]);
                 $cohortnames .= $cohortname;
                 if ($cohortid != end($cohortids)) {
                     $cohortnames .= ", ";

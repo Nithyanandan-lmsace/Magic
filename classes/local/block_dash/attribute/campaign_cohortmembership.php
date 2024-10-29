@@ -45,10 +45,10 @@ class campaign_cohortmembership extends abstract_field_attribute {
     public function transform_data($data, \stdClass $record) {
         global $DB;
         if (!empty($data)) {
-        $cohortids = json_decode($data);
+            $cohortids = json_decode($data);
             $cohortnames = "";
             foreach ($cohortids as $cohortid) {
-                $cohortname = $DB->get_field('cohort', 'name', array('id' => $cohortid));
+                $cohortname = $DB->get_field('cohort', 'name', ['id' => $cohortid]);
                 $cohortnames .= $cohortname;
                 if ($cohortid != end($cohortids)) {
                     $cohortnames .= ", ";

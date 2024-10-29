@@ -17,7 +17,7 @@
 /**
  * Filters results to current course only.
  *
- * @package    block_dash
+ * @package    auth_magic
  * @copyright  2020 bdecent gmbh <https://bdecent.de>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -89,7 +89,7 @@ class campaign_approval_types_condition extends condition {
     }
 
 
-     /**
+    /**
      * Get values from filter based on user selection. All filters must return an array of values.
      *
      * Override in child class to add more values.
@@ -116,7 +116,8 @@ class campaign_approval_types_condition extends condition {
         list($sql, $params) = parent::get_sql_and_params();
 
         if ($sql) {
-            list($insql, $inparams) = $DB->get_in_or_equal($this->get_preferences()['approvaltypes'], SQL_PARAMS_NAMED, 'amc', true, true);
+            list($insql, $inparams) = $DB->get_in_or_equal($this->get_preferences()['approvaltypes'],
+                SQL_PARAMS_NAMED, 'amc', true, true);
             $sql = ' amc.approvaltype ' . $insql;
             $params = array_merge($params, $inparams);
         }

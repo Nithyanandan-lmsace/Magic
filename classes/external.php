@@ -367,4 +367,40 @@ class external extends \external_api {
         );
     }
 
+    /**
+     * Parameters of bank entry id.
+     */
+    public static function get_bankgat_amount_parameters() {
+        return new external_function_parameters(
+            [
+                'entryid' => new external_value(PARAM_INT, 'Id of Bank entry'),
+            ],
+        );
+    }
+
+    /**
+     * Get the bank gateway amount.
+     * @param int $bankentryid
+     *
+     */
+    public static function get_bankgat_amount($bankentryid) {
+        global $DB;
+        $params = self::validate_parameters(self::get_bankgat_amount_parameters(),
+        ['entryid' => $bankentryid]);
+        $entryrecord = $DB->get_record('paygw_bank', ['id' => $bankentryid]);
+        return ['amount' => !empty($entryrecord) ? $entryrecord->totalamount : ''];
+    }
+
+
+    /**
+     * Returns bankgat amount.
+     */
+    public static function get_bankgat_amount_returns() {
+        return new external_single_structure(
+        [
+            'amount' => new \external_value(PARAM_TEXT, 'Return amount'),
+            ],
+        );
+    }
+
 }

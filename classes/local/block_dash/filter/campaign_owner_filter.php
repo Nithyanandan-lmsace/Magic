@@ -41,7 +41,6 @@ class campaign_owner_filter extends select_filter {
                                     WHERE confirmed = 1 AND deleted = 0 AND id <> ?", [$CFG->siteguest]);
         $options = auth_magic_get_usernames_choices($users);
         $this->add_options($options);
-        //$this->add_option(2, 'Admin User');
         parent::init();
     }
 
@@ -52,24 +51,4 @@ class campaign_owner_filter extends select_filter {
     public function get_label() {
         return get_string('campaigns:campaignowner', 'auth_magic');
     }
-
-    /**
-     * Return where SQL and params for placeholders.
-     *
-     * @return array
-     * @throws \coding_exception|\dml_exception
-     */
-   /*  public function get_sql_and_params() {
-        global $USER, $DB;
-
-        $userids = $this->get_values();
-        list($sql, $params) = parent::get_sql_and_params();
-
-        if ($sql) {
-            list($insql, $inparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, 'amc', true, true);
-            $sql = ' amc.campaignowner ' . $insql;
-            $params += $inparams;
-        }
-        return [$sql, $params];
-    } */
 }

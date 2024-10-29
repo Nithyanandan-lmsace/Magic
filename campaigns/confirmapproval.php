@@ -36,13 +36,12 @@ if (!is_enabled_auth('magic')) {
 
 
 // PAGE URL.
-$userid = required_param('userid',  PARAM_INT);
-$campaignid = required_param('campaignid',  PARAM_INT);
+$userid = required_param('user', PARAM_INT);
+$campaignid = required_param('campaignid', PARAM_INT);
 $data = required_param('data', PARAM_RAW);
+//$redirecturl = optional_param('redirecturl', null, PARAM_RAW);
 
-$redirecturl = optional_param('redirecturl', null, PARAM_RAW);
-
-$url = new \moodle_url('/auth/magic/campaigns/revocation.php', ['userid' => $userid, 'campaignid' => $campaignid]);
+$url = new \moodle_url('/auth/magic/campaigns/confirmapproval.php', ['userid' => $userid, 'campaignid' => $campaignid]);
 
 $context = context_system::instance();
 $strrevocationcampaign = get_string('strrevocationcampaign', 'auth_magic');
@@ -50,61 +49,47 @@ $PAGE->set_url($url);
 $PAGE->set_context($context);
 $PAGE->set_title("$SITE->fullname: ". $strrevocationcampaign);
 
-if (!auth_magic_is_campaign_signup_user($userid, $campaignid)) {
-    // Throw error to non access the.
-    throw new moodle_exception('invalidrequest');
-}
-
-
 $dataelements = explode('/', $data, 2); // Stop after 1st slash. Rest is username. MDL-7647.
 $usersecret = $dataelements[0];
 $username   = $dataelements[1];
-
-
-if (!$relateduser = get_complete_user_data('username', $username)) {
+if (!$approvaluser = get_complete_user_data('username', $username)) {
     throw new \moodle_exception('cannotfinduser', '', '', s($username));
 }
 
-complete_user_login($relateduser);
-\core\session\manager::apply_concurrent_login_limit($relateduser->id, session_id());
+complete_user_login($approvaluser);
+
+\core\session\manager::apply_concurrent_login_limit($approvaluser->id, session_id());
 
 
-require_login();
+
+$confirmapprovalstr = "approvalconfirmalready";
 
 $user = $DB->get_record('user', ['id' => $userid]);
-$campaignhelper = new campaign_helper($campaignid);
-$campaignhelper->process_campaign_assignments($user, true);
 
-$campaigninstance = campaign::instance($campaignid);
-$campaignrecord = $campaigninstance->get_campaign();
-
-// Check the campaign approval type and change to user unconfirmed.
-if ($campaignrecord->approvaltype == 'fulloptionout') {
-    // Set the user unconfirmed and set the auth to nologin.
-    $DB->set_field("user", "confirmed", 0, ["id" => $user->id]);
-    $DB->set_field("user", "auth", 'nologin', ["id" => $user->id]);
-}
-
-
-if (!$DB->record_exists('auth_magic_revocation_logs', ['userid' => $user->id, 'campaignid' => $campaignid])) {
+if (!$DB->record_exists('auth_magic_confirmation_logs', ['userid' => $user->id, 'campaignid' => $campaignid])) {
     $record = new stdClass;
     $record->userid = $user->id;
     $record->campaignid = $campaignid;
     $record->timecreated = time();
-    $DB->insert_record('auth_magic_revocation_logs', $record);
+    $DB->insert_record('auth_magic_confirmation_logs', $record);
+
+    $campaignhelper = new campaign_helper($campaignid);
+    $campaignhelper->process_campaign_assignments($user, false);
+
+    $campaigninstance = campaign::instance($campaignid);
+    $campaignrecord = $campaigninstance->get_campaign();
+    $confirmapprovalstr = "approvalconfirm";
 }
 
-if ($redirecturl != null) {
-    redirect(urldecode($redirecturl));
-}
 
-$PAGE->navbar->add(get_string("revoked", 'auth_magic'));
-$PAGE->set_title(get_string("revoked", 'auth_magic'));
+
+$PAGE->navbar->add(get_string($confirmapprovalstr, 'auth_magic'));
+$PAGE->set_title(get_string($confirmapprovalstr, 'auth_magic'));
 $PAGE->set_heading($COURSE->fullname);
 echo $OUTPUT->header();
 echo $OUTPUT->box_start('generalbox centerpara boxwidthnormal boxaligncenter');
 echo "<h3>".get_string("thanks").", ". fullname($user) . "</h3>\n";
-echo "<p>".get_string("revoked", 'auth_magic')."</p>\n";
+echo "<p>".get_string($confirmapprovalstr, 'auth_magic')."</p>\n";
 echo $OUTPUT->single_button(new \moodle_url('/my'), get_string('continue'));
 echo $OUTPUT->box_end();
 echo $OUTPUT->footer();

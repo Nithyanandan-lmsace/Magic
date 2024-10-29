@@ -40,10 +40,6 @@ $observers = [
         'eventname' => '\core\event\user_list_viewed',
         'callback' => '\auth_magic\event\observer::create_user_list_viewed_request',
     ],
-    [
-        'eventname' => '\core\event\user_loggedin',
-        'callback' => '\auth_magic\event\observer::create_user_loggedin_request',
-    ],
 
     [
         'eventname' => '\core\event\config_log_created',

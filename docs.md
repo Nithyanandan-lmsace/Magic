@@ -91,7 +91,7 @@ Go to "*`Site administration > Plugins > Authentication > Magic authentication`*
 
 1. **Default enrolment duration**:
 
-   The Default Enrolment Duration setting in Quick Registration enables you to specify the default duration for course enrolments. This setting controls the length of time users will have access to a course upon enrolment.
+   The Default Enrolment Duration setting in Quick Registration allows you to specify the default duration for course enrolments. This setting determines how long users will have access to a course after enrolment.
 
 
 2. **Default enrolment role**:
@@ -134,23 +134,22 @@ Go to "*`Site administration > Plugins > Authentication > Magic authentication`*
 ![magic-general-setting-free](https://github.com/bdecentgmbh/moodle-auth_magic/assets/44221518/9a3e1c85-1a5d-4056-878d-f2ca6f0423dc)
 
 
-
 #### General Configurations (Pro):
 
 1. **Supports password**:
 
-    ***Disabled***: This option allows users to don't utilize a password for accessing Moodle.
+    ***Disabled***: This option allows users to access Moodle without using a password.
 
-    ***Enabled***: This option allows users to utilize a password for accessing Moodle.
+    ***Enabled***: This option requires users to use a password to access Moodle.
 
 
 2. **Configure login key link**:
 
     This setting allows administrators to adjust the behavior of login keys.
 
-    - Only once: Login keys can be utilized for a single use
+    - Only once: Login keys can be used for a single login.
 
-    - Until it expires: Login keys can be utilized for until their expiry time
+    - Until it expires: Login keys can be used until they reach their expiration time.
 
 
 3. **Allow Username to get magic link**:
@@ -163,19 +162,16 @@ Go to "*`Site administration > Plugins > Authentication > Magic authentication`*
 4. **Magic login link button position**:
 
     This setting allows you to configure the placement of the "Get a Magic Link" button on the login form.
-
-    **Below username**:  This option moves the "Get a Magic Link" button below the username field on the login form.
-
-    **Below password**:  This option positions the "Get a Magic Link" button below the password field on the login form.
-
-    **Normal**: This option positions the "Get a Magic Link" button in the default location based on the identity provider being used.
+    **Below Username**: Positions the "Get a Magic Link" button below the username field on the login form.
+    **Below Password**: Positions the "Get a Magic Link" button below the password field on the login form.
+    **Default**: Positions the "Get a Magic Link" button in its standard location, based on the identity provider being used.
 
 
 5. **Privileged role**:
 
     This setting allows you to define which roles are considered "privileged" during the magic login process.
 
-    **Note**: When signing in with an email address, if the email address belongs to an account that supports magic login but has a privileged role, users will be required to enter their password before they can obtain the magic login link via email on the magic custom login page.
+    **Note**: When signing in with an email address linked to an account with a privileged role, users must enter their password before they can receive the magic login link via email on the magic custom login page.
 
 
 6. **Login footer links**:
@@ -184,7 +180,7 @@ Go to "*`Site administration > Plugins > Authentication > Magic authentication`*
 
 7. **Campaign owner role**:
 
-    Select a campaign owner role for a magic campaign.
+    Select the campaign owner role, which will display the option as the default value in the campaign form.
 
 
 ![magic-general-setting-pro](https://github.com/bdecentgmbh/moodle-auth_magic/assets/44221518/a385e95c-0894-4c19-adb4-a293b5b8522d)
@@ -210,13 +206,24 @@ Create a user context role and a profile field with a text type for the role. As
 
 
 
-
-
 # Feature
 
 ## Feature: Quick registration
 
-Quick Registration is a convenient feature in Moodle that allows for fast and efficient user registration and enrollment into a course. It simplifies the process by enabling users to register and join a course in just one step. The feature is accessible to users with the appropriate capability in the context, ensuring that only authorized individuals can utilize it.
+Quick Registration is a convenient feature in the Magic Auth plugin that allows for fast and efficient user registration and course enrollment. It simplifies the process by enabling users to register and join a course in a single step. This feature is accessible only to users with the appropriate capability within the context, ensuring that only authorized individuals can use it.
+
+### General
+**First name:** The first name of the user for registration in magic authentication.
+
+**Last name:**  The last name of the user for registration in magic authentication.
+
+**Email address:** The email address of the user for registration in magic authentication.
+
+### Course Enrollment
+
+**Course:** The user will enroll in the selected course following registration.
+
+**Enrolment duration:** You can choose a fixed date or specify a duration in days, weeks, months, or years to determine how long the course enrollment will remain active.
 
 ![Quick_registration](https://github.com/bdecentgmbh/moodle-auth_magic/assets/44221518/1e27eaf1-483e-40d6-95cd-98e803613b48)
 
@@ -284,7 +291,8 @@ The Magic User Accounts feature offers a convenient way to manage users with mag
     **Suspend**: Enables / Disables the suspension of user accounts.
 
         - Site-level capability required: "auth/magic:usersuspend"
-       - User-level capability required: "auth/magic:childusersuspend"
+
+        - User-level capability required: "auth/magic:childusersuspend"
 
     **Settings**: Provides the ability to edit user account settings.
 
@@ -324,12 +332,11 @@ To access the custom Magic login page in Magic Authentication, follow these step
 2. Navigate to "*`Site Administration > Plugins > Authentication > Manage authentication`*".
 3. Look for the "Common settings" section.
 4. Locate the "Alternate login URL" setting.
-5. In the field provided, enter the URL for your custom Magic login page. For example, set it to "https://yourmoodlesite//auth/magic/login.php".
+5. In the field provided, enter the URL for your custom Magic login page. For example, set it to "https://yourmoodlesite/auth/magic/signin.php".
 6. Save the changes.
 
 
-![alternate-login](https://github.com/bdecentgmbh/moodle-auth_magic/assets/44221518/ef2c630c-2b5c-4df1-ad7d-90ba2954de45)
-
+![Magic-login-page](https://github.com/user-attachments/assets/a5b6f5c7-d33d-4d1d-92e4-484563c63490)
 
 
 The magic login page offers a simplified and intuitive login experience by requesting only the user's email address initially. Once the email address is entered, the page dynamically adapts to show the relevant input fields based on the authentication method associated with that email.
@@ -338,7 +345,6 @@ The magic login page offers a simplified and intuitive login experience by reque
 To sign in, please enter your email address. If the email address belongs to an account that supports a specific authentication method, additional input elements will be displayed accordingly based on the associated authentication method.
 
 ![Moodle-411-Demo-Log-in-to-the-site](https://github.com/bdecentgmbh/moodle-auth_magic/assets/44221518/e9107223-9972-4df4-8444-99c268d30750)
-
 
 
 If the email address belongs to an account that supports magic login and is not a privileged user, or if there is no account associated with the entered email address and Magic Pro is configured to Create user accounts, you will be able to obtain the magic login link after entering the email address.
@@ -350,7 +356,6 @@ If the email address belongs to an account that supports magic login and is not 
 If the email address belongs to an account that does not support magic login, you will be required to enter your password.
 
 ![manual_account_login](https://github.com/bdecentgmbh/moodle-auth_magic/assets/44221518/23729240-4645-4385-ba8c-2e7539093614)
-
 
 
 If the email address belongs to a privileged user account that supports magic login, you will be prompted to enter your password before obtaining the magic login link via email.
@@ -366,8 +371,7 @@ If the email address belongs to an account that uses an identity provider for au
 
 ## Feature: Magic Sign Up
 
-
-The concept of magic sign-up enables users to create an account simply by entering their email addresses. When users enter an email address that does not correspond to an existing account, they will receive a magic registration link. Clicking on this link will trigger the account creation process, and the user account will be successfully created upon completion. It is important to note that the magic registration link will have the same expiration duration as an invitation link, ensuring consistency in the account registration process.
+Magic sign-up allows users to create an account by simply entering their email address. If the email does not match an existing account, they will receive a magic registration link. Clicking the link starts the account creation process, and the account is successfully created once completed. The magic registration link expires after the same duration as an invitation link, ensuring consistency in the registration process.
 
 To enable Magic Sign Up in Magic Authentication, follow these steps:
 
@@ -379,54 +383,21 @@ To enable Magic Sign Up in Magic Authentication, follow these steps:
 ![M411-Administration-Plugins-Auth-plugins-Magic-authentication-pro-Magic-Sign-Up](https://github.com/bdecentgmbh/moodle-auth_magic/assets/44221518/d9f58f61-c802-4bce-a25e-06f9b7770ee1)
 
 
-By default, the "Auto create users" checkbox is set to false. In this default state:
+### By default, the "Auto create users" checkbox is set to false. In this default state:
 
 - Only existing users will receive a magic link when they enter their email address in the login form. If the email address does not match an existing account, no action will be taken.
 
-However, when the "Auto create users" checkbox is set to true:
+### However, when the "Auto create users" checkbox is set to true:
 
 - Users who enter an email address that does not belong to an existing account will receive a magic registration link.
 
 
 ![Moodle 411 Demo_ Log in to the site](https://github.com/bdecentgmbh/moodle-auth_magic/assets/44221518/055f2243-beb5-4dd9-8ec2-7dba0968259c)
 
-## Report sources: Payment transactions
-
-It indicates a specialized approach to reporting on payment transactions, where the authentication method, is integrated into the process.
-
-**Filters**:
-- This option aids in filtering the User object, Payment gateway, Origin, and Status.
-
-![payment-transaction-filter](https://github.com/bdecentgmbh/moodle-auth_magic/assets/44221518/b89390d2-1b02-44f9-8f1a-17d6d49ed97b)
-
-
-**Name**:
-- This field refers to the name associated with the payment transaction.
-
-**Payment Gateway**:
-- This section is likely for specifying the payment gateway through which the transaction was processed. It could include popular gateways like PayPal, Stripe, or others.
-
-**Fullname with link**:
-- This field displays the full name with a link leading to the user's profile page.
-
-**Cost**:
-- This is where the monetary value of the payment transaction is recorded.
-
-**Currency**:
-- The currency field indicates the type of currency in which the payment transaction occurred. It could be USD, EUR, or any other applicable currency code.
-
-**Date**:
-- This field is designed to capture the date of the payment transaction, facilitating the tracking of the timeline of financial activities.
-
-**Payment Status**:
-- This section provides information about the status of the payment transaction, indicating whether it was successful, pending, declined, or has another status.
-
-![payment-transaction-report](https://github.com/bdecentgmbh/moodle-auth_magic/assets/44221518/712218d8-fef4-433e-b37f-4bc6f7e6dd2f)
-
 
 ## Feature: Magic campaign
 
-The concept of magic campaign in Magic authentication allows users to create customized registration forms for specific purposes or events. The campaign provide the flexibility to customize various aspects of the registration form to meet specific requirements. Participants can sign up using the customized registration forms of each campaign, allowing for a personalized and efficient registration experience aligned with the campaign.
+The concept of magic campaign in Magic authentication allows users to create customized registration forms for specific purposes or events. The campaign provide the flexibility to customize various aspects of the registration form to meet specific requirements. Participants can sign up using these custom forms, making the registration process more personalized and efficient.
 
 ![campaign_view (1)](https://github.com/bdecentgmbh/moodle-auth_magic/assets/44221518/6227ba94-1ecc-4a11-8601-d1e9b5052507)
 
@@ -454,19 +425,18 @@ The concept of magic campaign in Magic authentication allows users to create cus
 **Each campaign can be customized using the following settings**:
 
 
-**General Settings**:
+## General Settings
 
-- Title of the campaign: A mandatory text input field to provide a title for the campaign.
+- **Title** of the campaign: A mandatory text input field to provide a title for the campaign.
 
-- Description: An optional text editor field to add a description of the campaign.
+- **Description**: An optional text editor field to add a description of the campaign.
 
-- Comments: An optional text editor field to include additional comments or instructions.
+- **Comments**: An optional text editor field to include additional comments or instructions.
 
 ![campaign_general_settings](https://github.com/bdecentgmbh/moodle-auth_magic/assets/44221518/35386238-f119-40bf-9003-ec01113077fb)
 
 
-
-**Availability Settings**:
+### Availability Settings
 
 - **Capacity**: A number input field with a default value of 0 (indicating unlimited users) to specify the maximum number of users who can register via the campaign.
 
@@ -497,7 +467,7 @@ The concept of magic campaign in Magic authentication allows users to create cus
 ![campaign_available](https://github.com/bdecentgmbh/moodle-auth_magic/assets/44221518/5d7bb2a0-fa84-4fcf-a24d-7ab7a2adf7dc)
 
 
-**Appearance Settings**:
+### Appearance Settings
 
 - Logo: A file picker to upload and display a logo for the campaign.
 
@@ -512,6 +482,16 @@ The concept of magic campaign in Magic authentication allows users to create cus
 - Form Position: A checkbox field that allows campaign owners to define the placement of the registration form on the signup page.
 
 ![campaign_apperaence](https://github.com/bdecentgmbh/moodle-auth_magic/assets/44221518/b6a41456-128f-4d21-95d3-f7ba967bf029)
+
+### Restrict access
+
+1. **By role:** Restrict visibility based on the user's role.
+
+2. **Context:** Select the context in which the user's role should be checked (either any context or only the system context).
+
+3. **By cohort:** Restrict visibility based on the user's cohort.
+
+4. **Operator:** Select the operator for the cohort condition (either Any or All option for the cohort).
 
 **Security**
 
@@ -528,7 +508,7 @@ The concept of magic campaign in Magic authentication allows users to create cus
 ![security](https://github.com/bdecentgmbh/moodle-auth_magic/assets/44221518/3be2773b-1092-46c5-afa1-be0551ed85d0)
 
 
-**Payment**
+### Payment
 
 1. **Type**: Specifies whether the campaign is free or paid using the multi-select option.
    - Free: Users can sign up for the campaign without any cost.
@@ -539,27 +519,58 @@ The concept of magic campaign in Magic authentication allows users to create cus
 
 ![payment](https://github.com/bdecentgmbh/moodle-auth_magic/assets/44221518/c7fe44a1-d015-4820-b793-14a6f637176e)
 
+### Expiry
 
-**Redirect after form submission**
+1. **Expiration Date:** To enable the expiration date option, check the box. You can choose a fixed date or specify a duration in days, weeks, months, or years to determine how long until the expiration actions take effect.
+
+2. **Suspend User:** Once the expiration date is enabled, this option allows you to temporarily disable a user's account, preventing access to the system until the suspension is lifted.
+
+3. **Delete User:** Once the expiration date is enabled, this option allows you to permanently remove a user's account from the system, which will delete all associated data and prevent any future access.
+
+4. **Add to cohort:** Once the expiration date is enabled, this option allows you to assign the user to a specific cohort, enabling them to access targeted resources or courses associated with that group.
+
+5. **Remove from cohort:** Once the expiration date is enabled, this option allows you to unassign the user from a specific cohort, restricting their access to resources or courses associated with that group.
+
+6. **Unassign global role:** Once the expiration date is enabled, this option allows you to remove a user's global role, revoking their permissions and access rights associated with that role across the system.
+
+7. **Notify before expiry:** Once the expiration date is enabled, this option allows you to send notifications to users prior to the expiration date, ensuring they are aware of the upcoming expiration and can take necessary actions.
+
+
+### Redirect after form submission
 
 1. **Redirect after form submission**: This setting determines if the user shall be redirected to a summary page after submitting the form.
     - No redirect: After submitting the campaign, the summary page content is displayed on the same page.
-   - Redirect to the summary page: After submitting the campaign, the user is redirected to the summary page.
+    - Redirect to the summary page: After submitting the campaign, the user is redirected to the summary page.
      - Summary page content: Enter the summary content in the text area field that you want to display on the page.
-   - Redirect to the URL: After submitting the campaign, the user is redirected to the specified URL page.
+    - Redirect to the URL: After submitting the campaign, the user is redirected to the specified URL page.
      - Redirect to URL: Enter the URL to which the user should be redirected after submission.
 
 ![redirect](https://github.com/bdecentgmbh/moodle-auth_magic/assets/44221518/958e51ea-d06c-4f5d-8d14-3e76c3481342)
 
-**Approval**
-1. **Type**:
-    - Information: A notification (with a confirmation link) is sent upon sign-up for the 'parent' user mail.
-    - Approval roles: Please select the roles for the parent user, considering all user contexts and the system roles available on the platform.
+### Approval
+
+1. **Type:**
+    - Disabled: No approval process.
+    - Information: Users, whether they have a parent or not, can click the confirmation link to create an account with the assigned relationship role. For payments, either the user or parent can use the confirmation link to complete the payment process.
+    Regarding email confirmation, if set to "No," users will have full access without needing further confirmation. If set to "Yes," email confirmation is required before access is granted. With the "Partial" option, users receive one-time access until the confirmation is completed.
+
+    - Opt-in: For the Opt-in process, both the user’s and parent’s email addresses are required. Once the user enters their details in the magic campaign form, Moodle sends a welcome message with a generated password to both the learner and the parent. Only the parent will receive the confirmation link
+
+            ***New Parent Approval (Opt-in):***
+
+            - Only the parent’s email is required to create the campaign. Moodle sends a welcome message with a generated password to the parent. The learner and parent are then assigned their respective roles in the system.
+
+    - Campaign opt-out: For the Campaign Opt-out process, both the user’s and parent’s email addresses are required. The confirmation link is sent to both the user and the parent, while the revoke link is sent only to the parent.
+
+    -Full Opt-out: In the Campaign Opt-out process, both the user’s and parent’s email addresses are required. The confirmation link is sent to both the user and the parent, while the revocation link is sent only to the parent. Clicking the revocation link revokes the campaign assignments, setting the user account to unconfirmed and changing the authentication method to no login. This effectively prevents the user from logging in, and the account will be deleted according to the "Delete not fully set up users after" setting, which defaults to 7 days.
+
+    **Note:** Enabling the "Parent Email Address" option in the campaign form settings is required for the "Approval" type option to function properly.
 
 ![approval-campaign](https://github.com/bdecentgmbh/moodle-auth_magic/assets/44221518/8a5c8500-01a5-4b84-8f5a-e93dedcb75d0)
 
 
-**Campaign Course**
+### Campaign Course
+
 1. **Campaign course**:
     - Disabled: Selecting this option disables the user from auto-enrolling in the campaign course.
     - Course1: Selecting the course will enroll the user in the selected course after signing up for the campaign course.
@@ -569,7 +580,7 @@ The concept of magic campaign in Magic authentication allows users to create cus
     - Roles: Select the available roles in the option to assign the user to the selected course context.
 
 3. **Course role for "Parent" user**:
-    - Disabled: Selecting this option prevents the "Parent" user from assigning system roles.
+    - Disabled: Selecting this option prevents the "Parent" user from assigning roles for the course context.
     - Roles: Select the available roles from the options to assign the 'Parent' user to the selected course.
 
 4. **Groups**:
@@ -578,11 +589,11 @@ The concept of magic campaign in Magic authentication allows users to create cus
     - Per User: This option allows the creation of a new group with the user's name who created the campaign and assigns the user to that group when the user signs up for the campaign.
 
         ***Group messaging***:
-        - Enable or disable the "Group Messaging" option for the campaign course.
+        - Enable or disable the "Group Messaging" option for the campaign course groups.
         - If the 'Disabled' option is selected for the 'Group' setting, the 'Group Messaging' option will be hidden.
 
         ***Group enrolment key***:
-        - Enable or disable the "Group Enrolment Key" option for the campaign course.
+        - Enable or disable the "Group Enrolment Key" option for the campaign course groups.
         - If the 'Disabled' option is selected for the 'Group' setting, the 'Group Enrolment key' option will be hidden.
 
 
@@ -599,25 +610,18 @@ The concept of magic campaign in Magic authentication allows users to create cus
 ![campaign-course](https://github.com/bdecentgmbh/moodle-auth_magic/assets/44221518/2b264803-006d-4ab0-8256-a89d219f57c2)
 
 
-**Form fields**
+### Form fields
 
 Form fields in the campaign allow customization of the user signup form. These fields include default Moodle profile fields as well as custom user profile fields. These fields can be used to customize the signup form for each campaign. The campaign owner can select the desired form fields and configure their visibility and requirement settings accordingly.
 
 1. **Authentication method**:
-    - **Manual accounts**:
-        - This process involves the manual verification of user accounts by system administrators or authorized personnel.
-    - **No Login**:
-        -No-Login denotes a system or feature that provides access to certain functionalities or information without requiring users to log in with traditional credentials, offering quick and anonymous access.
-    - **Email-based self-registration**:
-        - In this method, users register themselves by providing necessary information through an email-based system.
-    - **OAuth2**:
-        - OAuth2 is a protocol that allows secure authorization and authentication, commonly used for third-party application access to user data.
-    - **Magic authentication**:
-        - Users no longer need to remember and enter their usernames and passwords to access the Moodle site. Instead, they can use a magic link that is sent to their email address, providing them with direct access to the Moodle platform.
+    - Moodle offers multiple methods to manage this process, ensuring secure and controlled user access. You can choose the authentication method that best aligns with the user's environmental needs and security requirements during signup.
+
+    **Magic Authentication Method:**
+    - This method allows users to sign in or register using a magic link, offering a password-free and streamlined authentication process. It simplifies access while maintaining security, making it ideal for fast and convenient logins.
 
 2. **Enrolment key**:
-
-    - If a user enters a valid enrollment key here, they will be added to the course or course group associated with that enrollment key. No payment will be required, as this functions as a 'coupon.' It should be possible to pass the enrollment key as an encrypted parameter via the URL.
+    - If a user enters a valid enrollment key here, they will be added to the course or course group associated with that enrollment key. No payment will be required, as this functions as a 'coupon.'
 
         - **Disabled**: The default state where the field is not added to the form.
         - **Strict**: A valid enrollment key for the selected campaign course must be provided; other enrollment keys won't be accepted. This requires a campaign course to be set up.
@@ -630,7 +634,7 @@ Each form field can be configured with the following options:
 
 2. **Optional**: The field will be visible on the campaign signup form, but users will have the choice to leave it blank if they prefer.
 
-3. **Hidden (use provided text)**: The field will not be visible on the campaign signup form, but the campaign owner can provide a custom value for this field in the backend.
+3. **Hidden (use provided text)**: The field will not be visible on the campaign signup     form, but the campaign owner can provide a custom value for this field in the backend.
 
 4. **Hidden (use default)**: The field will not be visible on the campaign signup form, but a default value will be used for this field in the backend.
 
@@ -639,7 +643,7 @@ Each form field can be configured with the following options:
 ![form-fields](https://github.com/bdecentgmbh/moodle-auth_magic/assets/44221518/c7c678ba-8499-4ca9-a0d1-dd9db47adbe1)
 
 
-**Assignments**:
+### Assignments
 
 - **Cohort membership**: A autocomplete select field populated with all cohorts on the site level context, allowing the selection of cohorts to be assigned to the user accounts created through the campaign.
 
@@ -650,8 +654,7 @@ Each form field can be configured with the following options:
 ![campaign_assign](https://github.com/bdecentgmbh/moodle-auth_magic/assets/44221518/5d06641c-3f8e-4048-903a-006ede64315b)
 
 
-
-**Privacy Policy Settings**:
+### Privacy Policy Settings
 
 - **Display consent option**: A checkbox to enable the display of a consent statement on the campaign page, allowing users to give their consent to the privacy policies.
 
@@ -660,8 +663,7 @@ Each form field can be configured with the following options:
 ![campaign_privacy](https://github.com/bdecentgmbh/moodle-auth_magic/assets/44221518/6e229923-a0ef-463e-a4f6-e8e47552b032)
 
 
-
-**Welcome Message Settings**:
+### Welcome Message Settings
 
 - **Send welcome message to new accounts**: A checkbox to enable sending a welcome message to newly created accounts, with placeholders to personalize the message.
 
@@ -669,12 +671,10 @@ Each form field can be configured with the following options:
 
 - **Also send to campaign owner**: A checkbox to determine whether the welcome message should also be sent to the campaign owner.
 
-
 ![campaign_welcome](https://github.com/bdecentgmbh/moodle-auth_magic/assets/44221518/96d86cb0-0eb3-41f9-a1b9-034fe44fbcf6)
 
 
-
-**Follow-up Message Settings**:
+### Follow-up Message Settings
 
 - **Send follow-up message to new accounts**: A field to specify the number of days after which a follow-up message will be sent to newly created accounts, using the same placeholders as the welcome message.
 
@@ -686,7 +686,168 @@ Each form field can be configured with the following options:
 
 ![campaign_followup](https://github.com/bdecentgmbh/moodle-auth_magic/assets/44221518/5a9b62e5-99a4-4503-b5dd-725d05fe4396)
 
+## Report sources: Payment transactions
 
+### Bank Transference support:
+
+The back transference payment gateway is available for users registering through the magic campaign. This feature is particularly important during the registration process, as it allows users to complete their payments securely.
+
+**Paid Campaign:**
+
+When the campaign includes a paid option. After a user is created in the campaign, they will be prompted for payment upon logging in to access the moodle
+
+**Payment Campaign approval:**
+
+Once the user has done the payment for the campaign, the admin will review and verify. Upon successful verification, the admin can approve the user's participation in the campaign.
+
+## Report sources: Custom Report
+
+In the custom, you will see a list of custom reports related to the campaign sources.
+
+Once "Camapigns" report source is created as the custom report, the fields for "Campaigns," "Campaign groups," "Campaign statistics," "Campaign approval status," "User statistics," and "User" will be available. Clicking on these links will add the corresponding data to the reports table.
+
+### Campaign fields:
+
+The list of the campaign fields are explained here,
+
+https://github.com/bdecentgmbh/moodle-auth_magic/wiki#general-setting
+
+### Campaign Groups:
+
+**Group Name:** Displays the name of the campaign course in the report table.
+**Group ID:** Shows the unique ID of the campaign group in the report table.
+**Group Capacity:** Represents the maximum number of users who can use the 'Group Enrollment Key' to access the course.
+**Member Count:** Displays the total number of members in the campaign group in the report table.
+**Group Available Seats:** Shows the number of available seats in the campaign group in the report table.
+**Status:** Indicates whether the group is available or archived.
+
+### Campaign Statics:
+
+**Confirmed Users:** Displays the number of users who have completed the signup process and confirmed their accounts.
+**Unconfirmed Users:** Shows the number of users who have not yet confirmed their accounts.
+**Campaign Available Seats:** Indicates the remaining seats available in the campaign.
+**Total Revenue:** Displays the total amount of revenue generated by the campaign.
+**First Signup:** Shows the date and time of the first user signup for the campaign.
+**Most Recent Signup:** Displays the date and time of the most recent user signup for the campaign.
+
+### Campaign Statics:
+
+**Open**: Indicates that neither the confirmation nor the revocation link has been clicked yet, as displayed in the report table.
+**Approved**: Shows that the confirmation link has been clicked, as reflected in the report table.
+**Rejected**: Displays that the revocation link has been clicked, as shown in the report table.
+
+### Campaign User Statistics:
+
+**Logins**: Displays the number of times the user has logged into the system.
+**Badges awarded**: Shows the total number of badges the user has earned.
+**Enrolled courses**: Indicates the number of courses the user is currently enrolled in.
+**In-progress courses**: Lists the courses the user has started but not yet completed.
+**Completed courses**: Shows the courses the user has finished.
+**Activities completed**: Displays the total number of activities the user has completed in the courses.
+
+### Campaign conditions report:
+
+Report conditions allow you to control which data is displayed when the report is viewed. These conditions are set by the report creator, and users viewing the report cannot change or override the specified condition values.
+
+### Campaign Filters report:
+
+Report filters allow users viewing the report to further limit the data being displayed, by selecting their own values for each filter. Filter values are stored on a per-user basis.
+
+
+It provide comprehensive insights into financial activities, combining authentication details with transaction reporting for a more holistic understanding.
+
+**Filters**:
+- This option aids in filtering the User object, Payment gateway, Origin, and Status.
+
+![payment-transaction-filter](https://github.com/bdecentgmbh/moodle-auth_magic/assets/44221518/b89390d2-1b02-44f9-8f1a-17d6d49ed97b)
+
+**Name**:
+- This field refers to the name associated with the payment transaction.
+
+**Origin**:
+- The origin refers to the payment transaction associated with the course or campaign that the user has purchased.
+
+**Origin Linked**:
+- It provides a direct link to the course or campaign within the Moodle platform that is associated with the payment transaction.
+
+**Payment Gateway**:
+- This section is likely for specifying the payment gateway through which the transaction was processed. It could include popular gateways like PayPal, Stripe, or others.
+
+**Fullname with link**:
+- This field displays the full name with a link leading to the user's profile page.
+
+**Cost**:
+- This is where the monetary value of the payment transaction is recorded.
+
+**Currency**:
+- The currency field indicates the type of currency in which the payment transaction occurred. It could be USD, EUR, or any other applicable currency code.
+
+**Date**:
+- This field is designed to capture the date of the payment transaction, facilitating the tracking of the timeline of financial activities.
+
+**Payment Status**:
+- This section provides information about the status of the payment transaction, indicating whether it was successful, pending, declined, or has another status.
+
+![payment-transaction-report](https://github.com/bdecentgmbh/moodle-auth_magic/assets/44221518/d778f307-f862-43b9-b07b-97f0ef80ff4a)
+
+
+### Dash Plugin Data Source: Campaigns
+
+Dash plugin data source provides insights into campaigns created within the system. It includes key metrics and detailed statistics related to each campaign, helping administrators track user participation, campaign performance, and other relevant data.
+
+### Dash Campaign Preferences:
+
+#### Campaign Fields:
+**Name:** Displays the campaign name in the Dash report table.
+**Background Image:** Displays the background image used for the campaign.
+**Background Image (Linked):** Provides a link to the background image.
+**Header Image:** Shows the image displayed in the campaign header.
+**Header Image (Linked):** Provides a link to the header image.
+**Logo Image:** Displays the campaign logo.
+**Logo Image (Linked):** Provides a link to the logo image.
+**Description:** Provides a brief description of the campaign.
+**Comments:** Additional notes or comments related to the campaign.
+**Time Created:** The date and time when the campaign was created.
+**Time Modified:** The date and time when the campaign was last modified.
+**Capacity Status:** Indicates the current enrollment capacity status of the campaign.
+**Total Capacity:** The maximum number of users who can enroll in the campaign.
+**Available Capacity:** The remaining number of available seats for enrollment.
+**Available/Total Capacity:** Shows the ratio of available seats to total capacity.
+**Status:** Displays the current campaign status (active, archived, etc.).
+**Visibility:** Controls the visibility settings of the campaign.
+**Restrict by Role:** Limits campaign access based on user roles.
+**Restrict by Cohorts:** Limits access to specific cohorts within the campaign.
+**Approval Type:** Specifies the approval process required for the campaign.
+**Approval Roles:** Defines the roles involved in the approval process.
+**Available Start Date:** The start date for the campaign's availability.
+**Available Closes:** The end date for the campaign's availability.
+**Password:** A password that may be required for campaign access.
+**Enrolment Key:** A key required for users to enroll in the campaign.
+**Cohort Membership:** Indicates the cohorts assigned to the campaign.
+**Global Role:** Displays the global role associated with the campaign.
+**Campaign Owner:** Identifies the user or entity responsible for the campaign.
+**Campaign User with Link:** Provides a link to the campaign user.
+**Payment:** Details the payment required for participating in the campaign.
+**Registration Fee:** Specifies the registration fee for the campaign.
+**Expiration Date:** Indicates when the campaign will expire or become inactive.
+
+#### Filters:
+
+This section provides filtering options where users can input text to refine their search results based on specific campaign fields.
+
+**Payment:** Filters and displays the payment method used for the campaign, showing results based on whether the user selected "Free" or "Paid" for the campaign.
+**Campaign Password:** Filters the fiel based on whether a password was set for access.
+**Approval Types:** Filters the campaigns based on the approval process type (e.g., Opt-in, Full Opt-out).
+**Campaign Owner:** Filters campaigns based on the owner or person responsible for the campaign.
+
+#### Conditions:
+
+The conditions option allows the user to select criteria based on specific campaigns from the options below:
+
+**My Campaigns:** Filters to display only the campaigns owned by the current user.
+**Approval Types:** Filters campaigns based on the approval process type (e.g., Opt-in, Full Opt-out).
+**Campaign Dates:** Displays campaigns categorized as past, present, or future based on the current date.
+**Hide My Campaigns:** Option to exclude the user's own campaigns from the displayed list.
 
 # Best Practices and Tips:
 

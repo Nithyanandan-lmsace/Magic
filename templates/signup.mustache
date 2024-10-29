@@ -31,70 +31,70 @@
 }}
 
 {{#confirm}}
-<div role="alertdialog" aria-labelledby="modal-header" aria-describedby="modal-body" aria-modal="true" id="notice" class="box py-3 generalbox modal modal-dialog modal-in-page show">
-    <div id="modal-content" class="box py-3 modal-content">
-        <div id="modal-header" class="box py-3 modal-header px-3">
-            <h4>{{#str}}confirmpassword, auth_magic {{/str}}</h4>
-        </div>
-        <div role="alert" id="modal-body" class="box py-3 modal-body">
-            {{{passwordform}}}
+    <div role="alertdialog" aria-labelledby="modal-header" aria-describedby="modal-body" aria-modal="true" id="notice" class="box py-3 generalbox modal modal-dialog modal-in-page show">
+        <div id="modal-content" class="box py-3 modal-content">
+            <div id="modal-header" class="box py-3 modal-header px-3">
+                <h4>{{#str}}confirmpassword, auth_magic {{/str}}</h4>
+            </div>
+            <div role="alert" id="modal-body" class="box py-3 modal-body">
+                {{{passwordform}}}
+            </div>
         </div>
     </div>
-</div>
 {{/confirm}}
 
 {{^confirm}}
-<div class="campaign-block {{#classes}} {{.}} {{/classes}}">
-    {{#images.headerimage}}
-        <div class="campaign-header-block">
-            <img src="{{{images.headerimage}}}" alt="Header image of {{{title}}}" role="presentation">
-        </div>
-    {{/images.headerimage}}
-    <div class="container-fluid">
-        <div class="campaign-wrapper">
-            <div class="campaign-container">
-
-                {{#images.backgroundimage}}
-                <div class="campaign-background-block">
-                    <img src="{{{images.backgroundimage}}}" alt="Background image of {{{title}}}" class="campaign-background">
-                </div>
-                {{/images.backgroundimage}}
-
-                <div class="campaign-content-section">
-                    <div class="campaign-signup-block">
-                        {{#images.logo}}
-                            <div class="logo-block">
-                                <img src="{{{images.logo}}}" alt="logo image of {{{title}}}" role="presentaion" >
-                            </div>
-                        {{/images.logo}}
-
-                        <div class="campaign-info-block">
-                            <div class="header-block">
-                                <div class="header-block">
-                                    {{#title}} <h3> {{{title}}} </h3> {{/title}}
-                                </div>
-                                {{#cost}}
-                                    <div class="cost">
-                                        <p> <b> {{#str}} paymentrequiredcampaign, auth_magic{{/str}} </b> </p>
-                                        <p> <b> {{#str}} cost{{/str}}: {{cost}} </b> <p>
-                                    </div>
-                                {{/cost}}
-                            </div>
-                            <div class="campaign-owner-profile">
-                                {{{ownerpicture}}}
-                                {{#ownername}}<span>{{ownername}}</span>{{/ownername}}
-                            </div>
-                            {{#description}} <p> {{{description}}} </p> {{/description}}
-                        </div>
-                    </div>
-
-                    {{#content}}
-                        {{{content}}}
-                    {{/content}}
-                </div>
+    <div class="campaign-block {{#classes}} {{.}} {{/classes}}">
+        {{#images.headerimage}}
+            <div class="campaign-header-block">
+                <img src="{{{images.headerimage}}}" alt="Header image of {{{title}}}" role="presentation">
             </div>
+        {{/images.headerimage}}
+        <div class="container-fluid">
+            <div class="campaign-wrapper">
+                <div class="campaign-container">
 
+                    {{#images.backgroundimage}}
+                    <div class="campaign-background-block">
+                        <img src="{{{images.backgroundimage}}}" alt="Background image of {{{title}}}" class="campaign-background">
+                    </div>
+                    {{/images.backgroundimage}}
+
+                    <div class="campaign-content-section">
+                        <div class="campaign-signup-block">
+                            {{#images.logo}}
+                                <div class="logo-block">
+                                    <img src="{{{images.logo}}}" alt="logo image of {{{title}}}" role="presentaion" >
+                                </div>
+                            {{/images.logo}}
+
+                            <div class="campaign-info-block">
+                                <div class="header-block">
+                                    <div class="header-block">
+                                        {{#title}} <h3> {{{title}}} </h3> {{/title}}
+                                    </div>
+                                    {{#cost}}
+                                        <div class="cost">
+                                            <p> <b> {{#str}} paymentrequiredcampaign, auth_magic{{/str}} </b> </p>
+                                            <p> <b> {{#str}} cost{{/str}}: {{cost}} </b> <p>
+                                        </div>
+                                    {{/cost}}
+                                </div>
+                                <div class="campaign-owner-profile">
+                                    {{{ownerpicture}}}
+                                    {{#ownername}}<span>{{ownername}}</span>{{/ownername}}
+                                </div>
+                                {{#description}} <p> {{{description}}} </p> {{/description}}
+                            </div>
+                        </div>
+
+                        {{#content}}
+                            {{{content}}}
+                        {{/content}}
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
-</div>
 {{/confirm}}

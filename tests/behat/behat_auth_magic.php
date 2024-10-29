@@ -40,6 +40,28 @@ use Behat\Mink\Exception\ExpectationException as ExpectationException;
  */
 class behat_auth_magic extends behat_question_base {
 
+
+    /**
+     * Turns block editing mode on.
+     *
+     * @Given I turn dash block editing mode on
+     */
+    public function i_turn_dash_block_editing_mode_on() {
+        global $CFG;
+
+        if ($CFG->branch >= "400") {
+            $this->execute('behat_forms::i_set_the_field_to', [get_string('editmode'), 1]);
+            if (!$this->running_javascript()) {
+                $this->execute('behat_general::i_click_on', [
+                    get_string('setmode', 'core'),
+                    'button',
+                ]);
+            }
+        } else {
+            $this->execute('behat_general::i_click_on', ['Blocks editing on', 'button']);
+        }
+    }
+
     /**
      * Check the magic link button position as normal.
      *
@@ -266,6 +288,23 @@ class behat_auth_magic extends behat_question_base {
         $this->execute('behat_forms::i_set_the_field_to', [$field, $value]);
         $this->execute('behat_forms::press_button', "Save changes");
         $this->execute('behat_auth::i_log_out');
+    }
+    /**
+     * Creates a datasource for dash block.
+     *
+     * @Given I create dash :arg1 datasource
+     *
+     * @throws ElementNotFoundException Thrown by behat_base::find
+     * @param string $datasource
+     */
+    public function i_create_dash_datasource($datasource) {
+        global $CFG;
+
+        $this->execute('behat_navigation::i_navigate_to_in_site_administration',
+            ['Appearance > Default Dashboard page']);
+        $this->execute('behat_block_dash::i_turn_dash_block_editing_mode_on', []);
+        $this->execute('behat_blocks::i_add_the_block', ["Dash"]);
+        $this->execute('behat_general::i_click_on_in_the', [$datasource, 'text', 'New Dash', 'block']);
     }
 
 }

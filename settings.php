@@ -46,20 +46,20 @@ require_once($CFG->dirroot. "/auth/magic/classes/roleassignment.php");
     // Support password.
     $name = "auth_magic/supportpassword";
     $title = get_string("strsupportpassword", "auth_magic");
-    $setting = new admin_setting_configcheckbox($name, $title, "", 0);
+    $setting = new admin_setting_configcheckbox($name, $title, get_string('strsupportpassword_desc', 'auth_magic'), 0);
     $settings->add($setting);
 
     // Magic login link expiry.
     $name = "auth_magic/loginexpiry";
     $title = get_string("loginexpiry", "auth_magic");
-    $desc = "";
+    $desc = get_string("loginexpiry_desc", "auth_magic");
     $setting = new admin_setting_configduration($name, $title, $desc, 10 * MINSECS);
     $settings->add($setting);
 
     // Magic invitation link expiry.
     $name = "auth_magic/invitationexpiry";
     $title = get_string("invitationexpiry", "auth_magic");
-    $desc = "";
+    $desc = get_string("invitationexpiry_desc", "auth_magic");
     $setting = new admin_setting_configduration($name, $title, $desc, 1 * HOURSECS);
     $settings->add($setting);
 
@@ -90,14 +90,14 @@ require_once($CFG->dirroot. "/auth/magic/classes/roleassignment.php");
     ];
     $name = "auth_magic/authmethod";
     $title = get_string("strsupportauth", "auth_magic");
-    $desc = "";
+    $desc = get_string("strsupportauth_desc", "auth_magic");
     $setting = new admin_setting_configselect($name, $title, $desc, 0, $options);
     $settings->add($setting);
 
     // Enrolment duration.
     $name = "auth_magic/enrolmentduration";
     $title = get_string("defaultenrolmentduration", "auth_magic");
-    $desc = "";
+    $desc = get_string("defaultenrolmentduration_desc", "auth_magic");
     $setting = new admin_setting_configduration($name, $title, $desc, 0);
     $settings->add($setting);
 
@@ -107,10 +107,9 @@ require_once($CFG->dirroot. "/auth/magic/classes/roleassignment.php");
     $student = reset($student);
     $name = "auth_magic/enrolmentrole";
     $title = get_string("defaultenrolmentrole", "auth_magic");
-    $desc = "";
+    $desc = get_string("defaultenrolmentrole_desc", "auth_magic");
     $setting = new admin_setting_configselect($name, $title, $desc, $student->id ?? null, $options);
     $settings->add($setting);
-
 
     // Owner account role.
     $options = [];
@@ -122,9 +121,11 @@ require_once($CFG->dirroot. "/auth/magic/classes/roleassignment.php");
         $roles = $DB->get_records_sql($sql, $roleparams);
         $options += array_column($roles, 'name', 'id');
     }
+
+
     $name = "auth_magic/owneraccountrole";
     $title = get_string("strowneraccountrole", "auth_magic");
-    $desc = "";
+    $desc = get_string("owneraccountrole_desc", "auth_magic");
     $setting = new admin_setting_configselect($name, $title, $desc, 0, $options);
     $settings->add($setting);
 
@@ -132,7 +133,7 @@ require_once($CFG->dirroot. "/auth/magic/classes/roleassignment.php");
     // Magic login link button position.
     $name = "auth_magic/loginlinkbtnpostion";
     $title = get_string("loginlinkbtnpostion", "auth_magic");
-    $desc = "";
+    $desc = get_string("loginlinkbtnpostion_desc", "auth_magic");
     $options = [
         0 => get_string('belowusername', 'auth_magic'),
         1 => get_string('belowpassword', 'auth_magic'),
@@ -155,7 +156,7 @@ require_once($CFG->dirroot. "/auth/magic/classes/roleassignment.php");
     // Magic login link button position.
     $name = "auth_magic/privilegedrole";
     $title = get_string("privilegedrole", "auth_magic");
-    $desc = "";
+    $desc = get_string("privilegedrole_desc", "auth_magic");
     $default = ['value' => key($roles)];
     $setting = new admin_setting_configmultiselect($name, $title, $desc, $default, $roles);
     $settings->add($setting);

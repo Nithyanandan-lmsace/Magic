@@ -291,7 +291,6 @@ class campaigns_form extends \moodleform {
             $mform->hideIf('customint1', 'paymenttype', 'eq', 'free');
         }
 
-
         // Get cohorts.
         $cohortslist = \cohort_get_all_cohorts();
         $cohorts = $cohortslist['cohorts'];
@@ -316,20 +315,23 @@ class campaigns_form extends \moodleform {
             ['units' => [HOURSECS, DAYSECS, WEEKSECS], 'optional' => true]);
         $mform->setType('expirytime', PARAM_INT);
 
+        $mform->addElement('advcheckbox', 'expirysuspenduser', get_string('campaign:suspenduser',
+            'auth_magic'), 'Default: false', null, [0, 1]);
 
-        $mform->addElement('advcheckbox', 'expirysuspenduser', get_string('campaign:suspenduser', 'auth_magic'), 'Default: false', null, [0, 1]);
-
-        $mform->addElement('advcheckbox', 'expirydeleteduser', get_string('campaign:deleteuser', 'auth_magic'), 'Default: false', null, [0, 1]);
+        $mform->addElement('advcheckbox', 'expirydeleteduser', get_string('campaign:deleteuser',
+            'auth_magic'), 'Default: false', null, [0, 1]);
 
         $selectcohorts = array_merge([0 => get_string('disabled', 'auth_magic')], $cohorts);
-        $mform->addElement('select', 'expiryassigncohorts', get_string('campaign:expiryassigncohorts', 'auth_magic'),
-            $selectcohorts);
+        $mform->addElement('select', 'expiryassigncohorts', get_string('campaign:expiryassigncohorts',
+            'auth_magic'), $selectcohorts);
         $mform->setType('expiryassigncohorts', PARAM_INT);
 
-        $mform->addElement('select', 'expiryremovecohorts', get_string('campaign:expiryremovecohorts', 'auth_magic'), $selectcohorts);
+        $mform->addElement('select', 'expiryremovecohorts', get_string('campaign:expiryremovecohorts',
+            'auth_magic'), $selectcohorts);
         $mform->setType('expiryremovecohorts', PARAM_INT);
 
-        $mform->addElement('select', 'expiryunassignglobalrole', get_string('campaign:unassignglobalrole', 'auth_magic'), $systemroles);
+        $mform->addElement('select', 'expiryunassignglobalrole', get_string('campaign:unassignglobalrole',
+            'auth_magic'), $systemroles);
         $mform->setType('expiryunassignglobalrole', PARAM_INT);
 
         $expirybefore = [
@@ -340,14 +342,16 @@ class campaigns_form extends \moodleform {
             '1week' => get_string('weekbefore1', 'auth_magic'),
             '3day' => get_string('daybefore3', 'auth_magic'),
             '1day' => get_string('daybefore1', 'auth_magic'),
-            'upon' => get_string('uponbefore', 'auth_magic')
+            'upon' => get_string('uponbefore', 'auth_magic'),
         ];
 
-        $select = $mform->addElement('select', 'expirybeforenotify', get_string('campaign:expirybeforenotify', 'auth_magic'), $expirybefore);
+        $select = $mform->addElement('select', 'expirybeforenotify', get_string('campaign:expirybeforenotify',
+            'auth_magic'), $expirybefore);
         $select->setMultiple(true);
 
         // After submission setion.
-        $mform->addElement('header', 'aftersubmisson', get_string('campaigns:redirectaftersubmisson', 'auth_magic'));
+        $mform->addElement('header', 'aftersubmisson', get_string('campaigns:redirectaftersubmisson',
+            'auth_magic'));
         $options = [
             'noredirect' => get_string('campaigns:noredirect', 'auth_magic'),
             'redirectsummary' => get_string('campaigns:redirectsummary', 'auth_magic'),
@@ -355,9 +359,10 @@ class campaigns_form extends \moodleform {
         ];
 
         // Redirect after submisson.
-        $mform->addElement('select', 'redirectaftersubmisson', get_string('campaigns:redirectaftersubmisson', 'auth_magic'),
-            $options);
-        $mform->addHelpButton('redirectaftersubmisson', 'campaigns:redirectaftersubmisson', 'auth_magic');
+        $mform->addElement('select', 'redirectaftersubmisson', get_string('campaigns:redirectaftersubmisson',
+            'auth_magic'), $options);
+        $mform->addHelpButton('redirectaftersubmisson', 'campaigns:redirectaftersubmisson',
+            'auth_magic');
         $mform->setDefault('redirectaftersubmisson', 'noredirect');
 
         $mform->addElement('text', 'submissonredirecturl', get_string('campaigns:redirecturl', 'auth_magic'));

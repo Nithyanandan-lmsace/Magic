@@ -112,9 +112,9 @@ class provider implements
      * Get the list of contexts that contain user information for the specified user.
      *
      * @param   int           $userid       The user to search.
-     * @return  contextlist   $contextlist  The list of contexts used in this plugin.
+     * @return  \contextlist   $contextlist  The list of contexts used in this plugin.
      */
-    public static function get_contexts_for_userid(int $userid) : contextlist {
+    public static function get_contexts_for_userid(int $userid) :\contextlist {
         $params = ['amluserid' => $userid,
                     'contextlevel' => CONTEXT_USER,
                     'apluserid' => $userid,

@@ -40,7 +40,7 @@ class campaigns_selfform extends \moodleform {
      * Define the form.
      */
     public function definition() {
-        global $USER;
+        global $USER, $DB;
         $mform = $this->_form;
 
         $campaignid = $this->_customdata['campaignid'];
@@ -63,7 +63,12 @@ class campaigns_selfform extends \moodleform {
         $mform->addElement('hidden', 'coupon', $coupon);
         $mform->setType('coupon', PARAM_ALPHANUMEXT);
 
-        $mform->addElement('static', 'myselfinfo', get_string('campaign:myselfinfo', 'auth_magic'));
-        $this->add_action_buttons(true, get_string('strapply', 'auth_magic'));
+        $mform->addElement('static', 'myselfinfo', '', get_string('campaign:myselfinfo', 'auth_magic'));
+
+        if (!$DB->record_exists('auth_magic_campaigns_users', ['campaignid' => $campaignid, 'userid' => $USER->id])) {
+            $this->add_action_buttons(true, get_string('strapply', 'auth_magic'));
+        } else {
+            $mform->addElement('static', 'myselfexistinfo', '', get_string('campaign:myselfexistinfo', 'auth_magic'));
+        }
     }
 }

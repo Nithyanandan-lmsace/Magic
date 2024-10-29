@@ -41,6 +41,18 @@ use core_reportbuilder\local\helpers\format;
 class campaign_groups extends base {
 
 
+
+    /**
+     * Database tables that this entity uses
+     *
+     * @return array
+     */
+    protected function get_default_tables(): array {
+        return [
+            'auth_magic_campaigns',
+        ];
+    }
+
     /**
      * Database tables that this entity uses and their default aliases
      *
@@ -81,90 +93,95 @@ class campaign_groups extends base {
      */
     protected function get_all_columns(): array {
         global $DB;
-        $campaigntablealias = $this->get_table_alias('auth_magic_campaigns');
+        $campaigntablealias = "amc";
+        $campaigngrouptablealias = "amcg";
         $name = $this->get_entity_name();
 
         // Confirmed users.
         $columns[] = (new column('groupname', new lang_string('campaignsource:field_groupname', 'auth_magic'), $name))
             ->add_joins($this->get_joins())
-            ->add_join("LEFT JOIN {auth_magic_campaign_groups} amcg ON {$campaigntablealias}.id = amcg.campaignid")
+            ->add_join("LEFT JOIN {auth_magic_campaign_groups} {$campaigngrouptablealias}
+                ON {$campaigntablealias}.id = {$campaigngrouptablealias}.campaignid")
             ->set_type(column::TYPE_INTEGER)
             ->set_is_sortable(true)
-            ->add_field("amcg.groupid")
+            ->add_field("{$campaigngrouptablealias}.groupid")
             ->add_callback(static function(?int $value) use ($DB): string {
-               return $DB->get_field('groups', 'name', ['id' => $value]);
+                return $DB->get_field('groups', 'name', ['id' => $value]);
             });
 
         // Group ID.
         $columns[] = (new column('groupid', new lang_string('campaignsource:field_groupid', 'auth_magic'), $name))
-        ->add_join("LEFT JOIN {auth_magic_campaign_groups} amcg ON {$campaigntablealias}.id = amcg.campaignid")
-        ->add_joins($this->get_joins())
-        ->set_type(column::TYPE_INTEGER)
-        ->set_is_sortable(true)
-        ->add_field("amcg.groupid");
+            ->add_join("LEFT JOIN {auth_magic_campaign_groups} {$campaigngrouptablealias} ON
+                $campaigntablealias}.id = {$campaigngrouptablealias}.campaignid")
+            ->add_joins($this->get_joins())
+            ->set_type(column::TYPE_INTEGER)
+            ->set_is_sortable(true)
+            ->add_field("{$campaigngrouptablealias}.groupid");
 
         // Group capacity.
         $columns[] = (new column('groupcapacity', new lang_string('campaignsource:field_groupcapacity', 'auth_magic'), $name))
-        ->add_joins($this->get_joins())
-        ->set_type(column::TYPE_INTEGER)
-        ->set_is_sortable(true)
-        ->add_field("{$campaigntablealias}.groupcapacity")
-        ->add_callback(static function(?int $value) : string {
-            if ($value) {
-                return (string) $value;
-            }
-            return get_string('campaigns:unlimited', 'auth_magic');
-        });
-
+            ->add_joins($this->get_joins())
+            ->set_type(column::TYPE_INTEGER)
+            ->set_is_sortable(true)
+            ->add_field("{$campaigntablealias}.groupcapacity")
+            ->add_callback(static function(?int $value): string {
+                if ($value) {
+                    return (string) $value;
+                }
+                return get_string('campaigns:unlimited', 'auth_magic');
+            });
 
         // Group member count.
         $columns[] = (new column('membercount', new lang_string('campaignsource:field_membercount', 'auth_magic'), $name))
-        ->add_joins($this->get_joins())
-        ->add_join("LEFT JOIN {auth_magic_campaign_groups} amcg ON {$campaigntablealias}.id = amcg.campaignid")
-        ->set_type(column::TYPE_INTEGER)
-        ->set_is_sortable(true)
-        ->add_field("amcg.groupid")
-        ->add_callback(static function(?int $value) use ($DB): int {
-            return $DB->count_records('groups_members', ['groupid' => $value]);
-        });
+            ->add_joins($this->get_joins())
+            ->add_join("LEFT JOIN {auth_magic_campaign_groups} {$campaigngrouptablealias} ON
+                {$campaigntablealias}.id = {$campaigngrouptablealias}.campaignid")
+            ->set_type(column::TYPE_INTEGER)
+            ->set_is_sortable(true)
+            ->add_field("{$campaigngrouptablealias}.groupid")
+            ->add_callback(static function(?int $value) use ($DB): int {
+                return $DB->count_records('groups_members', ['groupid' => $value]);
+            });
 
         // Available Seats.
-        $columns[] = (new column('availableseats', new lang_string('campaignsource:field_groupavailableseats', 'auth_magic'), $name))
-         ->add_joins($this->get_joins())
-         ->add_join("LEFT JOIN {auth_magic_campaign_groups} amcg ON {$campaigntablealias}.id = amcg.campaignid")
-         ->set_type(column::TYPE_INTEGER)
-         ->set_is_sortable(true)
-         ->add_field("amcg.groupid")
-         ->add_field("{$campaigntablealias}.groupcapacity")
-         ->add_callback(static function(?int $value, \stdClass $row) use ($DB): int {
-            $totalmembers = $DB->count_records('groups_members', ['groupid' => $value]);
-            if ($row->groupcapacity) {
-                return $row->groupcapacity - $totalmembers;
-            }
-            return 0;
-        });
-
+        $columns[] = (new column('availableseats', new lang_string('campaignsource:field_groupavailableseats', 'auth_magic'),
+        $name))
+            ->add_joins($this->get_joins())
+            ->add_join("LEFT JOIN {auth_magic_campaign_groups} {$campaigngrouptablealias} ON
+                {$campaigntablealias}.id = {$campaigngrouptablealias}.campaignid")
+            ->set_type(column::TYPE_INTEGER)
+            ->set_is_sortable(true)
+            ->add_field("{$campaigngrouptablealias}.groupid")
+            ->add_field("{$campaigntablealias}.groupcapacity")
+            ->add_callback(static function(?int $value, \stdClass $row) use ($DB): string {
+                $totalmembers = $DB->count_records('groups_members', ['groupid' => $value]);
+                if ($row->groupcapacity) {
+                    return (string) $row->groupcapacity - $totalmembers;
+                }
+                return get_string('campaigns:unlimited', 'auth_magic');
+            });
 
         // Group status.
         $columns[] = (new column('status', new lang_string('campaignsource:field_groupstatus', 'auth_magic'), $name))
-        ->add_joins($this->get_joins())
-        ->add_join("LEFT JOIN {auth_magic_campaign_groups} amcg ON {$campaigntablealias}.id = amcg.campaignid")
-        ->set_type(column::TYPE_INTEGER)
-        ->set_is_sortable(true)
-        ->add_field("amcg.groupid")
-        ->add_field("{$campaigntablealias}.groupcapacity")
-        ->add_callback(static function(?int $value, \stdClass $row) use ($DB): String {
-            $totalmembers = $DB->count_records('groups_members', ['groupid' => $value]);
-            if ($row->groupcapacity) {
-                $bal = $row->groupcapacity - $totalmembers;
-                if ($bal == 0) {
-                    return get_string('strfull', 'auth_magic');
+            ->add_joins($this->get_joins())
+            ->add_join("LEFT JOIN {auth_magic_campaign_groups} {$campaigngrouptablealias} ON
+                {$campaigntablealias}.id = {$campaigngrouptablealias}.campaignid")
+            ->set_type(column::TYPE_INTEGER)
+            ->set_is_sortable(true)
+            ->add_field("{$campaigngrouptablealias}.groupid")
+            ->add_field("{$campaigntablealias}.groupcapacity")
+            ->add_callback(static function(?int $value, \stdClass $row) use ($DB): String {
+                $totalmembers = $DB->count_records('groups_members', ['groupid' => $value]);
+                if ($row->groupcapacity) {
+                    $bal = $row->groupcapacity - $totalmembers;
+                    if ($bal == 0) {
+                        return get_string('strfull', 'auth_magic');
+                    }
+                    return get_string('stravailable', 'auth_magic');
+
                 }
                 return get_string('stravailable', 'auth_magic');
-
-            }
-            return get_string('stravailable', 'auth_magic');
-        });
+            });
 
         return $columns;
     }

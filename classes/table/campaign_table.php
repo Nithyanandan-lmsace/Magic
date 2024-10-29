@@ -144,9 +144,7 @@ class campaigns_table extends \table_sql {
     /**
      * Show the campaign comment.
      */
-
     public function col_comments($row) {
-        //pri
         return file_rewrite_pluginfile_urls(
             $row->comments, 'pluginfile.php', \context_system::instance()->id,
             'auth_magic', 'comments', $row->id

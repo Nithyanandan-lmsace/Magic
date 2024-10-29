@@ -25,6 +25,8 @@ namespace auth_magic\task;
 
 use core\task\scheduled_task;
 
+defined('MOODLE_INTERNAL') || die();
+
 require_once($CFG->dirroot. "/auth/magic/campaigns/campaign_helper.php");
 
 /**
@@ -48,7 +50,7 @@ class campaign_expiry_actions extends scheduled_task {
     public function execute() {
         global $DB;
         mtrace("running the magic campaign expiry task");
-        // Fetch campaigns that are expired but haven't had their post-expiry actions triggered yet
+        // Fetch campaigns that are expired but haven't had their post-expiry actions triggered yet.
         $time = time();
         $sql = "SELECT * FROM {auth_magic_campaigns} WHERE expirydate >= :time AND expirytime != 0";
         $campaigns = $DB->get_records_sql($sql, ['time' => $time]);
@@ -56,22 +58,29 @@ class campaign_expiry_actions extends scheduled_task {
         foreach ($campaigns as $campaign) {
             mtrace("running the campaign expiry task: " . $campaign->title);
             $campaign = \campaign_helper::get_campaign($campaign->id);
-            // Handle pre-expiry notifications
+            // Handle pre-expiry notifications.
             $this->handle_campaign_notifications($campaign);
-            // Handle post-expiry actions
+            // Handle post-expiry actions.
             if ($time >= $campaign->expirydate) {
                 $this->handle_post_expiry_actions($campaign);
             }
         }
     }
 
+    /**
+     * Handler for post expiry actions.
+     * @param object $campaign.
+     */
     private function handle_post_expiry_actions($campaign) {
         mtrace("running handle_post_expiry_actions: " . $campaign->title);
         $campaignhelper = new \campaign_helper($campaign->id);
         return $campaignhelper->process_expiry_campaign_actions();
     }
 
-
+    /**
+     * Handle campaign notification.
+     * @param object $campaign
+     */
     public function handle_campaign_notifications($campaign) {
         global $DB;
         mtrace("running handle_campaign_notifications: " . $campaign->title);

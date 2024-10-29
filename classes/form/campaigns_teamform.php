@@ -71,11 +71,16 @@ class campaigns_teamform extends \moodleform {
         $teamusersoptions = ['multiple' => true];
         $childusers = auth_magic_get_parent_child_users($USER->id, false, false);
         if ($childusers) {
-            list($usersql, $userparams) = $DB->get_in_or_equal($childusers, SQL_PARAMS_NAMED);
-            $records = $DB->get_records_sql("SELECT userid FROM {auth_magic_campaigns_users} WHERE userid $usersql", $userparams);
-            if ($records) {
-                $childusers = user_get_users_by_id(array_keys($records));
-                $teamusers = auth_magic_get_usernames_choices($childusers);
+            $childusers = user_get_users_by_id($childusers);
+            $teamusers = auth_magic_get_usernames_choices($childusers);
+            unset($teamusers[0]);
+        }
+
+        if ($teamusers) {
+            foreach ($teamusers as $teamuserid => $teamuser) {
+                if ($DB->record_exists('auth_magic_campaigns_users', ['campaignid' => $campaignid, 'userid' => $teamuserid])) {
+                    unset($teamusers[$teamuserid]);
+                }
             }
         }
 
@@ -88,19 +93,19 @@ class campaigns_teamform extends \moodleform {
                 'valuehtmlcallback' => function($userid) : string {
                     $user = \core_user::get_user($userid);
                     return fullname($user);
-                }
+                },
             ];
         }
 
         if ($teamusers || is_siteadmin()) {
 
-            $mform->addElement('autocomplete', 'teammembers', get_string('searchusers', component: 'auth_magic'),
+            $mform->addElement('autocomplete', 'teammembers', get_string('searchusers', 'auth_magic'),
                 $teamusers, $teamusersoptions);
-            $mform->addElement('static', 'teaminfo', get_string('campaign:myselfinfo', 'auth_magic'));
+            $mform->addElement('static', 'teaminfo', '', get_string('campaign:teammemberinfo', 'auth_magic'));
             $mform->setType('teaminfo', PARAM_INT);
             $this->add_action_buttons(true, get_string('strapply', 'auth_magic'));
         } else {
-            $mform->addElement('static', 'noteaminfo', get_string('campaign:noteaminfo', 'auth_magic'));
+            $mform->addElement('static', 'noteaminfo', '', get_string('campaign:noteaminfo', 'auth_magic'));
         }
     }
 }

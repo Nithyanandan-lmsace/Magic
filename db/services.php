@@ -59,4 +59,12 @@ $functions = [
         'type' => 'write',
         'ajax' => true,
     ],
+    'auth_magic_get_bankgat_amount' => [
+        'classname' => 'external',
+        'methodname' => 'get_bankgat_amount',
+        'classpath' => 'auth/magic/classes/external.php',
+        'description' => 'Get the bank gatway amount',
+        'type' => 'write',
+        'ajax' => true,
+    ],
 ];

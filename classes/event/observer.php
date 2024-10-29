@@ -131,12 +131,12 @@ class observer {
      *
      * @param \core\event\user_loggedin $event
      */
-    public static function create_user_loggedin_request(\core\event\user_loggedin $event) {
+    /* public static function create_user_loggedin_request(\core\event\user_loggedin $event) {
         global $PAGE, $DB;
         $data = $event->get_data();
         $userid = $data['userid'];
         auth_magic_user_confirmation_campaign_assignments($userid);
-    }
+    } */
 
 
     /**

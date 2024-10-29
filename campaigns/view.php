@@ -128,7 +128,6 @@ if (!$submissionuser) {
         // Need to update team form data.
         $campaignhelper->update_campaign_teamform($teamformdata);
     }
-
 }
 
 $content = $campaigninstance->buildform($campaignmanageform, $campaignselfform, $campaignteamform);

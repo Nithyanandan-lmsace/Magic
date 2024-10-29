@@ -34,10 +34,35 @@ require_once($CFG->dirroot."/user/profile/lib.php");
 class campaign_fields {
 
     /**
-     * Indicator for recursive function.
+     * Campaign Id
+     * @var int
+     */
+    public $id;
+
+    /**
+     * Campaign fields.
+     * @var object
+     */
+    public $campaignfields;
+
+    /**
+     * Call recursive function.
      * @var int
      */
     public $callrecursivefunction;
+
+    /**
+     * Indicator for recursive function.
+     * @var int
+     */
+    public $callrecursivefunction1;
+
+
+    /**
+     * Indicator for recursive function.
+     * @var int
+     */
+    public $callrecursivefunction2;
 
     /**
      * Create instance of the campaign.
@@ -181,8 +206,8 @@ class campaign_fields {
     public function replace_otherfield_value($fieldinstance, $formdata) {
         $instance = $fieldinstance;
         $this->callrecursivefunction++;
-        // TODO Stop the recursive function over 20 times.
-        // TODO Sometimes User give wrong form fields data.To stop the recursive function.
+        // TODO: Stop the recursive function over 20 times.
+        // TODO: Sometimes User give wrong form fields data.To stop the recursive function.
         if ($this->callrecursivefunction > 20) {
             return "";
         }
@@ -278,6 +303,9 @@ class campaign_fields {
             $fieldcustomvalue = $fieldtype . $field;
             $instance->customvalue = isset($formfields[$fieldcustomvalue]) ? $formfields[$fieldcustomvalue] : '';
             $fieldotherfield = $fieldtype . $field .'_otherfield';
+            if (is_array($instance->customvalue)) {
+                $instance->customvalue = json_encode($instance->customvalue);
+            }
             $instance->otherfieldvalue = isset($formfields[$fieldotherfield]) ? $formfields[$fieldotherfield] : '';
             $instance->fieldtype = (strpos($fieldtype, 'profile_field_') === 0)
                 ? MAGICCAMPAIGNPROFILEFIELD : MAGICCAMPAIGNSTANDARDFIELD;
@@ -314,6 +342,9 @@ class campaign_fields {
                 $fieldoption = isset($formfields[$fieldtype . $field. '_option'])
                     ? $formfields[$fieldtype . $field. '_option'] : '';
                 $fieldcustomvalue = isset($formfields[$fieldtype . $field]) ? $formfields[$fieldtype . $field] : '';
+                if (is_array($fieldcustomvalue)) {
+                    $fieldcustomvalue = json_encode($fieldcustomvalue);
+                }
                 $fieldotherfieldvalue = isset($formfields[$fieldtype . $field. '_otherfield'])
                     ? $formfields[$fieldtype . $field. '_otherfield'] : '';
                 if ($fieldrecord->fieldoption != $fieldoption || $fieldrecord->customvalue != $fieldcustomvalue ||

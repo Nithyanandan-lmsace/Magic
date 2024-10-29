@@ -72,6 +72,11 @@ class campaign_message_vars {
     protected $blank = "[blank]";
 
     /**
+     * @var int
+     */
+    protected $group;
+
+    /**
      * Sets up and retrieves the API objects.
      *
      * @param  mixed $user User data record
